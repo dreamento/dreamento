@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mainWindow module &mdash; Dreamento  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="realTimeAutoScoring module" href="realTimeAutoScoring.html" />
+    <link rel="prev" title="ZmaxSocket module" href="ZmaxSocket.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Dreamento
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installaion Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html">How to use Dreamento?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html#how-to-use-the-offline-dreamento">How to use the offline Dreamento?</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ZmaxHeadband.html">ZmaxHeadband module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ZmaxSocket.html">ZmaxSocket module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">mainWindow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realTimeAutoScoring.html">realTimeAutoScoring module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OfflineDreamento.html">OfflineDreamento module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotter.html">Plotter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="periodogram.html">periodogram module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Dreamento</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>mainWindow module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mainWindow.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mainWindow">
+<span id="mainwindow-module"></span><h1>mainWindow module<a class="headerlink" href="#module-mainWindow" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mainWindow.RecordThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mainWindow.</span></span><span class="sig-name descname"><span class="pre">RecordThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>The thread class of the program which is basically meant for establishing a connection
+with the mainwindow GUI.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.epochPredictionResultSignal">
+<span class="sig-name descname"><span class="pre">epochPredictionResultSignal</span></span><a class="headerlink" href="#mainWindow.RecordThread.epochPredictionResultSignal" title="Permalink to this definition"></a></dt>
+<dd><p>Sleep scoring prediction signal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyqtSignal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.getCurrentSampleInformation">
+<span class="sig-name descname"><span class="pre">getCurrentSampleInformation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread.getCurrentSampleInformation" title="Permalink to this definition"></a></dt>
+<dd><p>Receive current information regarding the sample numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dataSampleCounter, self.secondCounter, self.totalDataSampleCounter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.getSignalTypeFromUI">
+<span class="sig-name descname"><span class="pre">getSignalTypeFromUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread.getSignalTypeFromUI" title="Permalink to this definition"></a></dt>
+<dd><p>To know which signals to record, based on the comboBox in the GUI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.signalType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.recordingFinishedSignal">
+<span class="sig-name descname"><span class="pre">recordingFinishedSignal</span></span><a class="headerlink" href="#mainWindow.RecordThread.recordingFinishedSignal" title="Permalink to this definition"></a></dt>
+<dd><p>a sending signal to mainWindow - sends name of stored file to mainWindow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyqtSignal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.recordingProgessSignal">
+<span class="sig-name descname"><span class="pre">recordingProgessSignal</span></span><a class="headerlink" href="#mainWindow.RecordThread.recordingProgessSignal" title="Permalink to this definition"></a></dt>
+<dd><p>send recording signal and time info to mainWindow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyqtSignal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread.run" title="Permalink to this definition"></a></dt>
+<dd><p>start recording the signal. in each second, also calculates the sampling rate
+(# of samples received by program over stream)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.sendEEGdata2MainWindow">
+<span class="sig-name descname"><span class="pre">sendEEGdata2MainWindow</span></span><a class="headerlink" href="#mainWindow.RecordThread.sendEEGdata2MainWindow" title="Permalink to this definition"></a></dt>
+<dd><p>Sending the relavant data from the thread to the main window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>pyqtSignal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.sendEEGdata2main">
+<span class="sig-name descname"><span class="pre">sendEEGdata2main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eegSigR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eegSigL</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_EEG</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_periodogram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_spectrogram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_sleep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread.sendEEGdata2main" title="Permalink to this definition"></a></dt>
+<dd><p>Data transmission from the thread to the mainwindow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>eegSigR</strong> – EEG R</p></li>
+<li><p><strong>eegSigL</strong> – EEG L</p></li>
+<li><p><strong>plot_EEG</strong> – enable/disable EEG plotting</p></li>
+<li><p><strong>plot_periodogram</strong> – plotting/updating periodogram every epoch (30 s)</p></li>
+<li><p><strong>plot_spectrogram</strong> – plotting/updating spectrogram every epoch (30 s)</p></li>
+<li><p><strong>score_sleep</strong> – enable/disable sleep scoring</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.sendEEGdata2MainWindow.emit(eegSigR, eegSigL, plot_EEG, plot_periodogram, plot_spectrogram,
+score_sleep, self.epochCounter)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.RecordThread.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.RecordThread.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mainWindow.Window">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mainWindow.</span></span><span class="sig-name descname"><span class="pre">Window</span></span><a class="headerlink" href="#mainWindow.Window" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is one of the main programming classes of the ZmaxCoDo responsible for
+all the the creation of graphical user-interface (GUI), relavant parameters
+for the recording (e.g., which signals to record), stimulation
+(e.g., the properties of a sensory stimulation), data representation and its
+corresponding scales (e.g., amplitude scale), the buttons and the corresponding
+functions of the GUI’s buttons can be defined.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.AudioBrowserClicked">
+<span class="sig-name descname"><span class="pre">AudioBrowserClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.AudioBrowserClicked" title="Permalink to this definition"></a></dt>
+<dd><p>The method to address the audio file for audio stimulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.audio_file_path, self.audio_file_name, self.dlg.triggerSoundButton.setEnabled(True), self.dlg.audioNameLabel.setText(str(self.audio_file_name))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.bSliderChanged">
+<span class="sig-name descname"><span class="pre">bSliderChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.bSliderChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the slider for ‘blue’ color of visual stimulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>value</strong> – the value from 0 to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.bValLabel.setText(str(value))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.connectSoftwareButton">
+<span class="sig-name descname"><span class="pre">connectSoftwareButton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.connectSoftwareButton" title="Permalink to this definition"></a></dt>
+<dd><p>Initiates the ZmaxHeadband() and check the socket method of it to check
+whether the server is running or is not yet connected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.connectSoftwareButton.setStyleSheet() , self.dlg.connectSoftwareButton.setText(), self.dlg.triggerLightButton.setEnabled(True), self.dlg.recordButton.setEnabled(True)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.displayEpochPredictionResult">
+<span class="sig-name descname"><span class="pre">displayEpochPredictionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predResult</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochNum</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.displayEpochPredictionResult" title="Permalink to this definition"></a></dt>
+<dd><p>Display of the autosciring results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>predResult</strong> – the predictions</p></li>
+<li><p><strong>epochNum</strong> – Epoch number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.appDisplay.appendHtml(f”&lt;font style=’color:{stagesListColor[predResult]};’ size=’4’&gt;{epochNum:03}. {stagesList[predResult]}&lt;/font&gt;”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.eegRangeX_SpinBox_valueChanged">
+<span class="sig-name descname"><span class="pre">eegRangeX_SpinBox_valueChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.eegRangeX_SpinBox_valueChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Chanigng the time scale of the real-time EEG representation. To apply this,
+after setting the scale, the button should be clicked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>val</strong> – zero-to-peak amplitude</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.eegRangeY_SpinBox_valueChanged">
+<span class="sig-name descname"><span class="pre">eegRangeY_SpinBox_valueChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.eegRangeY_SpinBox_valueChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Chanigng the amplitude scale of the real-time EEG representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>val</strong> – zero-to-peak amplitude</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.gSliderChanged">
+<span class="sig-name descname"><span class="pre">gSliderChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.gSliderChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the slider for ‘green’ color of visual stimulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>value</strong> – the value from 0 to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.gValLabel.setText(str(value))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.getEEG_from_thread">
+<span class="sig-name descname"><span class="pre">getEEG_from_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eegSignal_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eegSignal_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_EEG</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_periodogram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_spectrogram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.getEEG_from_thread" title="Permalink to this definition"></a></dt>
+<dd><p>The main method to connect the thread to the main window (GUI).
+Getting the desired signals (EEG L and EEG R) from the thread and apply
+the relavant analysis such as scoring, TFR, and periodogram analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>eegSignal_r</strong> – the EEG R recording.</p></li>
+<li><p><strong>eegSignal_l</strong> – the EEG L recording.</p></li>
+<li><p><strong>plot_EEG</strong> – PLotting EEG in real-time.</p></li>
+<li><p><strong>plot_periodogram</strong> – plotting/updating periodogram every epoch (30 s)</p></li>
+<li><p><strong>plot_spectrogram</strong> – plotting/updating TFR every epoch (30 s)</p></li>
+<li><p><strong>sleep_scoring</strong> – enable/disable sleep scoring</p></li>
+<li><p><strong>epoch_counter</strong> – the counter for the epoch number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>autoscoring (self.scoring_predictions.append()),</p>
+</dd>
+</dl>
+<p>spectrogram (self.spectrogramMplWidget.canvas.draw()),
+periodogram (self.periodogramMplWidget.canvas.draw())</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.markerLineEditChanged">
+<span class="sig-name descname"><span class="pre">markerLineEditChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.markerLineEditChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieving the last marker by pushing ‘…’. This is useful for setting up
+the repititive markers withou wasting time on retyping them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.markerLineEdit.setText(self.previousMarkerLineEditValue)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.onRecordingFinished">
+<span class="sig-name descname"><span class="pre">onRecordingFinished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.onRecordingFinished" title="Permalink to this definition"></a></dt>
+<dd><p>When the recording is finished, this function is called to chnage the icon shape
+, change text, and the rest of initialization for the next recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.onRecordingFinishedWriteStimulationDB">
+<span class="sig-name descname"><span class="pre">onRecordingFinishedWriteStimulationDB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.onRecordingFinishedWriteStimulationDB" title="Permalink to this definition"></a></dt>
+<dd><p>Writing the output of the recordings. This method generates two outputs,
+namely the stimulation marker/annotations file (<em>.json) and the
+predicitons of the real-time scoring (</em>.txt)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>fileName</strong> – filename, which is the date and time of the start of reording</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a href="#id1"><span class="problematic" id="id2">*</span></a>.json, <a href="#id3"><span class="problematic" id="id4">*</span></a>.txt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.pwmSliderChanged">
+<span class="sig-name descname"><span class="pre">pwmSliderChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.pwmSliderChanged" title="Permalink to this definition"></a></dt>
+<dd><p>”
+Defines the intensity of the visual stimulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>value</strong> – the value from 0 to 100</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.intensitySliderLabel.setText(s)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.rSliderChanged">
+<span class="sig-name descname"><span class="pre">rSliderChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.rSliderChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the slider for ‘red’ color of visual stimulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>value</strong> – the value from 0 to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.dlg.rValLabel.setText(str(value))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.recordClicked">
+<span class="sig-name descname"><span class="pre">recordClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.recordClicked" title="Permalink to this definition"></a></dt>
+<dd><p>Start/stop recording, load relavant autoscoring algorithms, and
+communicate with the thread to transmit 30-seconds epochs for
+plotting and analysis.</p>
+<p>:param self:access the attributes and methods of the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.recordingThread.finished.connect(self.onRecordingFinished), self.recordingThread.recordingFinishedSignal.connect(self.onRecordingFinishedWriteStimulationDB), self.recordingThread.epochPredictionResultSignal.connect(self.displayEpochPredictionResult) , self.recordingThread.sendEEGdata2MainWindow.connect(self.getEEG_from_thread)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.resetEEGPlotButtonPressed">
+<span class="sig-name descname"><span class="pre">resetEEGPlotButtonPressed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.resetEEGPlotButtonPressed" title="Permalink to this definition"></a></dt>
+<dd><p>The button to adjust the time-axis length of the online plotting of the
+EEG channels. Set up the desired time and then push this button.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.scoreSleepCheckBoxChanged">
+<span class="sig-name descname"><span class="pre">scoreSleepCheckBoxChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.scoreSleepCheckBoxChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Autoscoring checkbox</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.scoreSleepCheckBoxDisabled">
+<span class="sig-name descname"><span class="pre">scoreSleepCheckBoxDisabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.scoreSleepCheckBoxDisabled" title="Permalink to this definition"></a></dt>
+<dd><p>Disabling autoscoring checkbox in the GUI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.scoreSleepCheckBoxEnabled">
+<span class="sig-name descname"><span class="pre">scoreSleepCheckBoxEnabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.scoreSleepCheckBoxEnabled" title="Permalink to this definition"></a></dt>
+<dd><p>Enabling autoscoring checkbox in the GUI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.setMarkerButtonPressed">
+<span class="sig-name descname"><span class="pre">setMarkerButtonPressed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.setMarkerButtonPressed" title="Permalink to this definition"></a></dt>
+<dd><p>Pressing ‘set markers’ button to store the relavant information regarding
+the description and the timing of an annotation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.setupPredictionPanelInGUI">
+<span class="sig-name descname"><span class="pre">setupPredictionPanelInGUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.setupPredictionPanelInGUI" title="Permalink to this definition"></a></dt>
+<dd><p>Designing the autoscoring panel in the GUI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class.</p></li>
+<li><p><strong>enabled</strong> – enable/disable the prediction panel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.text2speech">
+<span class="sig-name descname"><span class="pre">text2speech</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.text2speech" title="Permalink to this definition"></a></dt>
+<dd><p>Text-to-speech converter for communication with the participant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>txt</strong> – the text to be converted to speech.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an audio file, ie., f”{file_path}{dt_string}.wav”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.textToSpeechLineEditChanged">
+<span class="sig-name descname"><span class="pre">textToSpeechLineEditChanged</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.textToSpeechLineEditChanged" title="Permalink to this definition"></a></dt>
+<dd><p>Activate the text2speech button when a text exists.</p>
+<p>:param self:access the attributes and methods of the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.dlg.triggerText2SpeechButton.setEnabled(True/False)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.triggerLightClicked">
+<span class="sig-name descname"><span class="pre">triggerLightClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.triggerLightClicked" title="Permalink to this definition"></a></dt>
+<dd><p>Receives the properties for the light/visual stimulation and then present the cue by activating self.hb.stimulate().
+If the software is already ‘recording’, then the stimulation properties will
+be stored using and the exact time of stimulation will be received from
+self.recordingThread.getCurrentSampleInformation()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.recordingThread.getCurrentSampleInformation()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.triggerSoundClicked">
+<span class="sig-name descname"><span class="pre">triggerSoundClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.triggerSoundClicked" title="Permalink to this definition"></a></dt>
+<dd><p>Presents the audio file which is loaded using AudioBrowserClicked</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>play the audio cue and store the properties and timing in self.stimulationDataBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.triggerText2SpeechClicked">
+<span class="sig-name descname"><span class="pre">triggerText2SpeechClicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.triggerText2SpeechClicked" title="Permalink to this definition"></a></dt>
+<dd><p>Convert the text to speech, create a .wav file and play it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>play the text-to-speech cue and store the properties and timing in self.stimulationDataBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mainWindow.Window.updateRecordBtnText">
+<span class="sig-name descname"><span class="pre">updateRecordBtnText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeInSeconds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mainWindow.Window.updateRecordBtnText" title="Permalink to this definition"></a></dt>
+<dd><p>change the shape of the record button before, during, and after recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>timeInSeconds</strong> – The passed time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ZmaxSocket.html" class="btn btn-neutral float-left" title="ZmaxSocket module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="realTimeAutoScoring.html" class="btn btn-neutral float-right" title="realTimeAutoScoring module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

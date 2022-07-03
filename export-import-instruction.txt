@@ -1,0 +1,3 @@
+Create an environment from YAML file
+
+	conda env create --name dreamento --file dreamento.yml

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minibatching module &mdash; Dreamento  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Dreamento
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installaion Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html">How to use Dreamento?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html#how-to-use-the-offline-dreamento">How to use the offline Dreamento?</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ZmaxHeadband.html">ZmaxHeadband module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ZmaxSocket.html">ZmaxSocket module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mainWindow.html">mainWindow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realTimeAutoScoring.html">realTimeAutoScoring module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OfflineDreamento.html">OfflineDreamento module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotter.html">Plotter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="periodogram.html">periodogram module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Dreamento</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>minibatching module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minibatching.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minibatching">
+<span id="minibatching-module"></span><h1>minibatching module<a class="headerlink" href="#module-minibatching" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="minibatching.iterate_batch_multiple_seq_minibatches">
+<span class="sig-prename descclassname"><span class="pre">minibatching.</span></span><span class="sig-name descname"><span class="pre">iterate_batch_multiple_seq_minibatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">augment_seq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minibatching.iterate_batch_multiple_seq_minibatches" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a generator that return a batch of sequences of inputs and targets.</p>
+<p>This function randomly selects batches of multiple sequence. It then iterates
+through multiple sequence in parallel to generate a sequence of inputs and
+targets. It will append the input sequence with 0 and target with -1 when
+the lenght of each sequence is not equal.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minibatching.iterate_batch_seq_minibatches">
+<span class="sig-prename descclassname"><span class="pre">minibatching.</span></span><span class="sig-name descname"><span class="pre">iterate_batch_seq_minibatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minibatching.iterate_batch_seq_minibatches" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a generator that return a batch of sequences of inputs and targets.</p>
+<p>This function splits a sequence of inputs and targets into multiple sub-
+sequences equally. Then it further splits each sub-sequence into multiple
+chunks with the size of seq_length.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minibatching.iterate_minibatches">
+<span class="sig-prename descclassname"><span class="pre">minibatching.</span></span><span class="sig-name descname"><span class="pre">iterate_minibatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minibatching.iterate_minibatches" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a generator that return a batch of inputs and targets.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

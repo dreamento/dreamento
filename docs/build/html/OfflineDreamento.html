@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OfflineDreamento module &mdash; Dreamento  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plotter module" href="Plotter.html" />
+    <link rel="prev" title="realTimeAutoScoring module" href="realTimeAutoScoring.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Dreamento
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installaion Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html">How to use Dreamento?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HowTo.html#how-to-use-the-offline-dreamento">How to use the offline Dreamento?</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ZmaxHeadband.html">ZmaxHeadband module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ZmaxSocket.html">ZmaxSocket module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mainWindow.html">mainWindow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realTimeAutoScoring.html">realTimeAutoScoring module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OfflineDreamento module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotter.html">Plotter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="periodogram.html">periodogram module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Dreamento</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>OfflineDreamento module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/OfflineDreamento.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-OfflineDreamento">
+<span id="offlinedreamento-module"></span><h1>OfflineDreamento module<a class="headerlink" href="#module-OfflineDreamento" title="Permalink to this heading"></a></h1>
+<p>Copyright (c) 2021-2022 Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie</p>
+<p>OfflineDreamento: The post-processing Dreamento!</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OfflineDreamento.</span></span><span class="sig-name descname"><span class="pre">OfflineDreamento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.Apply_button">
+<span class="sig-name descname"><span class="pre">Apply_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.Apply_button" title="Permalink to this definition"></a></dt>
+<dd><p>Start the processing, once all the parameters are set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns display</dt>
+<dd class="field-even"><p>The main post-processing Dreamento window, saving options</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.AssignMarkersToRecordedData_EEG_TFR">
+<span class="sig-name descname"><span class="pre">AssignMarkersToRecordedData_EEG_TFR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_json_markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EMG_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers_to_show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['light',</span> <span class="pre">'manual',</span> <span class="pre">'sound']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trimperc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RdBu_r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.AssignMarkersToRecordedData_EEG_TFR" title="Permalink to this definition"></a></dt>
+<dd><p>The main function: create the main display window of Offline Dreamento</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>data</strong> – EEG L data</p></li>
+<li><p><strong>data_R</strong> – EEG R data</p></li>
+<li><p><strong>sf</strong> – sampling frequency</p></li>
+<li><p><strong>path_to_json_markers</strong> – path to the annotation file (generated by Dreamento)</p></li>
+<li><p><strong>EMG_path</strong> – path to the EMG file</p></li>
+<li><p><strong>markers_to_show</strong> – the desired type of markers to show [‘light’, ‘manual’, ‘sound’]</p></li>
+<li><p><strong>win_sec</strong> – the window size to compute spectrogram</p></li>
+<li><p><strong>fmin</strong> – relavant min frequency for spectrogram</p></li>
+<li><p><strong>fmax</strong> – relavant max frequency for spectrogram</p></li>
+<li><p><strong>trimperc</strong> – bidirectional trim factor for normalizing the spectrogram colormap</p></li>
+<li><p><strong>cmap</strong> – colormap of the spectrogram</p></li>
+<li><p><strong>add_colorbar</strong> – adding colorbar to spectrogram</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>fig, markers_details</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.butter_bandpass_filter">
+<span class="sig-name descname"><span class="pre">butter_bandpass_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowcut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highcut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.butter_bandpass_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Butterworth bandpass filter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>data</strong> – data to be filtered</p></li>
+<li><p><strong>lowcut</strong> – the lowcut of the filter</p></li>
+<li><p><strong>highcut</strong> – the highcut of the filter</p></li>
+<li><p><strong>fs</strong> – sampling frequency</p></li>
+<li><p><strong>order</strong> – filter order</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>y</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.calculate_lag">
+<span class="sig-name descname"><span class="pre">calculate_lag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_EDF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_Txt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_end_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.calculate_lag" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the lag between the HDRecorder and Dreamento and compensate it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>plot</strong> – activate/deactivate plotting</p></li>
+<li><p><strong>path_EDF</strong> – path to HDRecorder EEG L.edf file</p></li>
+<li><p><strong>path_Txt</strong> – path to Dreamento .txt file</p></li>
+<li><p><strong>T</strong> – The duration to use for synchronization (seconds)</p></li>
+<li><p><strong>t_start_sync</strong> – the start time of a nevent for sync.</p></li>
+<li><p><strong>t_end_sync</strong> – the end point of a nevent for sync.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>samples_before_begin, sigHDRecorder_org_synced, sigScript_org, sigScript_org_R fwsd</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.create_save_options">
+<span class="sig-name descname"><span class="pre">create_save_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.create_save_options" title="Permalink to this definition"></a></dt>
+<dd><p>Store all the raw and processed variables to be used in Matlab</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>user_defined_name.mat</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.help_pop_up_func">
+<span class="sig-name descname"><span class="pre">help_pop_up_func</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.help_pop_up_func" title="Permalink to this definition"></a></dt>
+<dd><p>Help button of the software. Introduction to the applications and hot keeys</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.load_Dreamento_file_dialog">
+<span class="sig-name descname"><span class="pre">load_Dreamento_file_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.load_Dreamento_file_dialog" title="Permalink to this definition"></a></dt>
+<dd><p>Loading the .txt file recorded by Dreamento.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>global Dreamento_files_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.load_EMG_file_dialog">
+<span class="sig-name descname"><span class="pre">load_EMG_file_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.load_EMG_file_dialog" title="Permalink to this definition"></a></dt>
+<dd><p>Load the optional recorded data (e.g.,EMG.vhdr)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>global EMG_files_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.load_hypnodyne_file_dialog">
+<span class="sig-name descname"><span class="pre">load_hypnodyne_file_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.load_hypnodyne_file_dialog" title="Permalink to this definition"></a></dt>
+<dd><p>The function to load the EEG.L file from the HDrecorder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>global hypnodyne_files_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.load_marker_file_dialog">
+<span class="sig-name descname"><span class="pre">load_marker_file_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.load_marker_file_dialog" title="Permalink to this definition"></a></dt>
+<dd><p>Load the anntations file (.json) created by Dreamento.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>global marker_files_list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.onclick">
+<span class="sig-name descname"><span class="pre">onclick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.onclick" title="Permalink to this definition"></a></dt>
+<dd><p>Clicking on the TFR to go to the desired epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>event</strong> – mouse click</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.pan_nav">
+<span class="sig-name descname"><span class="pre">pan_nav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.pan_nav" title="Permalink to this definition"></a></dt>
+<dd><p>The keyboard controller of the software</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – accessing  the attributes and methods of the class</p></li>
+<li><p><strong>button</strong> (<em>right arrow keyboard</em>) – increase the EEG amplitude scale</p></li>
+<li><p><strong>button</strong> – lower the EEG amplitude scale</p></li>
+<li><p><strong>button</strong> – navigate to the previous epoch</p></li>
+<li><p><strong>button</strong> – navigate to the next epoch</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.plot_welch_periodogram">
+<span class="sig-name descname"><span class="pre">plot_welch_periodogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.plot_welch_periodogram" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the welch periodogram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>data</strong> – EEG data</p></li>
+<li><p><strong>sf</strong> – sampoling frequency</p></li>
+<li><p><strong>win_size</strong> – the size of sliding windows for Welch method.</p></li>
+<li><p><strong>log_power</strong> – compute logarithmic power</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.plot_xcorr">
+<span class="sig-name descname"><span class="pre">plot_xcorr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.plot_xcorr" title="Permalink to this definition"></a></dt>
+<dd><p>Plot  the cross-correlation between signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>signal1</strong> – sigHDRecorderTrimmed</p></li>
+<li><p><strong>signal2</strong> – sig Dreamento</p></li>
+<li><p><strong>axis</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.save_path_finder">
+<span class="sig-name descname"><span class="pre">save_path_finder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.save_path_finder" title="Permalink to this definition"></a></dt>
+<dd><p>Button to define the directory to save the .mat output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – access the attributes and methods of the class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>global where_to_save_path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="OfflineDreamento.OfflineDreamento.save_results_button">
+<span class="sig-name descname"><span class="pre">save_results_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_EEG_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_EEG_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Hypnodyne_EEG_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">microphone_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples_to_sync</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_EMG1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_EMG2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_EMG3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#OfflineDreamento.OfflineDreamento.save_results_button" title="Permalink to this definition"></a></dt>
+<dd><p>The command to save the results of the ra and processed data to a matfile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> – access the attributes and methods of the class</p></li>
+<li><p><strong>data_EEG_L</strong> – Dreamento EEG L</p></li>
+<li><p><strong>data_EEG_R</strong> – Dreamento EEG R</p></li>
+<li><p><strong>Hypnodyne_EEG_L</strong> – HDRecorder EEG L</p></li>
+<li><p><strong>markers</strong> – List of annotations</p></li>
+<li><p><strong>marker_keys</strong> – The keys to define the dictionaries of annotations</p></li>
+<li><p><strong>samples_to_sync</strong> – The number of samples to be compensated for sync.</p></li>
+<li><p><strong>microphone_data</strong> – mic recording from the headband</p></li>
+<li><p><strong>acc_x</strong> – The x-axis of accleration</p></li>
+<li><p><strong>acc_y</strong> – The y-axis of accleration</p></li>
+<li><p><strong>acc_z</strong> – The z-axis of accleration</p></li>
+<li><p><strong>raw_EMG1</strong> – The first recorded EMG channel</p></li>
+<li><p><strong>raw_EMG2</strong> – The second recorded EMG channel</p></li>
+<li><p><strong>raw_EMG3</strong> – The third recorded EMG channel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>matfile.mat</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="realTimeAutoScoring.html" class="btn btn-neutral float-left" title="realTimeAutoScoring module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Plotter.html" class="btn btn-neutral float-right" title="Plotter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
