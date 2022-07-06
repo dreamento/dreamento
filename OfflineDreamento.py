@@ -61,7 +61,7 @@ class OfflineDreamento():
         self.popup_button.grid(row = 1, column = 7)
         
         ###### ================== CopyRight ============================ ######
-        self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-22): Mahdad Jafarzadeh Esfahani",
+        self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie",
                                   font = 'Calibri 13 italic')
         self.label_CopyRight.grid(row = 1 , column = 0, padx = 15, pady = 10)
         
@@ -668,7 +668,7 @@ class OfflineDreamento():
             # Now plot the complete signals
             plt.figure()
             plt.title("Synced Signals")
-            plt.plot(sigScript_org, label='EEG L - ZmaxDonders')
+            plt.plot(sigScript_org, label='EEG L - Dreamento')
             plt.plot(sigHDRecorder_org[samples_before_begin:]*1e6, label='EEG L - HDRecorder')
             plt.legend()
             plt.show()
