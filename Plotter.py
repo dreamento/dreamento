@@ -4,10 +4,6 @@ from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 
 class CustomWidget(pg.GraphicsWindow):
-    
-    """
-    The custom widget to plot the EEG in real-time
-    """
     pg.setConfigOption('background', 'w')
     pg.setConfigOption('foreground', 'k')
     ptr1 = 0
@@ -26,13 +22,6 @@ class CustomWidget(pg.GraphicsWindow):
         timer.start(2000) # number of seconds (every 1000) for next update
 
     def update(self):
-        
-        """
-        Update the EEG plot.
-        
-        :param self: access the attributes and methods of the class
-
-        """
         self.data1[:-1] = self.data1[1:]  # shift data in the array one sample left
                             # (see also: np.roll)
         self.data1[-1] = np.random.normal()

@@ -1,4 +1,5 @@
-""" - Main model is based on TinySleepNet (Supratak & Guo, 2020) 
+""" - Main model is based on tinysleepnet - revised by Mahdad Jafarzadeh -Feb & Mar 2021
+
     - This function should be used to directly predict from an Array (useful for, e.g. real-time scoring)
 
     - Usage:
@@ -34,6 +35,7 @@ from minibatching import (iterate_minibatches,
                           iterate_batch_seq_minibatches,
                           iterate_batch_multiple_seq_minibatches)
 from logger import get_logger
+# from ssccoorriinngg import ssccoorriinngg  # TODO: add plotting if needed
 
 config = {
         # Train
@@ -73,13 +75,6 @@ config = {
     }
 
 def importModel(best_model_dir="./out_QS/train/4"):
-    
-    """
-    Import the trained model to classify the data.
-    
-    :param best_model_dir: directory of the best model for classification.
-    
-    """
     global config
     # Add dummy class weights
     config["class_weights"] = np.ones(config["n_classes"], dtype=np.float32)
@@ -105,23 +100,6 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
                   model=None,
                   single_epoch = True
                   ):
-    
-    """
-    Predict a data array and classify it to a sleep stage.
-    
-    :param output_dir: the output directory
-    :param args_log_file: directory to the log file
-    :param filtering_status: enable/disable filtering
-    :param lowcut: filter lowcut 
-    :param highcut: filter highcut 
-    :param fs: sampling frequency
-    :param signal_req: Signal 1 (requested channel)
-    :param signal_ref: Signal 2 (reference channel)
-    :param model: model
-    :param single_epoch: number of epochs to classify
-
-    :returns: outcome
-    """
     # %% Initializing paths
     output_dir = output_dir
 
@@ -144,9 +122,9 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
         os.makedirs(output_dir)
 
     # %% Create logger
-    # logger = get_logger(args_log_file, level="info")
-    #
-    # logger.info("Loading new array for prediciton...")
+    logger = get_logger(args_log_file, level="info")
+
+    logger.info("Loading new array for prediciton...")
 
     # Filter properties
     if filtering_status:
@@ -172,12 +150,12 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
     # Casting
     x = x.astype(np.float32)
 
-    # logger.info("\n=======================================\n")
+    logger.info("\n=======================================\n")
 
     # %% Prediction section
 
     # Initializing the model
-    # logger.info("Initializing the model ...")
+    logger.info("Initializing the model ...")
 
     # Init preds and trues per subject
     s_preds = []
@@ -191,8 +169,8 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
     test_y.append(y)
 
     # Print test set
-    # logger.info("Shape: ")
-    # for _x in test_x: logger.info(_x.shape)
+    logger.info("Shape: ")
+    for _x in test_x: logger.info(_x.shape)
 
     if config["model"] == "model-origin":
 
@@ -223,7 +201,7 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
                 "pred_{}.npz".format(fname)
             )
             np.savez(save_path, **save_dict)
-            # logger.info("Saved outputs to {}".format(save_path))
+            logger.info("Saved outputs to {}".format(save_path))
     else:
         for night_idx, night_data in enumerate(zip(test_x, test_y)):
             # Create minibatches for testing

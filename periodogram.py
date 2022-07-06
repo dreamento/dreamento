@@ -7,18 +7,6 @@ from yasa.spectral import bandpower as yas_bandpower    # for periodogram label 
 
 # %% Plot Power spectral density
 def calculatePowerSpectralDensity(sig, fs, noverlap, NFFT=2 ** 11,  scale_by_freq=True):
-    """
-    Calculate power spectral density
-    
-    :param sig: Signal
-    :param fs: Sampling frequency
-    :param noverlap: Overlap
-    :param NFFT: Number of FFT points
-    :param scale_by_freq: Scale by frequency
-    
-    :returns: psd_sig, f_psd_sig, Pow_Delta_ratio, Pow_Theta_ratio, Pow_Alpha_ratio, Pow_Beta_ratio, Pow_Sigma_ratio
-        
-    """
 
     # Compute power spectrums
     try:
@@ -72,18 +60,6 @@ def plotPowerSpectralDensity(figure=None, axis=None, sig=None,
                              lowcut=.3,
                              highcut=30,
                              ):
-    """
-    Plot power spectral density
-    
-    :param fig: figure
-    :param axis: axis
-    :param sig: Signal
-    :param filtering_status: Apply filtering?
-    :param lowcut: highcut of filtering
-    :param highcut: lowcut frequency of filtering
-    
-        
-    """
     log_power = False
     ylimit = 'auto'  # [-50, 10]
     label = 'psd'
@@ -102,6 +78,7 @@ def plotPowerSpectralDensity(figure=None, axis=None, sig=None,
             low = lowcut / nyquist_freq
             high = highcut / nyquist_freq
             # Req channel
+            print("filtering for periodogram")
             b, a = ssignal.butter(3, [low, high], btype='band')
             sig = ssignal.filtfilt(b, a, sig)
     psd_sig, f_psd_sig, Pow_Delta_ratio, Pow_Theta_ratio, Pow_Alpha_ratio, Pow_Beta_ratio, Pow_Sigma_ratio = \
@@ -137,11 +114,11 @@ def plotPowerSpectralDensity(figure=None, axis=None, sig=None,
              ylabel='Power spectral density (dB/ Hz)')
 
     # Legend
-    legend = axis.legend([f"Delta: {round(Pow_Delta_ratio * 100, 2)}% \n\
-Theta: {round(Pow_Theta_ratio * 100, 2)}% \n\
-Alpha: {round(Pow_Alpha_ratio * 100, 2)}% \n\
-Beta: {round(Pow_Beta_ratio * 100, 2)}%"], prop={'size': 10}, frameon=False)
-    legend.set_draggable(state=True)
+#     legend = axis.legend([f"Delta: {round(Pow_Delta_ratio * 100, 2)}% \n\
+# Theta: {round(Pow_Theta_ratio * 100, 2)}% \n\
+# Alpha: {round(Pow_Alpha_ratio * 100, 2)}% \n\
+# Beta: {round(Pow_Beta_ratio * 100, 2)}%"], prop={'size': 10}, frameon=False)
+#     legend.set_draggable(state=True)
 
     # new decision: calculate powers from YASA and show them on the legend
     ret = yas_bandpower(sig, sf=fs)

@@ -19,20 +19,25 @@ import periodogram # for periodogram plotting
 import pyqtgraph as pg     # for eeg plotting
 import scipy.signal as ssignal  # for signal filtering 4 plotting EEG
 from matplotlib.backends.backend_qt5agg import (NavigationToolbar2QT as NavigationToolbar)   # for spectrogram plotting
+def tic():
+    #Homemade version of matlab tic and toc functions
+    import time
+    global startTime_for_tictoc
+    startTime_for_tictoc = time.time()
+def toc(echo=True):
+    import time
+    if 'startTime_for_tictoc' in globals():
+        if echo:
+            print( "Elapsed time is " + str(time.time() - startTime_for_tictoc) + " seconds.")
+        return (time.time() - startTime_for_tictoc)
+    else:
+        if echo:
+            print("Toc: start time not set")
+        return -1
 
 
 
 class Window:
-    """
-    This is one of the main programming classes of the ZmaxCoDo responsible for
-    all the the creation of graphical user-interface (GUI), relavant parameters
-    for the recording (e.g., which signals to record), stimulation 
-    (e.g., the properties of a sensory stimulation), data representation and its
-    corresponding scales (e.g., amplitude scale), the buttons and the corresponding
-    functions of the GUI's buttons can be defined.
-    
-    
-    """
     def __init__(self):
         self.hb = None
         self.dlg = uic.loadUi("mainWindows.ui")
@@ -96,8 +101,8 @@ class Window:
         # {background-color:  #e7e7e7; color: black;} /* Gray */
         # {background-color:  #555555;} /* Black */
         self.dlg.graphWidget.setBackground('w')
-        self.dlg.graphWidget.setLabel('left', "<span style=\"color:black;font-size:14px\">EEG (uV)</span>")
-        self.dlg.graphWidget.setLabel('bottom', "<span style=\"color:black;font-size:14px\">Time (sec)</span>")
+        self.dlg.graphWidget.setLabel('left', "<span style=\"color:red;font-size:14px\">EEG (uV)</span>")
+        self.dlg.graphWidget.setLabel('bottom', "<span style=\"color:red;font-size:14px\">Time (sec)</span>")
         self.displayedXrangeCounter = 0 # for pyqtgraph eeg plot dynamic range
         self.desiredXrange = 5   # set default (0,5) - (5,10) - (10-15) - ...
         self.desiredYrange = 60  # set default (-60,60)
@@ -142,47 +147,15 @@ class Window:
         self.dlg.show()
 
     def rSliderChanged(self, value):
-        """
-        Defines the slider for 'red' color of visual stimulation.
-        
-        :param self: access the attributes and methods of the class
-        :param value: the value from 0 to 2
-        
-        :returns: self.dlg.rValLabel.setText(str(value))
-        """
         self.dlg.rValLabel.setText(str(value))
 
     def gSliderChanged(self, value):
-        """
-        Defines the slider for 'green' color of visual stimulation.
-        
-        :param self: access the attributes and methods of the class
-        :param value: the value from 0 to 2
-        
-        :returns: self.dlg.gValLabel.setText(str(value))
-        """
         self.dlg.gValLabel.setText(str(value))
 
     def bSliderChanged(self, value):
-        """
-        Defines the slider for 'blue' color of visual stimulation.
-        
-        :param self:  access the attributes and methods of the class
-        :param value: the value from 0 to 2
-        
-        :returns: self.dlg.bValLabel.setText(str(value))
-        """
         self.dlg.bValLabel.setText(str(value))
 
     def pwmSliderChanged(self, value):
-        """"
-        Defines the intensity of the visual stimulation.
-        
-        :param self: access the attributes and methods of the class 
-        :param value: the value from 0 to 100
-        
-        :returns: self.dlg.intensitySliderLabel.setText(s)
-        """
         val = value
         val = (val - 2) / 252 * 100
         s = f"{int(np.ceil(val))}%"
@@ -190,15 +163,6 @@ class Window:
         self.dlg.intensitySliderLabel.setText(s)
 
     def connectSoftwareButton(self):
-        
-        """ 
-        Initiates the ZmaxHeadband() and check the socket method of it to check
-        whether the server is running or is not yet connected.
-        
-        :param self: access the attributes and methods of the class
-        
-        :returns: self.dlg.connectSoftwareButton.setStyleSheet() , self.dlg.connectSoftwareButton.setText(), self.dlg.triggerLightButton.setEnabled(True), self.dlg.recordButton.setEnabled(True)
-        """
         self.hb = ZmaxHeadband()
         if self.hb.socket is None: # HDServer is not running
             self.dlg.connectSoftwareButton.setStyleSheet("background-color: #f44336; color: white;")  # /* Red */
@@ -218,13 +182,6 @@ class Window:
                 self.setupPredictionPanelInGUI(enabled=False)
 
     def AudioBrowserClicked(self):
-        """
-        The method to address the audio file for audio stimulation
-        
-        :param self: access the attributes and methods of the class
-            
-        :returns: self.audio_file_path, self.audio_file_name, self.dlg.triggerSoundButton.setEnabled(True), self.dlg.audioNameLabel.setText(str(self.audio_file_name))
-        """
         default_path = ".\\"
         self.audio_file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self.dlg, 'Open File', default_path, '*.wav', )
         self.audio_file_name = self.audio_file_path.split('/')[-1]
@@ -232,17 +189,6 @@ class Window:
         self.dlg.triggerSoundButton.setEnabled(True)
 
     def triggerLightClicked(self):
-        
-        """
-        Receives the properties for the light/visual stimulation and then present the cue by activating self.hb.stimulate().
-        If the software is already 'recording', then the stimulation properties will
-        be stored using and the exact time of stimulation will be received from 
-        self.recordingThread.getCurrentSampleInformation() 
-        
-        :param self: access the attributes and methods of the class
-            
-        :returns: self.recordingThread.getCurrentSampleInformation()
-        """
         # print(self.dlg.offTimeSpinBox.value()*10)
         self.hb.stimulate((self.dlg.rSlider.value(), self.dlg.gSlider.value(), self.dlg.bSlider.value()),
                           (self.dlg.rSlider.value(), self.dlg.gSlider.value(), self.dlg.bSlider.value()),
@@ -251,7 +197,7 @@ class Window:
                           vib=self.dlg.vibrationBox.isChecked(), alt=self.dlg.altEyesBox.isChecked())
         if self.isRecording:
             # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-            stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
+            stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
             color = ""
             if (str(self.dlg.rSlider.value()) == "1" or str(self.dlg.rSlider.value()) == "2") and \
                 self.dlg.gSlider.value() == 0 and self.dlg.bSlider.value() == 0:
@@ -268,7 +214,7 @@ class Window:
             else:
                 color = f"mixed color {self.dlg.rSlider.value()}, {self.dlg.gSlider.value()}, {self.dlg.bSlider.value()}"
 
-            self.stimulationDataBase[f"LIGHT sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
+            self.stimulationDataBase[f"LIGHT sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
                 f"""{color}, \
 pwm: {self.dlg.pwmSlider.value()}, {0}, On: {int(self.dlg.onTimeSpinBox.value() * 10)}, \
 Off: {int(self.dlg.offTimeSpinBox.value() * 10)}, Reps: {self.dlg.repetitionsBox.value()}, \
@@ -276,16 +222,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             print(self.stimulationDataBase)
 
     def text2speech(self, txt):
-        
-        """
-        Text-to-speech converter for communication with the participant.
-        
-        :param self: access the attributes and methods of the class
-        
-        :param txt: the text to be converted to speech.
-                
-        :returns: an audio file, ie., f"{file_path}\\{dt_string}.wav" 
-        """
         file_path = ".\\voices\\text2speech"
         Path(f"{file_path}").mkdir(parents=True, exist_ok=True)     # ensures directory exists
         myVoice = gTTS(text=txt, lang='en', slow=False)     # text 2 speech
@@ -297,55 +233,30 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
         return f"{file_path}\\{dt_string}.wav"    # returns output file name
 
     def triggerSoundClicked(self):
-        
-        """
-        Presents the audio file which is loaded using AudioBrowserClicked
-        
-        :param self: access the attributes and methods of the class
-            
-        :returns: play the audio cue and store the properties and timing in self.stimulationDataBase
-        """
         if self.audio_file_name != "":
             QSound.play(self.audio_file_path)   # plays .wav audio file
 
             if self.isRecording:
                 # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-                stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
-
-                self.stimulationDataBase[f"SOUND sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
+                stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
+                self.stimulationDataBase[f"SOUND sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
                     f"""{self.audio_file_path}"""
                 print(self.stimulationDataBase)
 
     def triggerText2SpeechClicked(self):
-        """
-        Convert the text to speech, create a .wav file and play it.
-        
-        :param self: access the attributes and methods of the class
-            
-        :returns: play the text-to-speech cue and store the properties and timing in self.stimulationDataBase
-        """
         if self.dlg.textToSpeechLineEdit.text() != "":
             try:
                 voiceFile = self.text2speech(self.dlg.textToSpeechLineEdit.text())      # text2speech and save .wav
                 QSound.play(voiceFile)      # plays saved .wav file, which contain speeched-voice
                 if self.isRecording:  # if a recording is in progress...
                     # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-                    stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
-                    self.stimulationDataBase[f"TEXT2SPEECH sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
+                    stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
+                    self.stimulationDataBase[f"TEXT2SPEECH sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
                         f"""{self.dlg.textToSpeechLineEdit.text()}"""
             except:
                 print("No internet connection for playing speech")
 
     def textToSpeechLineEditChanged(self):
-        
-        """
-        Activate the text2speech button when a text exists.
-        
-        :param self:access the attributes and methods of the class
-  
-        :returns: self.dlg.triggerText2SpeechButton.setEnabled(True/False)
-
-        """
         if self.dlg.textToSpeechLineEdit.text() != "":
             self.dlg.triggerText2SpeechButton.setEnabled(True)
 
@@ -353,17 +264,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             self.dlg.triggerText2SpeechButton.setEnabled(False)
 
     def recordClicked(self):
-        
-        """
-        Start/stop recording, load relavant autoscoring algorithms, and 
-        communicate with the thread to transmit 30-seconds epochs for 
-        plotting and analysis.
-        
-        :param self:access the attributes and methods of the class
-        
-        :returns: self.recordingThread.finished.connect(self.onRecordingFinished), self.recordingThread.recordingFinishedSignal.connect(self.onRecordingFinishedWriteStimulationDB), self.recordingThread.epochPredictionResultSignal.connect(self.displayEpochPredictionResult) , self.recordingThread.sendEEGdata2MainWindow.connect(self.getEEG_from_thread)
-
-        """
         if self.isRecording is False:
             self.recordingThread = RecordThread()
             if self.firstRecording:
@@ -399,42 +299,17 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
         # self.dlg.graphWidget.clear()
 
     def updateRecordBtnText(self, timeInSeconds):
-        """
-        change the shape of the record button before, during, and after recording.
-        
-        :param self: access the attributes and methods of the class
-        :param timeInSeconds: The passed time.
-        """
-        
         m, s = divmod(timeInSeconds, 60)
         h, m = divmod(m, 60)
         self.dlg.recordButton.setText(f'{h:d}:{m:02d}:{s:02d}')
 
     def displayEpochPredictionResult(self, predResult, epochNum):
-        
-        """
-        Display of the autosciring results
-        
-        :param self: access the attributes and methods of the class
-        :param predResult: the predictions
-        :param epochNum: Epoch number
-        
-        :returns: self.dlg.appDisplay.appendHtml(f"<font style='color:{stagesListColor[predResult]};' size='4'>{epochNum:03}. {stagesList[predResult]}</font>")
-
-        """
         stagesList = ['W', 'N1', 'N2', 'N3', 'REM', 'MOVE', 'UNK']
         stagesListColor = ['SlateBlue', 'MediumSeaGreen', 'DodgerBlue', 'Violet', 'Tomato', 'Gray', 'LightGray']
         self.dlg.appDisplay.appendHtml(f"<font style='color:{stagesListColor[predResult]};' size='4'>{epochNum:03}. {stagesList[predResult]}</font>")
 
     def onRecordingFinished(self):
-        """
-        When the recording is finished, this function is called to chnage the icon shape
-        , change text, and the rest of initialization for the next recording.
-        
-        :param self: access the attributes and methods of the class.
-        
-        
-        """
+        # when the recording is finished, this function is called
         self.dlg.recordButton.setIcon(QIcon('.\\graphics\\record_gray.png'))
         self.isRecording = False
         lastRecording = self.dlg.recordButton.text() # get last recording duration from the button text :)
@@ -442,20 +317,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
         self.dlg.markerLineEdit.setPlaceholderText('A remarkable happening....')
 
     def onRecordingFinishedWriteStimulationDB(self, fileName):
-        
-        """
-        Writing the output of the recordings. This method generates two outputs,
-        namely the stimulation marker/annotations file (*.json) and the 
-        predicitons of the real-time scoring (*.txt)
-        
-        :param self: access the attributes and methods of the class.
-        
-        :param fileName: filename, which is the date and time of the start of reording
-        
-        :returns: *.json, *.txt
-
-        """
-        
         # save triggered stimulation information on disk:
         with open(f'{fileName}-markers.json', 'w') as fp:
             json.dump(self.stimulationDataBase, fp, indent=4, separators=(',', ': '))
@@ -467,67 +328,26 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
                 outfile.write("\n".join(str(item) for item in self.scoring_predictions))
 
     def setMarkerButtonPressed(self):
-        
-        """
-        Pressing 'set markers' button to store the relavant information regarding
-        the description and the timing of an annotation.
-        
-        :param self: access the attributes and methods of the class.
-
-        """
         if self.isRecording:    # if a recording is in progress...
             # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-            stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
-            self.stimulationDataBase[f"MARKER sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
+            stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
+            self.stimulationDataBase[f"MARKER sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
                 f"""{self.dlg.markerLineEdit.text()}"""
             self.dlg.markerLineEdit.setPlaceholderText(f'{self.dlg.markerLineEdit.text()} - SAVED!')
             self.previousMarkerLineEditValue = self.dlg.markerLineEdit.text()
             self.dlg.markerLineEdit.setText("")
 
     def markerLineEditChanged(self):
-        
-        """
-        Retrieving the last marker by pushing '...'. This is useful for setting up
-        the repititive markers withou wasting time on retyping them.
-        
-        :param self: access the attributes and methods of the class.
-        
-        :returns: self.dlg.markerLineEdit.setText(self.previousMarkerLineEditValue)
-        """
         if self.dlg.markerLineEdit.text() == "...":
             self.dlg.markerLineEdit.setText(self.previousMarkerLineEditValue)
 
     def scoreSleepCheckBoxEnabled(self):
-        
-        """
-        Enabling autoscoring checkbox in the GUI
-        
-        :param self: access the attributes and methods of the class.
-
-        """
         self.setupPredictionPanelInGUI(enabled=True)
 
     def scoreSleepCheckBoxDisabled(self):
-                
-        """
-        Disabling autoscoring checkbox in the GUI
-        
-        :param self: access the attributes and methods of the class.
-
-        """
         self.setupPredictionPanelInGUI(enabled=False)
 
     def setupPredictionPanelInGUI(self, enabled=True):
-        
-        """
-        Designing the autoscoring panel in the GUI
-        
-        :param self: access the attributes and methods of the class.
-        
-        :param enabled: enable/disable the prediction panel.
-
-        """
-        
         if enabled:
             self.dlg.PredictionLabel.setStyleSheet("color:#000;")
             self.dlg.appDisplay.setDisabled(False) # enable
@@ -539,14 +359,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             self.dlg.sleepScoringMethodComboBox.setEnabled(False) # disable
 
     def resetEEGPlotButtonPressed(self):
-        
-        """
-        The button to adjust the time-axis length of the online plotting of the
-        EEG channels. Set up the desired time and then push this button.
-        
-        :param self: access the attributes and methods of the class.
-        
-        """
         # pen = pg.mkPen(color=(255, 0, 0), width=1)
         # self.dlg.graphWidget.clear()
         # # self.dlg.graphWidget.setXRange(0, 30, padding=0)
@@ -589,27 +401,7 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
                            plot_EEG=False, plot_periodogram=False,
                            plot_spectrogram=False, sleep_scoring=True,
                            epoch_counter=0):
-        """
-        The main method to connect the thread to the main window (GUI).
-        Getting the desired signals (EEG L and EEG R) from the thread and apply
-        the relavant analysis such as scoring, TFR, and periodogram analysis.
-        
-        :param self: access the attributes and methods of the class.
-        :param eegSignal_r: the EEG R recording.
-        :param eegSignal_l: the EEG L recording.
-        :param plot_EEG: PLotting EEG in real-time.
-        :param plot_periodogram: plotting/updating periodogram every epoch (30 s)
-        :param plot_spectrogram: plotting/updating TFR every epoch (30 s)
-        :param sleep_scoring: enable/disable sleep scoring
-        :param epoch_counter: the counter for the epoch number
-            
-        :returns: autoscoring (self.scoring_predictions.append()),
-        spectrogram (self.spectrogramMplWidget.canvas.draw()),
-        periodogram (self.periodogramMplWidget.canvas.draw())
-
-        """
         self.epochCounter = epoch_counter
-
 
         if plot_EEG:
             # lowcut = 0.3
@@ -803,12 +595,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
                 #     self.triggerLightClicked()
 
     def scoreSleepCheckBoxChanged(self):
-        """
-        Autoscoring checkbox
-        
-        :param self: access the attributes and methods of the class.
-
-        """
         if self.dlg.scoreSleepCheckBox.isChecked():
             self.dlg.scoreSleepCheckBox.setText("Real-time Autoscoring with:")
 
@@ -816,14 +602,6 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             self.dlg.scoreSleepCheckBox.setText("No Real-time Autoscoring")
 
     def eegRangeY_SpinBox_valueChanged(self, val):
-        
-        """
-        Chanigng the amplitude scale of the real-time EEG representation.
-        
-        :param self: access the attributes and methods of the class.
-        :param val: zero-to-peak amplitude
-
-        """
         # to change range automatically with change of spin box
         print(int(val))
         if int(val)%5 == 0:
@@ -832,19 +610,10 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             self.dlg.graphWidget.setYRange(-Y_rng, Y_rng, padding=0)
 
     def eegRangeX_SpinBox_valueChanged(self, val):
-        
-        """
-        Chanigng the time scale of the real-time EEG representation. To apply this,
-        after setting the scale, the button should be clicked.
-        
-        :param self: access the attributes and methods of the class.
-        :param val: zero-to-peak amplitude
-
-        """
         # to change range automatically with change of spin box
         if int(val) % 5 == 0:
             sec = int(np.floor(self.displayedXrangeCounter / 256))
-            k = int(np.floor(sec / val))
+            k = int(np.floor(sec / self.desiredXrange))
             xMin = val * k
             xMax = val * (k + 1)
             a_X = self.dlg.graphWidget.getAxis('bottom')
@@ -852,38 +621,11 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
             a_X.setTicks([[(v, str(v)) for v in ticks]])
             self.dlg.graphWidget.setXRange(xMin, xMax, padding=0)
 
-
 class RecordThread(QThread):
-    
-    """
-    The thread class of the program which is basically meant for establishing a connection
-    with the mainwindow GUI.
-    """
     recordingProgessSignal = pyqtSignal(int)    # a sending signal to mainWindow - sends time info of ongoing recording to mainWindow
-    """
-    pyqtSignal: send recording signal and time info to mainWindow
-    
-    
-    """
-    recordingFinishedSignal = pyqtSignal(str)    
-    
-    """
-    pyqtSignal: a sending signal to mainWindow - sends name of stored file to mainWindow
-    
-    
-    """
+    recordingFinishedSignal = pyqtSignal(str)    # a sending signal to mainWindow - sends name of stored file to mainWindow
     epochPredictionResultSignal = pyqtSignal(int, int)
-    
-    """
-    pyqtSignal:Sleep scoring prediction signal
-    
-    
-    """
     sendEEGdata2MainWindow = pyqtSignal(object, object, bool, bool, bool, bool, int)
-    
-    """
-    pyqtSignal: Sending the relavant data from the thread to the main window.
-    """
 
     def __init__(self, parent=None):
         super(RecordThread, self).__init__(parent)
@@ -893,20 +635,10 @@ class RecordThread(QThread):
         self.stimulationType = ""
         self.secondCounter = 0
         self.dataSampleCounter = 0
-        self.totalDataSampleCounter = 0
         self.epochCounter = 0
         self.samples_db = []
 
     def getSignalTypeFromUI(self, sig_type):
-        
-        """
-        To know which signals to record, based on the comboBox in the GUI
-        
-        :param self: access the attributes and methods of the class.
-        
-        :returns: self.signalType
-
-        """
         # to know which signals to record, based on user interface's choice in comboBox
         if sig_type == "EEGR":
             self.signalType = [ZmaxDataID.eegr.value]
@@ -925,51 +657,16 @@ class RecordThread(QThread):
                                ZmaxDataID.dx.value,ZmaxDataID.dy.value,ZmaxDataID.dz.value]
 
     def getCurrentSampleInformation(self):
-        
-        """
-        Receive current information regarding the sample numbers
-        
-        :param self: access the attributes and methods of the class.
-
-        :returns: self.dataSampleCounter, self.secondCounter, self.totalDataSampleCounter
-
-        """
-        return [self.dataSampleCounter, self.secondCounter, self.totalDataSampleCounter]  # returns time info of stimulation, when called
+        return [self.dataSampleCounter, self.secondCounter]  # returns time info of stimulation, when called
 
     def sendEEGdata2main(self,
                          eegSigR=None, eegSigL=None,
                          plot_EEG=False, plot_periodogram=False, plot_spectrogram=False,
                          score_sleep=False):
-        """
-        Data transmission from the thread to the mainwindow.
-        
-        :param self: access the attributes and methods of the class.
-        :param eegSigR: EEG R
-        :param eegSigL: EEG L 
-        :param plot_EEG: enable/disable EEG plotting
-        :param plot_periodogram: plotting/updating periodogram every epoch (30 s)
-        :param plot_spectrogram: plotting/updating spectrogram every epoch (30 s)
-        :param score_sleep: enable/disable sleep scoring
-            
-        :returns: self.sendEEGdata2MainWindow.emit(eegSigR, eegSigL, plot_EEG, plot_periodogram, plot_spectrogram,
-                                         score_sleep, self.epochCounter)
-
-        """
-        
         self.sendEEGdata2MainWindow.emit(eegSigR, eegSigL, plot_EEG, plot_periodogram, plot_spectrogram,
                                          score_sleep, self.epochCounter)
-        
 
     def run(self):
-        
-        """
-        start recording the signal. in each second, also calculates the sampling rate 
-        (# of samples received by program over stream)
-         
-        :param self: access the attributes and methods of the class.
-
-        """
-        
         # This part of the cord RECORDS signal.
         # In each second, also calculates the sampling rate (# of samples received by program over stream)
         recording = []
@@ -998,10 +695,12 @@ class RecordThread(QThread):
         sigL_accumulative = []
 
         while True:
-            if self.epochCounter%60==0 and dataSamplesToAnalyzeCounter == 0:
-                del hb
-                hb = ZmaxHeadband()
-                print("New HB created after 60 epochs")
+# =============================================================================
+#             if int(self.epochCounter % 60) and dataSamplesToAnalyzeCounter == 0:
+#                 del hb
+#                 hb = ZmaxHeadband()
+#                 print("New HB created after 60 epochs")
+# =============================================================================
 
             self.dataSampleCounter = 0      # count samples in each second
             self.secondCounter += 1
@@ -1014,7 +713,6 @@ class RecordThread(QThread):
                 x = hb.read(cols[:-2])
                 if x != []:
                     self.dataSampleCounter += 1
-                    self.totalDataSampleCounter += 1
 
                     x.extend([self.dataSampleCounter, self.secondCounter])
                     recording.append(x)
@@ -1085,16 +783,8 @@ class RecordThread(QThread):
         self.recordingFinishedSignal.emit(f"{file_path}\\{dt_string}") # send path of recorded file to mainWindow
 
     def stop(self):
-        
-        """
-        Stop the recording.
-        
-        :param self: access the attributes and methods of the class.
-
-        """
         self.threadactive = False
         self.wait()
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])

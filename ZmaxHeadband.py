@@ -5,73 +5,17 @@ import enum
 
 
 class ZmaxDataID(enum.Enum):
-    """
-    Enumerating each data signal with a specific number.
-    """
     eegr = 0
-    
-    """
-    The assigned number to EEG R channel 
-    """
     eegl = 1
-    
-    """
-    The assigned number to EEG L channel 
-    """
-    
     dx = 2
-    
-    """
-    The assigned number to acceleration in x direction of the IMU.
-    """
-    
     dy = 3
-    
-    """
-    The assigned number to acceleration in y direction of the IMU.
-    """
-    
     dz = 4
-    
-    """
-    The assigned number to acceleration in z direction of the IMU.
-    """
-    
     bodytemp = 5
-    
-    """
-    The assigned number to body temperature data.
-    """
-    
     bat = 6
-    
-    """
-    The assigned number to battery levels.
-    """
-    
     noise = 7
-    
-    """
-    The assigned number to noise/microphone data.
-    """
-    
     light = 8
-    
-    """
-    The assigned number to ambient light data.
-    """
-    
     nasal_l = 9
-    
-    """
-    The assigned number to the left nasal channel.
-    """
-    
     nasal_r = 10
-    
-    """
-    The assigned number to the right nasal channel.
-    """
     oxy_ir_ac = 11
     oxy_r_ac = 12
     oxy_dark_ac = 13
@@ -81,13 +25,6 @@ class ZmaxDataID(enum.Enum):
 
 
 def connect():
-    """
-    Initiate the connection by calling a ZmaxSocket object.
-    
-    :param None: no input
-    
-    :returns: socket
-    """
     socket = ZmaxSocket()
     socket.connect()
     print(socket.serverConnected)
@@ -112,16 +49,9 @@ class ZmaxHeadband():
 
     def read(self, reqIDs=[0, 1]):
         """
-        Reading the signal from ZmaxDataID class.
-        
         output refers to a list of the desired outputs of the function for example [0,1,3] returns [eegl, eegr, dy]
         [0=eegr, 1=eegl, 2=dx, 3=dy, 4=dz, 5=bodytemp, 6=bat, 7=noise, 8=light, 9=nasal_l, 10=nasal_r, 11=oxy_ir_ac,
             12=oxy_r_ac, 13=oxy_dark_ac, 14=oxy_ir_dc, 15=oxy_r_dc, 16=oxy_dark_dc]
-        
-        :param self: access the attributes and methods of the class
-        :param reqIDs: The ID of the data to record.
-        
-        :returns: reqVals
         """
         reqVals = []
         buf = self.socket.receive_oneLineBuffer()
@@ -172,45 +102,17 @@ class ZmaxHeadband():
 
     def getbyteat(self, buf, idx=0):
         """
-        Receiving the bytes of data.
-        
         for example getbyteat("08-80-56-7F-EA",0) -> hex2dec(08)
                     getbyteat("08-80-56-7F-EA",2) -> hex2dec(56)
-                    
-        :param self: access the attributes and methods of the class
-        :param buf: the data buffer.
-        :param idx: the index of the data (indicating the data type).
-        
-        :returns: self.hex2dec(s)
-
         """
         s = buf[idx * 3:idx * 3 + 2]
         return self.hex2dec(s)
 
     def getwordat(self, buf, idx=0):
-        
-        """
-        Get the word
-        
-        :param self: access the attributes and methods of the class
-        :param buf: the data buffer.
-        :param idx: the index of the data (indicating the data type).
-        
-        :returns: w
-        """
         w = self.getbyteat(buf, idx) * 256 + self.getbyteat(buf, idx + 1)
         return w
 
     def ScaleEEG(self, e):  # word value to uV
-    
-        """
-        Scale the EEG data by receiving the word and converting it to uV.
-        
-        :param self: access the attributes and methods of the class
-        :param e: word to convert
-        
-        :returns: d
-        """
         uvRange = 3952;
         d = e - 32768;
         d = d * uvRange;
@@ -218,67 +120,24 @@ class ZmaxHeadband():
         return d
 
     def ScaleAccel(self, dx):  # word value to 'g'
-    
-        """
-        Scale the acceleration value with respecto to the gravity (g).
-        
-        :param self: access the attributes and methods of the class
-        :param dx:  word value to be converted to 'g' scale
-        """
         d = dx * 4 / 4096 - 2
         return d
 
     def BatteryVoltage(self, vbat):  # word value to Volts
-    
-        """
-        The battery voltage data
-        
-        :param self: access the attributes and methods of the class
-        :param vbat: The word to be converted to battery voltage (v)
-        
-        :returns: t (temperature)
-        """
-        
         v = vbat / 1024 * 6.60;
         return v
 
     def BodyTemp(self, bodytemp):  # word value to degrees C
-    
-        """
-        The body temperature data.
-        
-        :param self: access the attributes and methods of the class
-        :param bodytemp: The temperature in words (to be converted to degrees)
-        
-        :returns: t (temperature)
-        """
         v = bodytemp / 1024 * 3.3
         t = 15 + ((v - 1.0446) / 0.0565537333333333)
         return t
 
     def hex2dec(self, s):
-        """
-        Return the integer value of a hexadecimal string 's'.
-        
-        :param self: access the attributes and methods of the class
-        :param s: string value
-        
-        :returns: int(s, 16)
-        
-        """
+        """return the integer value of a hexadecimal string s"""
         return int(s, 16)
 
     def dec2hex(self, n, pad=0):
-        """
-        return the hexadecimal string representation of integer 'n'
-    
-        :param self: access the attributes and methods of the class
-        :param n: string value
-        :param pad: padding 
-        
-        :returns: s.rjust(pad, '0')
-        
-        """
+        """return the hexadecimal string representation of integer n"""
         s = "%X" % n
         if pad == 0:
             return s
@@ -288,9 +147,6 @@ class ZmaxHeadband():
 
     def stimulate(self, rgb1=(0, 0, 2), rgb2=(0, 0, 2), pwm1=254, pwm2=0, t1=1, t2=3, reps=5, vib=1, alt=0):
         """
-        
-        Stimulation trigger.
-        
         example:
         LIVEMODE_SENDBYTES 15 6 111 04-00-00-02-00-00-02-FE-00-01-03-05-01-00\r\n
         command = "LIVEMODE_SENDBYTES"
@@ -311,17 +167,6 @@ class ZmaxHeadband():
         reps = 05
         vib = 01
         alt = 00 # althernate eyes
-        
-        :param self: access the attributes and methods of the class
-        :param rgb1: rgb value 1
-        :param rgb2: rgb value 2
-        :param pwm1: ON intensity
-        :param pwm2: OFF intensity   
-        :param t1: time ON
-        :param t2: time OFF
-        :param reps: number of blinks/ repititions
-        :param vib: Vibration triggering
-        :param alt: Alternating the LEDs
         """
         command = "LIVEMODE_SENDBYTES"
         retries = 15
@@ -343,7 +188,8 @@ class ZmaxHeadband():
         i13 = self.dec2hex(vib, pad=2)
         i14 = self.dec2hex(alt, pad=2)
 
-        s = f"""{command} {retries} {self.msgn} {retry_ms} {i1}-{i2}-{i3}-{i4}-{i5}-{i6}-{i7}-{i8}-{i9}-{i10}-{i11}-{i12}-{i13}-{i14}\r\n"""
+        s = f"""{command} {retries} {self.msgn} {retry_ms} {i1}-{i2}-{i3}-{i4}\
+-{i5}-{i6}-{i7}-{i8}-{i9}-{i10}-{i11}-{i12}-{i13}-{i14}\r\n"""
         # print(s)
         self.socket.sendString(s)
         self.msgn += 1
