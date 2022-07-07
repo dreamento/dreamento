@@ -62,7 +62,8 @@ Basically whatever that the ZMax Hypnodyne wearable can collect in addition to o
 *2. How to post-process the data?*  
 
 ```
-conda activate dreamento
+conda env create --name offlinedreamento --file offlinedreamento.yml
+conda activate offlinedreamento
 python OfflineDreamento.py
 ```
 
