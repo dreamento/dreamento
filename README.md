@@ -44,9 +44,15 @@ python mainwindow.py
 ### The real-time Dreamento GUI
 ![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/177725424-9aca75e7-62c9-46c0-8a27-c17579fa8c47.png)
 
-### The offline Dreamento GUI
+### The offline Dreamento GUI 
+## with additional EMG measurement
 
-<img width="651" alt="zmaxcodoanaluzer2" src="https://user-images.githubusercontent.com/48684369/174683652-ee16c526-e019-4fc3-b2c7-5573acd24158.png">
+![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/177753415-a32ecb4c-a599-4212-bc03-b34b3de662dc.png)
+
+
+## Original measurement (no EMG)
+![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
+
 
 ### FAQ:
 *1. What sources of informaion we can collect?*
