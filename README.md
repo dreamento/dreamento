@@ -51,13 +51,13 @@ python mainwindow.py
 ### FAQ:
 *1. What sources of informaion we can collect?*
 
-Basically whatever that the Zmax Hypnodyne wearable can collect in addition to other information regarding stimulation, annotations assignment, and autoscoring, e.g., stimulation properties (color of light, intensity, etc), exact time (accurate up to the number of sample), autoscoring (real-time scored data output)
+Basically whatever that the ZMax Hypnodyne wearable can collect in addition to other information regarding stimulation, annotations assignment, and autoscoring, e.g., stimulation properties (color of light, intensity, etc), exact time (accurate up to the number of sample), autoscoring (real-time scored data output)
 
-*2. How to post-process the data*  
+*2. How to post-process the data?*  
 
 ```
 conda activate dreamento
-python mainwindow.py
+python OfflineDreamento.py
 ```
 
 Please note that this program is provided with no warranty of any kind.
