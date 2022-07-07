@@ -695,12 +695,11 @@ class RecordThread(QThread):
         sigL_accumulative = []
 
         while True:
-# =============================================================================
-#             if int(self.epochCounter % 60) and dataSamplesToAnalyzeCounter == 0:
-#                 del hb
-#                 hb = ZmaxHeadband()
-#                 print("New HB created after 60 epochs")
-# =============================================================================
+            
+            if int(self.epochCounter)>0 and int(int(self.epochCounter) % 60) ==0 and dataSamplesToAnalyzeCounter == 0:
+                del hb
+                hb = ZmaxHeadband()
+                print("New HB created after 60 epochs")
 
             self.dataSampleCounter = 0      # count samples in each second
             self.secondCounter += 1
