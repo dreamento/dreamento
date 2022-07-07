@@ -6,7 +6,7 @@ Copyright (c) 2021-2022 Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie
 OfflineDreamento: The post-processing Dreamento!
 
 """
-
+import tkinter as tk
 from tkinter import LabelFrame, Label, Button, filedialog, messagebox,OptionMenu, StringVar, DoubleVar, PhotoImage, Entry
 from tkinter import *
 import mne
@@ -25,8 +25,12 @@ import json
 import pickle
 from scipy.signal import butter, filtfilt
 import itertools
+import matplotlib
+matplotlib.use('TkAgg')
 
-#%matplotlib qt
+# =============================================================================
+# %matplotlib qt
+# =============================================================================
 style.use('default')
 
 
@@ -62,7 +66,7 @@ class OfflineDreamento():
         
         ###### ================== CopyRight ============================ ######
         self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie",
-                                  font = 'Calibri 13 italic')
+                                  font = 'Calibri 10 italic')
         self.label_CopyRight.grid(row = 1 , column = 0, padx = 15, pady = 10)
         
         #### ==================== Import Hypnodyne data  ========================####
@@ -140,7 +144,7 @@ class OfflineDreamento():
     #%% init a label to give warning
     #%% Checkbox for filtering
         self.is_filtering = IntVar(value = 1)
-        self.checkbox_is_filtering = Checkbutton(self.frame_import, text = "Band-pass filtering",
+        self.checkbox_is_filtering = Checkbutton(self.frame_import, text = "Band-pass filtering (.3-30 Hz)",
                                   font = 'Calibri 11 ', variable = self.is_filtering)
         
         self.checkbox_is_filtering.grid(row = 1, column = 4)
@@ -154,8 +158,9 @@ class OfflineDreamento():
         
     #%% Checkbox for plotting spectrograms with markers
         self.plot_additional_EMG = IntVar(value = 1)
-        self.checkbox_plot_additional_EMG = Checkbutton(self.frame_import, text = "Plot additional EMG?",
-                                  font = 'Calibri 11 ', variable = self.plot_additional_EMG)
+        self.checkbox_plot_additional_EMG = Checkbutton(self.frame_import, text = "Plot EMG",
+                                  font = 'Calibri 11 ', variable = self.plot_additional_EMG,\
+                                  command=self.EMG_button_activator)
         
         self.checkbox_plot_additional_EMG.grid(row = 3, column = 4)
         
@@ -165,13 +170,6 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
         self.checkbox_plot_psd.grid(row = 4, column = 4)
-        
-            #%% Checkbox for plotting periodogram 
-        self.plot_EMG = IntVar(value = 1)
-        self.checkbox_plot_EMG = Checkbutton(self.frame_import, text = "Plot EMG",
-                                  font = 'Calibri 11 ', variable = self.plot_EMG)
-        
-        self.checkbox_plot_EMG.grid(row = 5, column = 4)
         
         #%% EMG Y SCALE
         #Label to read data and extract features
@@ -186,7 +184,24 @@ class OfflineDreamento():
         
     #%% WarningNotEnoughDataMessage
         self.WarningNotEnoughDataMessage = "Dear user! \nAll required data are not uploaded! \n Please upload them all and try again."
+    
+    #%% Activation/inactivation of EMG button depending on the checkbox
+    def EMG_button_activator(self):
         
+        # EMG load button
+        if self.button_EMG_browse['state'] == tk.DISABLED:
+            self.button_EMG_browse['state'] = tk.NORMAL
+
+        else:
+            self.button_EMG_browse['state'] = tk.DISABLED
+            
+        # EMG option menu 
+        if self.EMG_scale_option_menu['state'] == tk.DISABLED:
+            self.EMG_scale_option_menu['state'] = tk.NORMAL
+
+        else:
+            self.EMG_scale_option_menu['state'] = tk.DISABLED
+
         #%% Save section    
     def create_save_options(self):
         """
@@ -396,8 +411,10 @@ class OfflineDreamento():
         elif 'marker_files_list' not in globals():
             messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .json file of markers is not selected!")
             
+        elif 'EMG_files_list' not in globals() and int(self.plot_additional_EMG.get()) == 1:
+            messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
             
-        elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...':
+        elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.plot_additional_EMG.get()) == 1:
             messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
             
         else: 
@@ -407,7 +424,9 @@ class OfflineDreamento():
             self.ZmaxDondersRecording = Dreamento_files_list[0]
             self.HDRecorderRecording  = hypnodyne_files_list[0]
             self.path_to_json_markers = marker_files_list[0]
-            self.path_to_EMG          = EMG_files_list[0]
+            
+            if int(self.plot_additional_EMG.get()) == 1:
+                self.path_to_EMG          = EMG_files_list[0]
                         
             self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
             self.noise_obj = mne.io.read_raw_edf(self.noise_path)
@@ -436,7 +455,7 @@ class OfflineDreamento():
                                t_end_sync   = 130)
             # Filter?
             if int(self.is_filtering.get()) == 1: 
-                print('I am filtering!!!')
+                print('Bandpass filtering (.3-30 Hz) started')
                 self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
                 self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
                 print(f'EMG scale is: {self.EMG_scale_options_val.get()} uV')
@@ -612,7 +631,7 @@ class OfflineDreamento():
         # for example: epoch 15 to 17
         # T = 30, t_start_sync = 15, t_end_sync = 17
         sigHDRecorder = sigHDRecorder[int(t_start_sync  * 256):int(t_end_sync * 256)]
-        print('I AM HERTE!!')
+        print('Calculating the lag between signals ...')
         corr = signal.correlate(sigHDRecorder, sigScript)  # Compute correlation
         lag = np.argmax(np.abs(corr))  # find lag
     
@@ -858,7 +877,7 @@ class OfflineDreamento():
         ax_acc.set_ylim([-1.4, 1.4])
         
         plt.subplots_adjust(hspace = 0)
-        ax1.set_title('Spectrogram and EEG with markers')
+        ax1.set_title('Dreamento: post-processing ')
         im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
                            shading="auto")
         ax3.set_xlim([0, len(data)/256])
@@ -1011,6 +1030,7 @@ class OfflineDreamento():
         ax_EMG.set_yticks([])
         ax_EMG3.set_yticks([])
         ax_EMG2.set_yticks((self.desired_EMG_scale[0], 0, self.desired_EMG_scale[1]))
+        plt.show()
 # =============================================================================
 #         ax_EMG.set_xticks([])
 #         ax_EMG2.set_xticks([])
@@ -1124,7 +1144,7 @@ class OfflineDreamento():
         ax_acc.set_ylim([-1.4, 1.4])
         
         plt.subplots_adjust(hspace = 0)
-        ax1.set_title('Spectrogram and EEG with markers')
+        ax1.set_title('Dreamento: post-processing ')
         im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
                            shading="auto")
         ax3.set_xlim([0, len(data)/256])
@@ -1240,8 +1260,8 @@ class OfflineDreamento():
         
         #ax4.get_xaxis().set_visible(False)
         
-        fig.canvas.mpl_connect('key_press_event', self.pan_nav)
-        fig.canvas.mpl_connect('button_press_event', self.onclick)
+        fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
+        fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
         #ax1.set_xlim([0, 7680])#len(data)])
         #ax2.set_xlim([0, 7680])#len(data)])
         #ax3.set_xlim([0, len(data)])
@@ -1261,8 +1281,9 @@ class OfflineDreamento():
         line2 = "Here you can sync the recordings from hypnodyne and Dreamento!\n"
         line3 = "** Notes:\n- First load the *EEG L* from Hypnodyne recording (.edf format).\n"
         line4 = "- Then load Dreamento output (.txt format).\n"
-        line5 = "- Afterwards load the marker file (.json).\n\n"
-        line5_5 = "- And eventually the .vhdr file from EMG recording.\n\n"
+        line5 = "- Afterwards load the marker file (.json).\n"
+        line5_5 = "- And eventually the .vhdr file from EMG recording (optional).\n"
+        line_5_75 = "If there is no EMG, uncheck the PLOT EMG checkbox.\n"
         
         line6 = "- Hotkeys to navigate in the final plot.\n"
 
@@ -1364,6 +1385,95 @@ class OfflineDreamento():
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
             if str(curr_ax) == 'AxesSubplot(0.125,0.67;0.775x0.175)':
+                if len(curr_ax.lines) > 0 :
+                    curr_ax.lines[-1].remove()
+                curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
+                curr_ax.set_ylim((0.1,25))
+                
+                
+    #%% Navigating via keyboard in the figure
+    def pan_nav_noEMG(self, event):
+        """
+        The keyboard controller of the software
+        
+        :param self: accessing  the attributes and methods of the class
+        :param up arrow keyboard button: increase the EEG amplitude scale
+        :param down arrow keyboard button: lower the EEG amplitude scale
+        :param left arrow keyboard button: navigate to the previous epoch
+        :param right arrow keyboard button: navigate to the next epoch
+
+        """
+        ax_tmp = plt.gca()
+        if event.key == 'left':
+            lims = ax_tmp.get_xlim()
+            adjust = (lims[1] - lims[0]) 
+            ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
+            curr_ax = event.inaxes
+            if str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)':
+                print('spectrogram axis detected')
+                if len(curr_ax.lines) > 0 :
+                    curr_ax.lines[-1].remove()
+                curr_ax.plot([int(np.mean((lims[0] - adjust, lims[1] - adjust))), int(np.mean((lims[0] - adjust, lims[1] - adjust)))], [-150, 150], color = 'black')
+                #curr_ax.set_ylim((0.1,25))
+            
+            plt.draw()
+        elif event.key == 'right':
+            lims = ax_tmp.get_xlim()
+            adjust = (lims[1] - lims[0]) 
+            ax_tmp.set_xlim((lims[0] + adjust, lims[1] + adjust))
+            print(event.xdata)
+            print(lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+            
+            curr_ax = event.inaxes
+            if str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)':
+                print('spectrogram axis detected')
+                if len(curr_ax.lines) > 0 :
+                    curr_ax.lines[-1].remove()
+                curr_ax.plot([int(np.mean((lims[0] + adjust, lims[1] + adjust))), int(np.mean((lims[0] + adjust, lims[1] + adjust)))], [-150, 150], color = 'black')
+                #curr_ax.set_ylim((0.1,25))
+        elif event.key == 'up':
+            lims = ax_tmp.get_ylim()
+            adjust_up = lims[1] - lims[1]/5
+            adjust_down = lims[0] +lims[1]/5
+            ax_tmp.set_ylim((adjust_down, adjust_up))
+            plt.draw()
+            
+        elif event.key == 'down':
+            lims = ax_tmp.get_ylim()
+            adjust_up = lims[1] + lims[1]/5
+            adjust_down = lims[0] - lims[1]/5
+            ax_tmp.set_ylim((adjust_down, adjust_up))
+            plt.draw()
+    
+    #%% Define event while clicking
+    
+    def onclick_noEMG(self, event):
+        """
+        Clicking on the TFR to go to the desired epoch.
+        
+        :param self: access the attributes and methods of the class
+        :param event: mouse click
+        """
+        ax_tmp = plt.gca()
+        if event.button == 1: 
+
+            print('mouse cliked --> move plot')
+            ax_tmp.set_xlim((np.floor(event.xdata)- int(7680/256/2), np.floor(event.xdata)+ int(7680/256/2)))
+            plt.draw()
+            print(f'clicked sample{ {event.xdata}}')
+            print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
+            print(f'{event.inaxes}')
+            curr_ax = event.inaxes
+            if str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
