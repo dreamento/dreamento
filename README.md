@@ -42,7 +42,7 @@ python mainwindow.py
 
 ## Demo:
 ### The real-time Dreamento GUI
-<img width="617" alt="Untitled" src="https://user-images.githubusercontent.com/48684369/174683169-44503f1e-2064-40a1-aa48-31ba9882fee4.png">
+![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/177725424-9aca75e7-62c9-46c0-8a27-c17579fa8c47.png)
 
 ### The offline Dreamento GUI
 
