@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 
 
-dataset = np.loadtxt(".\\Teressa_rec.txt", delimiter=',')
+dataset = np.loadtxt("path/to/data.txt", delimiter=',')
 
 data = dataset[10*256:(10+30)*256,0]
 # data =  signal.resample(data, int(len(data)/256*100))

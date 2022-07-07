@@ -3,7 +3,7 @@ import numpy as np
 
 sleepScoringModel = realTimeAutoScoring.importModel("./out_QS/train/21")
 
-recording = np.loadtxt(".\\2021-08-19 Pilot 8 Saba\\recording-date-2021-08-19-time-07-26-40-complete.txt", delimiter=',')
+recording = np.loadtxt("path/to_data.txt", delimiter=',')
 
 dataSamplesToAnalyzeBeginIndex = 0
 dataSampleCounter = 0

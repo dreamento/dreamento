@@ -9,7 +9,7 @@ from minibatching import (iterate_minibatches,
 
 sleepScoringModel = realTimeAutoScoring.importModel("./out_QS/train/21")
 
-recording = np.loadtxt(".\\2021-08-19 Pilot 8 Saba\\recording-date-2021-08-19-time-07-26-40-complete.txt", delimiter=',')
+recording = np.loadtxt(".\\path_to_data.txt", delimiter=',')
 recordingValid = recording[recording[:,4]!=1]
 fs = 256
 T = 30
@@ -116,7 +116,7 @@ else:
         #                      mark_REM = 'active', write_metrics = False,
         #                      Title = 'True Hyp_'+ Name , save_fig = False,\
         #                      directory = "./")
-            # directory = "P:/3022033.01/FilesForMathijs/daily_zmax_autoscoring/daily_zmax_hypnograms/
+            # directory = "path/
 
 # sampling_rate = 256
 # lowcut = 0.3
