@@ -16,29 +16,46 @@ Dreamento (DREAM ENgineering TOolbox) is a Python package to record, monitor, an
 ## Post-processing:
 OfflineDreamento.py: Integration of all the collected data for post-processing!
 
-## How to install?
-Create all the required packages on a virtual environment:
+## Installation and Prerequisities: 
+- Download and install Anaconda (https://www.anaconda.com/).
+- Download and install [the ZMax Hypnodyne software](https://hypnodynecorp.com/downloads.php).
+- Download and install Dreamento (see section below).
+
+## How to install Dreamento?
+- Open anaconda prompt.
+
+- Create all the required packages on a virtual environment with the following syntax (only at the first use):
 ```
 conda env create --name dreamento --file dreamento.yml
 ```
-
-## How to use?
-Prerequisities: 
-- You should have already installed Dreamento (see "How to install" section)
-- It is necessary to download [the ZMax Hypnodyne software](https://hypnodynecorp.com/downloads.php).
-
-When you have Dreamento and Hypndoyne software installed, follow these steps:
+## How to start a recording?
+When you have Dreamento and Hypndoyne software installed (see sections above), follow these steps:
 1. Connect the USB dongle to your pc.
 2. Run HDServer.exe
 3. Run HDRecorder.exe and click on "connect".
-4. Activate the virtual environment you made in the previous step and run then run Dreamento:
+4. Open Anaconda prompt, change directory to where you installed Dreamento, activate the virtual environment you made in the previous step and run then run Dreamento (mainWindow.py):
 ```
+cd directory/to/Dreamento
 conda activate dreamento
 python mainwindow.py
 ```
 5. When Dreamento's GUI started, click on "connect".
 6. By clicking on the "record" button,  the recording will be started!
 **Enjoy the GUI!**
+
+## Post-processing:
+- Make sure the post-processing environment is installed on your pc:
+```
+conda env create --name offlinedreamento --file offlinedreamento.yml
+```
+- Open Anaconda prompt and change the directory to where you installed Dreamento:
+```
+cd directory/to/Dreamento
+conda activate offlinedreamento
+python OfflineDreamento.py
+```
+- Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
+
 
 ## Demo:
 ### The real-time Dreamento GUI
