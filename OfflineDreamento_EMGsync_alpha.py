@@ -330,168 +330,236 @@ class OfflineDreamento():
         
         fig, axs = plt.subplots(3, figsize = (15,10))
         axs[0].set_title('EEG during sync event')
-        axs[0].plot(EEG_Abs, color = 'gray')
+        axs[0].plot(EEG_Abs, color = 'powderblue')
         axs[1].set_title('EMG during sync event')
-        axs[1].plot(EMG_Abs, color = 'salmon')
-        axs[2].plot(EEG_Abs, color = 'gray')
+        axs[1].plot(EMG_Abs, color = 'mediumpurple')
+        axs[2].plot(EEG_Abs, color = 'powderblue')
         axs[2].set_title('EMG vs EEG plotted on top of each other')
-        axs[2].plot(EMG_Abs, color = 'salmon')
+        axs[2].plot(EMG_Abs, color = 'mediumpurple')
         
-       
-        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Does the dataset require further synchronization?',icon = 'warning')
-        plt.show()
-        if MsgBox == 'yes':
-            print('Proceeding to synchronization process ...')
-            MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization?',icon = 'warning')
+        while True:
+            MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Does the dataset require further synchronization?',icon = 'warning')
+            plt.show()
             if MsgBox == 'yes':
-
-                fig, axs = plt.subplots(4, figsize = (15,10))
-                axs[0].plot(EEG_Abs, color = 'gray')
-                axs[0].plot(MA_EEG, color = 'black', linewidth=3)
-                axs[0].set_title('EEG')
-                axs[1].plot(EMG_Abs, color = 'salmon')
-                axs[1].plot(MA_EMG, color = 'red', linewidth=3)
-                axs[1].set_title('EMG')
-                
-# =============================================================================
-#                 x = EEG_Abs
-#                 y = EMG_Abs
-# =============================================================================
-                x = MA_EEG
-                y = MA_EMG                
-
-                N = max(len(x), len(y))
-                n = min(len(x), len(y))
-
-                if N == len(y):
-                    lags = np.arange(-N + 1, n)
-
-                else:
-                    lags = np.arange(-n + 1, N)
-
-                c = signal.correlate(x / np.std(x), y / np.std(y), 'full')
-
-
-                axs[2].plot(lags, c / n, color='k', label="Cross-correlation")
-
-                axs[2].set_title('Cross-correlation')
-
-
-                corr2 = np.correlate(x, y, "full")
-                lag2 = np.argmax(corr2)
-
-                samples_before_begin = lag2 + 1 - len(y)
-                samples_after_end = len(x) - samples_before_begin - len(y)
-                index_start_script = samples_before_begin
-                index_end_script = len(x) - samples_after_end
-                print(f"samples_before_begin {samples_before_begin}")
-                print(f"samples_after_end {samples_after_end}")
-                print(f"index_start_script {index_start_script}")
-                print(f"index_end_script {index_end_script}")
-                
-                
-                if samples_before_begin < 0:
-                    axs[3].plot(EEG, color ='gray')
-                    axs[3].plot(MA_EEG, color = 'black', linewidth=3)
-                    axs[3].plot(EMG[-samples_before_begin:], color = 'salmon')
-                    axs[3].plot(MA_EMG[-samples_before_begin:], color = 'red', linewidth=3)
-                    axs[3].set_title('EEG and EMG after sync')
-                else:
-                    axs[3].plot(EEG, color ='gray')
-                    axs[3].plot(MA_EEG, color = 'black', linewidth=3)
-                    tmp = np.zeros(samples_before_begin)
-                    synced_EMG = np.append(tmp, EMG)
-                    synced_EMG_MA = np.append(tmp, MA_EMG)
-                    axs[3].plot(synced_EMG, color = 'salmon')
-                    axs[3].plot(synced_EMG_MA, color = 'red', linewidth=3)
-                    axs[3].set_title('EEG and EMG after sync')
-                
-                messagebox.showinfo("Information",f"Auto-sync procedure compensated {samples_before_begin} samples. If the results of sync is satisfying based on the final figure, proceed with the analysis from the main menu. Otherwise, push the same button (sync EMG with EEG) again and try the manual sync procedure.")
-                plt.show()
-            else: 
-                MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
+                print('Proceeding to synchronization process ...')
+                MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
                 if MsgBox == 'yes':
-                    # Truncate sync period
-                    EEG_to_sync_period = sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                    EMG_to_sync_period = EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+    
+                    fig, axs = plt.subplots(4, figsize = (15,10))
+                    axs[0].plot(EEG_Abs, color = 'powderblue')
+                    axs[0].plot(MA_EEG, color = 'navy', linewidth=3)
+                    axs[0].set_title('EEG')
+                    axs[1].plot(EMG_Abs, color = 'mediumpurple')
+                    axs[1].plot(MA_EMG, color = 'purple', linewidth=3)
+                    axs[1].set_title('EMG')
                     
-                    # Rectified signal
-                    EEG = EEG_to_sync_period
-                    EMG = EMG_to_sync_period
-                    EMG_Abs= abs(EMG)
-                    EEG_Abs = abs(EEG)
+    # =============================================================================
+    #                 x = EEG_Abs
+    #                 y = EMG_Abs
+    # =============================================================================
+                    x = MA_EEG
+                    y = MA_EMG                
+    
+                    N = max(len(x), len(y))
+                    n = min(len(x), len(y))
+    
+                    if N == len(y):
+                        lags = np.arange(-N + 1, n)
+    
+                    else:
+                        lags = np.arange(-n + 1, N)
+    
+                    c = signal.correlate(x / np.std(x), y / np.std(y), 'full')
+    
+    
+                    axs[2].plot(lags, c / n, color='k', label="Cross-correlation")
+    
+                    axs[2].set_title('Cross-correlation')
+    
+    
+                    corr2 = np.correlate(x, y, "full")
+                    lag2 = np.argmax(corr2)
+    
+                    samples_before_begin = lag2 + 1 - len(y)
+                    samples_after_end = len(x) - samples_before_begin - len(y)
+                    index_start_script = samples_before_begin
+                    index_end_script = len(x) - samples_after_end
+                    print(f"samples_before_begin {samples_before_begin}")
+                    print(f"samples_after_end {samples_after_end}")
+                    print(f"index_start_script {index_start_script}")
+                    print(f"index_end_script {index_end_script}")
+                    
+                    
+                    if samples_before_begin < 0:
+                        axs[3].plot(EEG, color ='powderblue')
+                        axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
+                        axs[3].plot(EMG[-samples_before_begin:], color = 'mediumpurple')
+                        axs[3].plot(MA_EMG[-samples_before_begin:], color = 'purple', linewidth=3)
+                        axs[3].set_title('EEG and EMG after sync')
+                    else:
+                        axs[3].plot(EEG, color ='powderblue')
+                        axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
+                        tmp = np.zeros(samples_before_begin)
+                        synced_EMG = np.append(tmp, EMG)
+                        synced_EMG_MA = np.append(tmp, MA_EMG)
+                        axs[3].plot(synced_EMG, color = 'mediumpurple')
+                        axs[3].plot(synced_EMG_MA, color = 'purple', linewidth=3)
+                        axs[3].set_title('EEG and EMG after sync')
                         
-                    self.points = []
-                    
-                    """ To use this function: Please click once on the 1st point and two times on
-                    the second point!"""
-                    subj_night= 'hello'
-    
-                    fig, axs = plt.subplots(3 ,figsize=(15, 10))
-                    line = axs[0].plot(EEG_Abs, picker=2, color = 'gray')
-                    axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
-    
-    
-                    axs[0].set_xlim([0,len(EMG)])
-                    axs[1].set_xlim([0,len(EMG)])
-                    axs[2].set_xlim([0,len(EMG)])
-    
-                    axs[0].set_ylabel('Lag (samples)')
-    
-                    line = axs[1].plot(EMG_Abs, picker=2, color = 'salmon')
-    
-                    plt.show()
-                    self.points = fig.canvas.mpl_connect('pick_event', self.onpick)
-                    
+                    MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
+                    if MsgBox == 'yes':
+                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait ...")
+                        plt.show()
+                else: 
+                    MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
+                    if MsgBox == 'yes':
+                        # Truncate sync period
+                        EEG_to_sync_period = sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        EMG_to_sync_period = EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        
+                        # Rectified signal
+                        self.EEG = EEG_to_sync_period
+                        self.EMG = EMG_to_sync_period
+                        EMG_Abs= abs(self.EMG)
+                        EEG_Abs = abs(self.EEG)
+                            
+                        self.points = []
+                        self.n = 2
+        
+                        self.fig, self.axs = plt.subplots(3 ,figsize=(15, 10))
+                        line = self.axs[0].plot(EEG_Abs, picker=2, color = 'powderblue')
+                        self.axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
+                        
+                        self.MA_EEG = self.MA(EEG_Abs, 512)
+                        self.MA_EMG = self.MA(EMG_Abs, 512)
+        
+                        self.axs[0].set_xlim([0,len(self.EMG)])
+                        self.axs[1].set_xlim([0,len(self.EMG)])
+                        self.axs[2].set_xlim([0,len(self.EMG)])
+        
+                        self.axs[0].set_ylabel('Lag (samples)')
+        
+                        line = self.axs[1].plot(EMG_Abs, picker=2, color = 'mediumpurple')
+        
+                        plt.show()
+                        self.fig.canvas.mpl_connect('pick_event', self.onpick)
+            
+        # Loading all available data            
+        self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
+        self.noise_obj = mne.io.read_raw_edf(self.noise_path)
+        self.noise_data = self.noise_obj.get_data()[0]
+        
+        # Acc
+        self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
+        self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
+        self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+        
+        self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
+        self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
+        self.acc_z_obj = mne.io.read_raw_edf(self.acc_z_path)
+        
+        self.acc_x = self.acc_x_obj.get_data()[0]
+        self.acc_y = self.acc_y_obj.get_data()[0]
+        self.acc_z = self.acc_z_obj.get_data()[0]
+        
+        print('Acceleration and noise data imported successfully ...')
+        
+        self.samples_before_begin, self.sigHDRecorder_org_synced, self.sigScript_org, self.sigScript_org_R = self.calculate_lag(
+                               plot=(int(self.plot_sync_output.get()) ==1) , path_EDF=self.HDRecorderRecording,\
+                               path_Txt=self.ZmaxDondersRecording,\
+                               T = 30,\
+                               t_start_sync = 100,\
+                               t_end_sync   = 130)
+        print('The lag between Dreamento and Hypndoyne EEG computed ...')
+        # Filter?
+        if int(self.is_filtering.get()) == 1: 
+            print('Bandpass filtering (.3-30 Hz) started')
+            self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
+            self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
+            print('Band-pass filter applied to data ...')
+        else:
+            print('No filtering applied ...')
+
+        # Plot psd?
+        if int(self.plot_psd.get()) == 1:
+            print('plotting peridogram ...')
+            self.plot_welch_periodogram(data = self.sigScript_org, sf = 256, win_size = 5)
+            print('PSD plotted ...')
+            
+        # Plot EMG as well?
+        print('Loading the main window of Dreamento ... Please wait ...')
+        if int(self.plot_additional_EMG.get()) == 1:
+            fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
+                                             path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
+                                             markers_to_show = ['light', 'manual', 'sound'],\
+                                             win_sec=30, fmin=0.5, fmax=25,\
+                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
+                
+        else:
+                fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR_noEMG(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
+                                             path_to_json_markers=self.path_to_json_markers,\
+                                             markers_to_show = ['light', 'manual', 'sound'],\
+                                             win_sec=30, fmin=0.5, fmax=25,\
+                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
+        # Activate save section
+        self.create_save_options()
 
     #%% Manual sync function        
     def onpick(self,event):
-        points = []
         point1_x = []
         point2_x = []
         point1_y = []
         point2_y = []
-        n = 2
-        if len(points) < n:
+        
+        if len(self.points) < self.n:
             thisline = event.artist
             xdata = thisline.get_xdata()
             ydata = thisline.get_ydata()
             ind = event.ind
             point = tuple(zip(xdata[ind], ydata[ind]))
-            points.append(point)
+            self.points.append(point)
             print('onpick point:', point)
-        
-        elif len(points) == n :
-            print('done')
+            print(f'You already chose {len(self.points)} points')
             
-            
-            for i in points[0]:
+            if len(self.points) == self.n :
+                print('done')
                 
-                point1_x.append(i[0])
-                point1_y.append(i[1])
+                for i in self.points[0]:
+                    
+                    point1_x.append(i[0])
+                    point1_y.append(i[1])
+                    
+                for i in self.points[1]:
+                    point2_x.append(i[0])
+                    point2_y.append(i[1])
+                    
+                mean_x1 = np.mean(point1_x)
+                mean_x2 = np.mean(point2_x)
+                mean_y1 = np.mean(point1_y)
+                mean_y2 = np.mean(point2_y)
                 
-            for i in points[1]:
-                point2_x.append(i[0])
-                point2_y.append(i[1])
-                
-            mean_x1 = np.mean(point1_x)
-            mean_x2 = np.mean(point2_x)
-            mean_y1 = np.mean(point1_y)
-            mean_y2 = np.mean(point2_y)
-            
-            if mean_x1 > mean_x2:
-                axs[2].plot(EEG)
-                tmp_sync = np.zeros(int(mean_x1-mean_x2))
-                synced_EMG = np.append(tmp_sync, EMG)
-                axs[2].plot(synced_EMG)
-            
-            if mean_x1 < mean_x2:
-                axs[2].plot(EEG)
-                axs[2].plot(EMG[int(mean_x2-mean_x1):])
-            axs[1].plot([mean_x1, mean_x2], [mean_y1, mean_y2], linewidth = 3, color = 'green')
-            plt.show()
-        #return drift_estimate
-        return points
+                if mean_x1 > mean_x2:
+                    self.axs[2].plot(self.EEG, color = 'powderblue')
+                    
+                    tmp_sync = np.zeros(int(mean_x1-mean_x2))
+                    self.synced_EMG = np.append(tmp_sync, self.EMG)
+                    self.synced_MA_EMG = np.append(tmp_sync, self.MA_EMG)
+                    self.axs[2].plot(self.synced_EMG, color = 'mediumpurple')
+                    self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
+                    self.axs[2].plot(self.synced_MA_EMG, color = 'purple', linewidth = 2)
+                    n_sample_sync = len(tmp_sync)
+                if mean_x1 < mean_x2:
+                    self.axs[2].plot(self.EEG, color = 'powderblue')
+                    tmp_sync = int(mean_x2-mean_x1)
+                    self.axs[2].plot(self.EMG[tmp_sync:], color = 'mediumpurple')
+                    self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
+                    self.axs[2].plot(self.MA_EEG[tmp_sync:], color = 'purple', linewidth = 2)
+                #self.axs[1].plot([mean_x1, mean_x2], [mean_y1, mean_y2], linewidth = 3, color = 'mediumpurple')
+                n_sample_sync = int(mean_x2-mean_x1)
+                self.fig.canvas.draw()
+                messagebox.showinfo("Information",f"You compensated {str(samples_before_begin)} samples. Now Dreamento proceeds with the main analysis ...")
+            #return drift_estimate
+        return self.points
         #%% Save section    
     def create_save_options(self):
         """
