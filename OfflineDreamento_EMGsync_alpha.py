@@ -226,8 +226,12 @@ class OfflineDreamento():
 
         else:
             self.button_sync_EMG['state'] = tk.DISABLED
+    #%% Moving average filter    
+    def MA(self,x, N):
+    
+        cumsum = np.cumsum(np.insert(x, 0, 0)) 
+        return (cumsum[N:] - cumsum[:-N]) / float(N)
         
-            
     #%% Activation/inactivation of EMG button depending on the checkbox
     def EMG_sync_method_activator(self):
 
@@ -309,41 +313,52 @@ class OfflineDreamento():
         #Filtering 
         sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=5, highcut=100, fs = 256, order = 2)
         EMG_data_get   = self.butter_bandpass_filter(data = EMG_data_get, lowcut=5, highcut=100, fs = 256, order = 2)
+        t_sync = np.arange(time_sync_event[0] - 256*10, time_sync_event[0] + 256*20)
         
-        fig, axs = plt.subplots(3)
+        # Truncate sync period
+        EEG_to_sync_period = sigScript_org[t_sync]
+        EMG_to_sync_period = EMG_data_get[t_sync]
+        
+        # Rectified signal
+        EEG = EEG_to_sync_period
+        EMG = EMG_to_sync_period
+        EMG_Abs= abs(EMG)
+        EEG_Abs = abs(EEG)
+        
+        MA_EEG = self.MA(EEG_Abs, 512)
+        MA_EMG = self.MA(EMG_Abs, 512)
+        
+        fig, axs = plt.subplots(3, figsize = (15,10))
         axs[0].set_title('EEG during sync event')
-        axs[0].plot(sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)], color = 'black')
+        axs[0].plot(EEG_Abs, color = 'gray')
         axs[1].set_title('EMG during sync event')
-        axs[1].plot(EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)], color = 'red')
-        axs[2].plot(sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)], color = 'black')
+        axs[1].plot(EMG_Abs, color = 'salmon')
+        axs[2].plot(EEG_Abs, color = 'gray')
         axs[2].set_title('EMG vs EEG plotted on top of each other')
-        axs[2].plot(EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)], color = 'red')
+        axs[2].plot(EMG_Abs, color = 'salmon')
         
+       
         MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Does the dataset require further synchronization?',icon = 'warning')
-        
+        plt.show()
         if MsgBox == 'yes':
             print('Proceeding to synchronization process ...')
             MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization?',icon = 'warning')
             if MsgBox == 'yes':
-                
-                # Truncate sync period
-                EEG_to_sync_period = sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                EMG_to_sync_period = EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                
-                # Rectified signal
-                EEG = EEG_to_sync_period
-                EMG = EMG_to_sync_period
-                EMG_Abs= abs(EMG)
-                EEG_Abs = abs(EEG)
-                    
-                fig, axs = plt.subplots(4)
-                axs[0].plot(EEG)
+
+                fig, axs = plt.subplots(4, figsize = (15,10))
+                axs[0].plot(EEG_Abs, color = 'gray')
+                axs[0].plot(MA_EEG, color = 'black', linewidth=3)
                 axs[0].set_title('EEG')
-                axs[1].plot(EMG)
+                axs[1].plot(EMG_Abs, color = 'salmon')
+                axs[1].plot(MA_EMG, color = 'red', linewidth=3)
                 axs[1].set_title('EMG')
                 
-                x = EEG_Abs
-                y = EMG_Abs
+# =============================================================================
+#                 x = EEG_Abs
+#                 y = EMG_Abs
+# =============================================================================
+                x = MA_EEG
+                y = MA_EMG                
 
                 N = max(len(x), len(y))
                 n = min(len(x), len(y))
@@ -376,18 +391,23 @@ class OfflineDreamento():
                 
                 
                 if samples_before_begin < 0:
-                    axs[3].plot(EEG)
-                    axs[3].plot(EMG[-samples_before_begin:])
+                    axs[3].plot(EEG, color ='gray')
+                    axs[3].plot(MA_EEG, color = 'black', linewidth=3)
+                    axs[3].plot(EMG[-samples_before_begin:], color = 'salmon')
+                    axs[3].plot(MA_EMG[-samples_before_begin:], color = 'red', linewidth=3)
                     axs[3].set_title('EEG and EMG after sync')
                 else:
-                    axs[3].plot(EEG)
+                    axs[3].plot(EEG, color ='gray')
+                    axs[3].plot(MA_EEG, color = 'black', linewidth=3)
                     tmp = np.zeros(samples_before_begin)
                     synced_EMG = np.append(tmp, EMG)
-                    axs[3].plot(synced_EMG)
+                    synced_EMG_MA = np.append(tmp, MA_EMG)
+                    axs[3].plot(synced_EMG, color = 'salmon')
+                    axs[3].plot(synced_EMG_MA, color = 'red', linewidth=3)
                     axs[3].set_title('EEG and EMG after sync')
                 
-                messagebox.showinfo("Information","Now you can proceed with the analysis from the main menu.")
-
+                messagebox.showinfo("Information",f"Auto-sync procedure compensated {samples_before_begin} samples. If the results of sync is satisfying based on the final figure, proceed with the analysis from the main menu. Otherwise, push the same button (sync EMG with EEG) again and try the manual sync procedure.")
+                plt.show()
             else: 
                 MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
                 if MsgBox == 'yes':
@@ -402,13 +422,13 @@ class OfflineDreamento():
                     EEG_Abs = abs(EEG)
                         
                     self.points = []
-                    n = 2
+                    
                     """ To use this function: Please click once on the 1st point and two times on
                     the second point!"""
                     subj_night= 'hello'
     
-                    fig, axs = plt.subplots(3 ,figsize=(20, 10))
-                    line = axs[0].plot(EEG, picker=2)
+                    fig, axs = plt.subplots(3 ,figsize=(15, 10))
+                    line = axs[0].plot(EEG_Abs, picker=2, color = 'gray')
                     axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
     
     
@@ -418,20 +438,20 @@ class OfflineDreamento():
     
                     axs[0].set_ylabel('Lag (samples)')
     
-                    line = axs[1].plot(EMG, picker=2)
+                    line = axs[1].plot(EMG_Abs, picker=2, color = 'salmon')
     
                     plt.show()
                     self.points = fig.canvas.mpl_connect('pick_event', self.onpick)
-
+                    
 
     #%% Manual sync function        
-    def onpick(self,event, n = 2):
+    def onpick(self,event):
         points = []
         point1_x = []
         point2_x = []
         point1_y = []
         point2_y = []
-        
+        n = 2
         if len(points) < n:
             thisline = event.artist
             xdata = thisline.get_xdata()
