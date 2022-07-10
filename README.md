@@ -33,7 +33,7 @@ When you have Dreamento and Hypndoyne software installed (see sections above), f
 1. Connect the USB dongle to your pc.
 2. Run HDServer.exe
 3. Run HDRecorder.exe and click on "connect".
-4. Open Anaconda prompt, change directory to where you installed Dreamento, activate the virtual environment you made in the previous step and run then run Dreamento (mainWindow.py):
+4. Open Anaconda prompt, change directory to where you installed Dreamento, activate the virtual environment you made in the previous step and then run Dreamento (mainWindow.py):
 ```
 cd directory/to/Dreamento
 conda activate dreamento
@@ -41,10 +41,11 @@ python mainwindow.py
 ```
 5. When Dreamento's GUI started, click on "connect".
 6. By clicking on the "record" button,  the recording will be started!
+
 **Enjoy the GUI!**
 
 ## Post-processing:
-- Make sure the post-processing environment is installed on your pc:
+- Make sure the post-processing virtual environment is installed on your pc:
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
