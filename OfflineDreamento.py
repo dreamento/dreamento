@@ -287,6 +287,7 @@ class OfflineDreamento():
                 print(marker.split())
                 counter_sync.append(counter)
         
+        print(counter_sync)
         for counter, marker in enumerate(markers.keys()):
             if counter in counter_sync:
                 time_sync_event.append(int(marker.split()[-1]))
@@ -301,7 +302,7 @@ class OfflineDreamento():
         sigScript_org = sigScript_org[:, 1]
 
         # Read EMG
-        print('Loading EEG file ... Please wait ...')                            
+        print('Loading EEG file ... Please wait')                            
         EMG_data = mne.io.read_raw_brainvision(self.path_to_EMG , preload = True)
         
         print('EEG and EMG imported successfully')
@@ -317,36 +318,61 @@ class OfflineDreamento():
             EMG_data.resample(EEG_sf)
         
         EMG_data_get = EMG_data.get_data()
-        EMG_data_get = EMG_data_get[0,:] * 1e6
+        EMG_data_get1 = EMG_data_get[0,:] * 1e6
+        EMG_data_get2 = EMG_data_get[1,:] * 1e6
+        EMG_data_get3 = EMG_data_get1 - EMG_data_get2
         
         #Filtering 
         sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=5, highcut=100, fs = 256, order = 2)
-        EMG_data_get   = self.butter_bandpass_filter(data = EMG_data_get, lowcut=5, highcut=100, fs = 256, order = 2)
-        t_sync = np.arange(time_sync_event[0] - 256*10, time_sync_event[0] + 256*20)
+        EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=5, highcut=100, fs = 256, order = 2)
+        EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=5, highcut=100, fs = 256, order = 2)
+        EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=5, highcut=100, fs = 256, order = 2)
+        t_sync          = np.arange(time_sync_event[0] - 256*10, time_sync_event[0] + 256*20)
         
         # Truncate sync period
-        EEG_to_sync_period = sigScript_org[t_sync]
-        EMG_to_sync_period = EMG_data_get[t_sync]
+        EEG_to_sync_period  = sigScript_org[t_sync]
+        EMG_to_sync_period1 = EMG_data_get1[t_sync]
+        EMG_to_sync_period2 = EMG_data_get2[t_sync]
+        EMG_to_sync_period3 = EMG_data_get3[t_sync]
         
         # Rectified signal
         EEG = EEG_to_sync_period
-        EMG = EMG_to_sync_period
-        EMG_Abs= abs(EMG)
         EEG_Abs = abs(EEG)
         
-        MA_EEG = self.MA(EEG_Abs, 512)
-        MA_EMG = self.MA(EMG_Abs, 512)
+        EMG1 = EMG_to_sync_period1
+        EMG2 = EMG_to_sync_period2
+        EMG3 = EMG_to_sync_period3
+        EMG_Abs1= abs(EMG1)
+        EMG_Abs2= abs(EMG2)
+        EMG_Abs3= abs(EMG3)
         
-        fig, axs = plt.subplots(3, figsize = (10,10))
+        MA_EEG  = self.MA(EEG_Abs, 512)
+        
+        MA_EMG1 = self.MA(EMG_Abs1, 512)
+        MA_EMG2 = self.MA(EMG_Abs2, 512)
+        MA_EMG3 = self.MA(EMG_Abs3, 512)
+        
+        fig, axs = plt.subplots(5, figsize = (10,10))
         axs[0].set_title('EEG during sync event')
         axs[0].plot(EEG_Abs, color = 'powderblue')
-        axs[1].set_title('EMG during sync event')
-        axs[1].plot(EMG_Abs, color = 'plum')
-        axs[2].plot(EEG_Abs, color = 'powderblue')
-        axs[2].set_title('EMG vs EEG plotted on top of each other')
-        axs[2].plot(EMG_Abs, color = 'plum')
         
-        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data durong sync period. Does the data require further synchronization?',icon = 'warning')
+        axs[1].set_title('EMG 1 during sync event')
+        axs[1].plot(EMG_Abs1, color = 'plum')
+        
+        axs[2].set_title('EMG 2 during sync event')
+        axs[2].plot(EMG_Abs2, color = 'orchid')
+        
+        axs[3].set_title('EMG 1 - EMG 2 during sync event')
+        axs[3].plot(EMG_Abs3, color = 'thistle')
+        
+        axs[4].plot(EEG_Abs, color = 'powderblue')
+        axs[4].set_title('EMG vs EEG plotted on top of each other')
+        axs[4].plot(EMG_Abs1, color = 'plum')
+        axs[4].plot(EMG_Abs2, color = 'orchid')
+        axs[4].plot(EMG_Abs3, color = 'thistle')
+        
+        plt.tight_layout()
+        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization?',icon = 'warning')
         plt.show()
         if MsgBox == 'yes':
             self.flag_sync_EEG_EMG = True
@@ -355,20 +381,29 @@ class OfflineDreamento():
                 MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
                 if MsgBox == 'yes':
     
-                    fig, axs = plt.subplots(4, figsize = (15,10))
+                    fig, axs = plt.subplots(6, figsize = (15,10))
                     axs[0].plot(EEG_Abs, color = 'powderblue')
                     axs[0].plot(MA_EEG, color = 'navy', linewidth=3)
                     axs[0].set_title('EEG')
-                    axs[1].plot(EMG_Abs, color = 'plum')
-                    axs[1].plot(MA_EMG, color = 'purple', linewidth=3)
-                    axs[1].set_title('EMG')
+                    
+                    axs[1].plot(EMG_Abs1, color = 'plum')
+                    axs[1].plot(MA_EMG1, color = 'purple', linewidth=3)
+                    axs[1].set_title('EMG1')
+                    
+                    axs[2].plot(EMG_Abs2, color = 'orchid')
+                    axs[2].plot(MA_EMG2, color = 'slateblue', linewidth=3)
+                    axs[2].set_title('EMG2')
+                    
+                    axs[3].plot(EMG_Abs3, color = 'thistle')
+                    axs[3].plot(MA_EMG3, color = 'blueviolet', linewidth=3)
+                    axs[3].set_title('EMG1 - EMG2')
                     
     # =============================================================================
     #                 x = EEG_Abs
     #                 y = EMG_Abs
     # =============================================================================
                     x = MA_EEG
-                    y = MA_EMG                
+                    y = MA_EMG3                
     
                     N = max(len(x), len(y))
                     n = min(len(x), len(y))
@@ -382,9 +417,9 @@ class OfflineDreamento():
                     c = signal.correlate(x / np.std(x), y / np.std(y), 'full')
     
     
-                    axs[2].plot(lags, c / n, color='k', label="Cross-correlation")
+                    axs[4].plot(lags, c / n, color='k', label="Cross-correlation")
     
-                    axs[2].set_title('Cross-correlation')
+                    axs[4].set_title('Cross-correlation')
     
     
                     corr2 = np.correlate(x, y, "full")
@@ -401,24 +436,51 @@ class OfflineDreamento():
                     
                     
                     if samples_before_begin < 0:
-                        axs[3].plot(EEG, color ='powderblue')
-                        axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
-                        axs[3].plot(EMG[-samples_before_begin:], color = 'plum')
-                        axs[3].plot(MA_EMG[-samples_before_begin:], color = 'purple', linewidth=3)
-                        axs[3].set_title('EEG and EMG after sync')
+                        axs[5].plot(EEG, color ='powderblue')
+                        axs[5].plot(MA_EEG, color = 'navy', linewidth=3)
+                        
+                        axs[5].plot(EMG1[-samples_before_begin:], color = 'plum')
+                        axs[5].plot(MA_EMG1[-samples_before_begin:], color = 'purple', linewidth=3)
+                        
+                        axs[5].plot(EMG2[-samples_before_begin:], color = 'orchid')
+                        axs[5].plot(MA_EMG2[-samples_before_begin:], color = 'slateblue', linewidth=3)
+                        
+                        axs[5].plot(EMG3[-samples_before_begin:], color = 'thistle')
+                        axs[5].plot(MA_EMG3[-samples_before_begin:], color = 'blueviolet', linewidth=3)
+                        
+                        axs[5].set_title('EEG and EMG after sync')
+                        
                         self.samples_before_begin_EMG_Dreamento = -samples_before_begin
                         self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
                     else:
-                        axs[3].plot(EEG, color ='powderblue')
-                        axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
+                        axs[5].plot(EEG, color ='powderblue')
+                        axs[5].plot(MA_EEG, color = 'navy', linewidth=3)
+                        
                         tmp = np.zeros(samples_before_begin)
-                        synced_EMG = np.append(tmp, EMG)
-                        synced_EMG_MA = np.append(tmp, MA_EMG)
-                        axs[3].plot(synced_EMG, color = 'plum')
-                        axs[3].plot(synced_EMG_MA, color = 'purple', linewidth=3)
-                        axs[3].set_title('EEG and EMG after sync')
+                        
+                        synced_EMG1 = np.append(tmp, EMG1)
+                        synced_EMG_MA1 = np.append(tmp, MA_EMG1)
+                        
+                        synced_EMG2 = np.append(tmp, EMG2)
+                        synced_EMG_MA2 = np.append(tmp, MA_EMG2)
+                        
+                        synced_EMG3 = np.append(tmp, EMG3)
+                        synced_EMG_MA3 = np.append(tmp, MA_EMG3)
+                        
+                        axs[5].plot(synced_EMG1, color = 'plum')
+                        axs[5].plot(synced_EMG_MA1, color = 'purple', linewidth=3)
+                        
+                        axs[5].plot(synced_EMG2, color = 'orchid')
+                        axs[5].plot(synced_EMG_MA2, color = 'slateblue', linewidth=3)
+                        
+                        axs[5].plot(synced_EMG3, color = 'thistle')
+                        axs[5].plot(synced_EMG_MA3, color = 'blueviolet', linewidth=3)
+                        
+                        axs[5].set_title('EEG and EMG after sync')
                         self.samples_before_begin_EMG_Dreamento = tmp
                         self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_earlier'
+                        
+                    plt.tight_layout()
                     MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                     if MsgBox == 'yes':
                         messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis")
@@ -430,37 +492,52 @@ class OfflineDreamento():
                     if MsgBox == 'yes':
                         # Truncate sync period
                         EEG_to_sync_period = sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                        EMG_to_sync_period = EMG_data_get[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        EMG_to_sync_period1 = EMG_data_get1[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        EMG_to_sync_period2 = EMG_data_get2[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        EMG_to_sync_period3 = EMG_data_get3[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
                         
                         # Rectified signal
                         self.EEG = EEG_to_sync_period
-                        self.EMG = EMG_to_sync_period
-                        EMG_Abs= abs(self.EMG)
                         EEG_Abs = abs(self.EEG)
-                            
+                        
+                        self.EMG1 = EMG_to_sync_period1
+                        EMG_Abs1= abs(self.EMG1)
+                        
+                        self.EMG2 = EMG_to_sync_period2
+                        EMG_Abs2= abs(self.EMG2)
+                        
+                        self.EMG3 = EMG_to_sync_period3
+                        EMG_Abs3 = abs(self.EMG3)
+                        
                         self.points = []
                         self.n = 2
         
-                        self.fig, self.axs = plt.subplots(3 ,figsize=(15, 10))
+                        self.fig, self.axs = plt.subplots(5 ,figsize=(15, 10))
                         line = self.axs[0].plot(EEG_Abs, picker=2, color = 'powderblue')
                         self.axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
                         
                         self.MA_EEG = self.MA(EEG_Abs, 512)
-                        self.MA_EMG = self.MA(EMG_Abs, 512)
+                        self.MA_EMG1 = self.MA(EMG_Abs1, 512)
+                        self.MA_EMG2 = self.MA(EMG_Abs2, 512)
+                        self.MA_EMG3 = self.MA(EMG_Abs3, 512)
         
-                        self.axs[0].set_xlim([0,len(self.EMG)])
-                        self.axs[1].set_xlim([0,len(self.EMG)])
-                        self.axs[2].set_xlim([0,len(self.EMG)])
+                        self.axs[0].set_xlim([0,len(self.EMG1)])
+                        self.axs[1].set_xlim([0,len(self.EMG1)])
+                        self.axs[2].set_xlim([0,len(self.EMG1)])
+                        self.axs[3].set_xlim([0,len(self.EMG1)])
+                        self.axs[4].set_xlim([0,len(self.EMG1)])
         
                         self.axs[0].set_ylabel('Lag (samples)')
         
-                        line = self.axs[1].plot(EMG_Abs, picker=2, color = 'plum')
-        
+                        line = self.axs[1].plot(EMG_Abs1, picker=2, color = 'plum')
+                        line = self.axs[2].plot(EMG_Abs2, picker=2, color = 'orchid')
+                        line = self.axs[3].plot(EMG_Abs3, picker=2, color = 'thistle')
+                        plt.tight_layout()
                         plt.show()
                         self.fig.canvas.mpl_connect('pick_event', self.onpick)
                         MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                         if MsgBox == 'yes':
-                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait ...")
+                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait")
                             plt.show()
                             break
                         
@@ -560,25 +637,46 @@ class OfflineDreamento():
                 mean_y2 = np.mean(point2_y)
                 
                 if mean_x1 > mean_x2:
-                    self.axs[2].plot(self.EEG, color = 'powderblue')
+                    self.axs[4].plot(self.EEG, color = 'powderblue')
+                    self.axs[4].plot(self.MA_EEG, color = 'navy', linewidth = 2)
                     
                     tmp_sync = np.zeros(int(mean_x1-mean_x2))
-                    self.synced_EMG = np.append(tmp_sync, self.EMG)
-                    self.synced_MA_EMG = np.append(tmp_sync, self.MA_EMG)
-                    self.axs[2].plot(self.synced_EMG, color = 'plum')
-                    self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
-                    self.axs[2].plot(self.synced_MA_EMG, color = 'purple', linewidth = 2)
+                    self.synced_EMG1    = np.append(tmp_sync, self.EMG1)
+                    self.synced_MA_EMG1 = np.append(tmp_sync, self.MA_EMG1)
+                    
+                    self.synced_EMG2    = np.append(tmp_sync, self.EMG2)
+                    self.synced_MA_EMG2 = np.append(tmp_sync, self.MA_EMG2)
+                    
+                    self.synced_EMG3    = np.append(tmp_sync, self.EMG3)
+                    self.synced_MA_EMG3 = np.append(tmp_sync, self.MA_EMG3)
+                    
+                    self.axs[4].plot(self.synced_EMG1, color = 'plum')
+                    self.axs[4].plot(self.synced_MA_EMG1, color = 'purple', linewidth = 2)
+                    self.axs[4].plot(self.synced_EMG2, color = 'orchid')
+                    self.axs[4].plot(self.synced_MA_EMG2, color = 'blueviolet', linewidth = 2)
+                    self.axs[4].plot(self.synced_EMG3, color = 'thristle')
+                    self.axs[4].plot(self.synced_MA_EMG3, color = 'slateblue', linewidth = 2)
+                    
                     n_sample_sync = len(tmp_sync)
                     
                     self.samples_before_begin_EMG_Dreamento = tmp_sync
                     self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_event_earlier'
                     
                 if mean_x1 < mean_x2:
-                    self.axs[2].plot(self.EEG, color = 'powderblue')
                     tmp_sync = int(mean_x2-mean_x1)
-                    self.axs[2].plot(self.EMG[tmp_sync:], color = 'plum')
-                    self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
-                    self.axs[2].plot(self.MA_EEG[tmp_sync:], color = 'purple', linewidth = 2)
+                    
+                    self.axs[4].plot(self.EEG, color = 'powderblue')
+                    self.axs[4].plot(self.MA_EEG, color = 'navy', linewidth = 2)
+                    
+                    self.axs[4].plot(self.EMG1[tmp_sync:], color = 'plum')
+                    self.axs[4].plot(self.MA_EMG1[tmp_sync:], color = 'purple', linewidth = 2)
+                    
+                    self.axs[4].plot(self.EMG2[tmp_sync:], color = 'plum')
+                    self.axs[4].plot(self.MA_EMG2[tmp_sync:], color = 'purple', linewidth = 2)
+                    
+                    self.axs[4].plot(self.EMG3[tmp_sync:], color = 'plum')
+                    self.axs[4].plot(self.MA_EMG3[tmp_sync:], color = 'purple', linewidth = 2)
+
                     self.samples_before_begin_EMG_Dreamento = tmp_sync
                     self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
                 #self.axs[1].plot([mean_x1, mean_x2], [mean_y1, mean_y2], linewidth = 3, color = 'plum')
@@ -1433,6 +1531,8 @@ class OfflineDreamento():
         ax_EMG.set_yticks([])
         ax_EMG3.set_yticks([])
         ax_EMG2.set_yticks((self.desired_EMG_scale[0], 0, self.desired_EMG_scale[1]))
+        #plt.subplots_adjust(left=0.1, right=0.1, top=0.9, bottom=0.1)
+        plt.tight_layout()
         plt.show()
 # =============================================================================
 #         ax_EMG.set_xticks([])
