@@ -26,6 +26,7 @@ import pickle
 from scipy.signal import butter, filtfilt
 import itertools
 import matplotlib
+
 matplotlib.use('TkAgg')
 
 # =============================================================================
@@ -129,9 +130,9 @@ class OfflineDreamento():
 #         self.label_apply.grid(row = 2 , column = 1)
 # =============================================================================
         # Apply button
-        self.button_apply = Button(self.frame_import, text = "Run!", padx = 40, pady=8,
+        self.button_apply = Button(self.frame_import, text = "Analyze!", padx = 40, pady=8,
                               font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
-                              command = self.Apply_button)
+                              command = self.Apply_button, state = tk.DISABLED)
         self.button_apply.grid(row = 3 , column =2, padx = 15, pady = 10)
 
 
@@ -165,7 +166,7 @@ class OfflineDreamento():
         self.checkbox_plot_additional_EMG.grid(row = 3, column = 4)
         
     #%% Checkbox for plotting periodogram 
-        self.plot_psd = IntVar(value = 1)
+        self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
@@ -180,12 +181,13 @@ class OfflineDreamento():
         self.EMG_scale_options_val = StringVar()
         self.EMG_scale_options_val.set(self.EMG_scale_options[0])
         self.EMG_scale_option_menu = OptionMenu(self.frame_import, self.EMG_scale_options_val, *self.EMG_scale_options)
+        self.EMG_scale_option_menu.config(fg = 'blue')
         self.EMG_scale_option_menu.grid(row = 3, column = 0)
     
     #%% EMG sync option
         #Label to read data and extract features
         
-        self.button_sync_EMG = Button(self.frame_import, text = "Sync EMG with EEG", padx = 40, pady=8,
+        self.button_sync_EMG = Button(self.frame_import, text = "Analyze! (+EMG)", padx = 40, pady=8,
                               font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
                               command = self.EMG_sync_method_activator)
         self.button_sync_EMG.grid(row = 3 , column =1, padx = 15, pady = 10)
@@ -226,6 +228,13 @@ class OfflineDreamento():
 
         else:
             self.button_sync_EMG['state'] = tk.DISABLED
+            
+        # Sync button
+        if self.button_apply['state'] == tk.NORMAL:
+            self.button_apply['state'] = tk.DISABLED
+
+        else:
+            self.button_apply['state'] = tk.NORMAL
     #%% Moving average filter    
     def MA(self,x, N):
     
@@ -282,7 +291,7 @@ class OfflineDreamento():
             if counter in counter_sync:
                 time_sync_event.append(int(marker.split()[-1]))
 
-        print('Loading EEG file ... Please wait ...')                            
+        print('Loading EEG file ... Please wait')                            
         path_Txt = self.ZmaxDondersRecording
 
         sigScript = np.loadtxt(path_Txt, delimiter=',')
@@ -328,20 +337,21 @@ class OfflineDreamento():
         MA_EEG = self.MA(EEG_Abs, 512)
         MA_EMG = self.MA(EMG_Abs, 512)
         
-        fig, axs = plt.subplots(3, figsize = (15,10))
+        fig, axs = plt.subplots(3, figsize = (10,10))
         axs[0].set_title('EEG during sync event')
         axs[0].plot(EEG_Abs, color = 'powderblue')
         axs[1].set_title('EMG during sync event')
-        axs[1].plot(EMG_Abs, color = 'mediumpurple')
+        axs[1].plot(EMG_Abs, color = 'plum')
         axs[2].plot(EEG_Abs, color = 'powderblue')
         axs[2].set_title('EMG vs EEG plotted on top of each other')
-        axs[2].plot(EMG_Abs, color = 'mediumpurple')
+        axs[2].plot(EMG_Abs, color = 'plum')
         
-        while True:
-            MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Does the dataset require further synchronization?',icon = 'warning')
-            plt.show()
-            if MsgBox == 'yes':
-                print('Proceeding to synchronization process ...')
+        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data durong sync period. Does the data require further synchronization?',icon = 'warning')
+        plt.show()
+        if MsgBox == 'yes':
+            self.flag_sync_EEG_EMG = True
+            print('Proceeding to synchronization process ...')
+            while True:
                 MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
                 if MsgBox == 'yes':
     
@@ -349,7 +359,7 @@ class OfflineDreamento():
                     axs[0].plot(EEG_Abs, color = 'powderblue')
                     axs[0].plot(MA_EEG, color = 'navy', linewidth=3)
                     axs[0].set_title('EEG')
-                    axs[1].plot(EMG_Abs, color = 'mediumpurple')
+                    axs[1].plot(EMG_Abs, color = 'plum')
                     axs[1].plot(MA_EMG, color = 'purple', linewidth=3)
                     axs[1].set_title('EMG')
                     
@@ -393,23 +403,28 @@ class OfflineDreamento():
                     if samples_before_begin < 0:
                         axs[3].plot(EEG, color ='powderblue')
                         axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
-                        axs[3].plot(EMG[-samples_before_begin:], color = 'mediumpurple')
+                        axs[3].plot(EMG[-samples_before_begin:], color = 'plum')
                         axs[3].plot(MA_EMG[-samples_before_begin:], color = 'purple', linewidth=3)
                         axs[3].set_title('EEG and EMG after sync')
+                        self.samples_before_begin_EMG_Dreamento = -samples_before_begin
+                        self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
                     else:
                         axs[3].plot(EEG, color ='powderblue')
                         axs[3].plot(MA_EEG, color = 'navy', linewidth=3)
                         tmp = np.zeros(samples_before_begin)
                         synced_EMG = np.append(tmp, EMG)
                         synced_EMG_MA = np.append(tmp, MA_EMG)
-                        axs[3].plot(synced_EMG, color = 'mediumpurple')
+                        axs[3].plot(synced_EMG, color = 'plum')
                         axs[3].plot(synced_EMG_MA, color = 'purple', linewidth=3)
                         axs[3].set_title('EEG and EMG after sync')
-                        
+                        self.samples_before_begin_EMG_Dreamento = tmp
+                        self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_earlier'
                     MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                     if MsgBox == 'yes':
-                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait ...")
+                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis")
                         plt.show()
+                        break
+                        
                 else: 
                     MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
                     if MsgBox == 'yes':
@@ -439,10 +454,16 @@ class OfflineDreamento():
         
                         self.axs[0].set_ylabel('Lag (samples)')
         
-                        line = self.axs[1].plot(EMG_Abs, picker=2, color = 'mediumpurple')
+                        line = self.axs[1].plot(EMG_Abs, picker=2, color = 'plum')
         
                         plt.show()
                         self.fig.canvas.mpl_connect('pick_event', self.onpick)
+                        MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
+                        if MsgBox == 'yes':
+                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait ...")
+                            plt.show()
+                            break
+                        
             
         # Loading all available data            
         self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
@@ -487,7 +508,7 @@ class OfflineDreamento():
             print('PSD plotted ...')
             
         # Plot EMG as well?
-        print('Loading the main window of Dreamento ... Please wait ...')
+        print('Loading the main window of Dreamento ... Please wait')
         if int(self.plot_additional_EMG.get()) == 1:
             fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
                                              path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
@@ -544,20 +565,24 @@ class OfflineDreamento():
                     tmp_sync = np.zeros(int(mean_x1-mean_x2))
                     self.synced_EMG = np.append(tmp_sync, self.EMG)
                     self.synced_MA_EMG = np.append(tmp_sync, self.MA_EMG)
-                    self.axs[2].plot(self.synced_EMG, color = 'mediumpurple')
+                    self.axs[2].plot(self.synced_EMG, color = 'plum')
                     self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
                     self.axs[2].plot(self.synced_MA_EMG, color = 'purple', linewidth = 2)
                     n_sample_sync = len(tmp_sync)
+                    
+                    self.samples_before_begin_EMG_Dreamento = tmp_sync
+                    self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_event_earlier'
+                    
                 if mean_x1 < mean_x2:
                     self.axs[2].plot(self.EEG, color = 'powderblue')
                     tmp_sync = int(mean_x2-mean_x1)
-                    self.axs[2].plot(self.EMG[tmp_sync:], color = 'mediumpurple')
+                    self.axs[2].plot(self.EMG[tmp_sync:], color = 'plum')
                     self.axs[2].plot(self.MA_EEG, color = 'navy', linewidth = 2)
                     self.axs[2].plot(self.MA_EEG[tmp_sync:], color = 'purple', linewidth = 2)
-                #self.axs[1].plot([mean_x1, mean_x2], [mean_y1, mean_y2], linewidth = 3, color = 'mediumpurple')
-                n_sample_sync = int(mean_x2-mean_x1)
+                    self.samples_before_begin_EMG_Dreamento = tmp_sync
+                    self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
+                #self.axs[1].plot([mean_x1, mean_x2], [mean_y1, mean_y2], linewidth = 3, color = 'plum')
                 self.fig.canvas.draw()
-                messagebox.showinfo("Information",f"You compensated {str(samples_before_begin)} samples. Now Dreamento proceeds with the main analysis ...")
             #return drift_estimate
         return self.points
         #%% Save section    
@@ -636,7 +661,7 @@ class OfflineDreamento():
                                           fg = 'red', font = 'Helvetica 9 bold').grid(row = 2, column = 0)
     
         else:
-            self.label_data       = Label(self.frame_import, text = str(self.n_data_files) + " EDF files has been loaded!",
+            self.label_data       = Label(self.frame_import, text = "The EDF files has been loaded!",
                                           fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 0)
             
     #%% Function: Import Hypnogram (Browse)
@@ -666,7 +691,7 @@ class OfflineDreamento():
             
         else:
             
-            self.label_labels  = Label(self.frame_import, text = str(self.n_label_files) + " Dreamento output file has been loaded!",
+            self.label_labels  = Label(self.frame_import, text ="The Dreamento data file has been loaded!",
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 1)
             
             
@@ -698,7 +723,7 @@ class OfflineDreamento():
             
         else:
             
-            self.label_labels  = Label(self.frame_import, text = str(self.n_label_files) + "  marker (.json) file has been loaded!",
+            self.label_labels  = Label(self.frame_import, text = "The marker (.json) file has been loaded!",
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 2)
             
     #%% Function: Import EMG (Browse)        
@@ -728,7 +753,7 @@ class OfflineDreamento():
             
         else:
             
-            self.label_labels  = Label(self.frame_import, text = str(self.n_label_files) + "  EMG (.vhdr) file has been loaded!",
+            self.label_labels  = Label(self.frame_import, text = "The EMG (.vhdr) file has been loaded!",
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 3)
      
     #%% Function: Import Hypnogram (Browse)
@@ -1375,7 +1400,27 @@ class OfflineDreamento():
         
         self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
         self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-       
+        
+        # Check whether the user already synced EMG vs. EEG or not
+        print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
+        print(f'sync samples: {str(self.samples_before_begin_EMG_Dreamento)} with shape {str(np.shape(self.samples_before_begin_EMG_Dreamento))}')
+        print(f'sync criterion: {self.flag_sign_samples_before_begin_EMG_Dreamento}')
+        if self.flag_sync_EEG_EMG == True:
+            
+            if self.flag_sign_samples_before_begin_EMG_Dreamento == 'eeg_event_earlier':
+                print('Detected that the event occured earlier in EEG than the EMG signal')
+                self.EMG_filtered_data1 = self.EMG_filtered_data1[self.samples_before_begin_EMG_Dreamento:]
+                self.EMG_filtered_data2 = self.EMG_filtered_data2[self.samples_before_begin_EMG_Dreamento:]
+                self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1_minus_2[self.samples_before_begin_EMG_Dreamento:]
+                
+            elif self.flag_sign_samples_before_begin_EMG_Dreamento == 'emg_event_earlier':
+                print('Detected that the event occured earlier in EMG than the EEG signal')
+                print(f'EMG shape before alignment is : {np.shape(self.EMG_filtered_data1)}')
+                self.EMG_filtered_data1 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1)
+                self.EMG_filtered_data2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data2)
+                self.EMG_filtered_data1_minus_2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1_minus_2)
+                print(f'EMG shape after alignment is : {np.shape(self.EMG_filtered_data1)}')
+        
         ax_EMG.plot(np.arange(len(self.EMG_filtered_data1))/256, self.EMG_filtered_data1, color = (84/255,164/255,75/255))
         ax_EMG2.plot(np.arange(len(self.EMG_filtered_data2))/256, self.EMG_filtered_data2, color = (24/255,100/255,160/255))
         ax_EMG3.plot(np.arange(len(self.EMG_filtered_data1_minus_2))/256, self.EMG_filtered_data1_minus_2, color = (160/255,10/255,22/255))

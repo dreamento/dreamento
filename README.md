@@ -88,7 +88,8 @@ python OfflineDreamento.py
 Please note that this program is provided with no warranty of any kind.
 
 **CITATION:**
-hello world!
+Esfahani, M.J., Daraie, A.H., Weber, F.D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. 
+https://doi.org/10.48550/arXiv.2207.03977
 
 
 **CopyRight (2021 - 22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
