@@ -84,6 +84,11 @@ conda env create --name offlinedreamento --file offlinedreamento.yml
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
+*3. Where can I find the list of dependencies?*
+
+The *.yml files include the dependencies of real-time and offline Dreamento.
+
+---------------------------------------------
 
 Please note that this program is provided with no warranty of any kind.
 
