@@ -22,6 +22,8 @@ OfflineDreamento.py: Integration of all the collected data for post-processing!
 - Download and install Dreamento (see section below).
 
 ## How to install Dreamento?
+A complete **tutorial on how to install Dreamento** can be found [HERE](https://youtu.be/bDRXnMZEIyI).
+
 - Open anaconda prompt.
 
 - Create all the required packages on a virtual environment with the following syntax (only at the first use):
@@ -29,6 +31,8 @@ OfflineDreamento.py: Integration of all the collected data for post-processing!
 conda env create --name dreamento --file dreamento.yml
 ```
 ## How to start a recording?
+A complete **tutorial on how to run Dreamento** can be found [HERE](https://youtu.be/vpmh_LiOjdw).
+
 When you have Dreamento and Hypndoyne software installed (see sections above), follow these steps:
 1. Connect the USB dongle to your pc.
 2. Run HDServer.exe
