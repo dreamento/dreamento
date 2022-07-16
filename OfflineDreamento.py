@@ -396,8 +396,11 @@ class OfflineDreamento():
         axs[4].plot(EMG_Abs3, color = 'thistle')
         
         plt.tight_layout()
-        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization?',icon = 'warning')
+        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization (recommended to sync further)?',icon = 'warning')
         plt.show()
+        if MsgBox == 'no':
+            messagebox.showinfo("Information",f"OK! Now we proceed with the main analysis ... Please click on OK and wait ...")
+            self.flag_sync_EEG_EMG = False
         if MsgBox == 'yes':
             self.flag_sync_EEG_EMG = True
             print('Proceeding to synchronization process ...')
@@ -507,7 +510,7 @@ class OfflineDreamento():
                     plt.tight_layout()
                     MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                     if MsgBox == 'yes':
-                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis")
+                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Click on OK and wait ...")
                         plt.show()
                         break
                         
@@ -561,7 +564,7 @@ class OfflineDreamento():
                         self.fig.canvas.mpl_connect('pick_event', self.onpick)
                         MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                         if MsgBox == 'yes':
-                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please wait")
+                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please click on OK and wait ...")
                             plt.show()
                             break
                         
@@ -678,7 +681,7 @@ class OfflineDreamento():
                     self.axs[4].plot(self.synced_MA_EMG1, color = 'purple', linewidth = 2)
                     self.axs[4].plot(self.synced_EMG2, color = 'orchid')
                     self.axs[4].plot(self.synced_MA_EMG2, color = 'blueviolet', linewidth = 2)
-                    self.axs[4].plot(self.synced_EMG3, color = 'thristle')
+                    self.axs[4].plot(self.synced_EMG3, color = 'thistle')
                     self.axs[4].plot(self.synced_MA_EMG3, color = 'slateblue', linewidth = 2)
                     
                     n_sample_sync = len(tmp_sync)
@@ -1525,9 +1528,11 @@ class OfflineDreamento():
         
         # Check whether the user already synced EMG vs. EEG or not
         print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
-        print(f'sync samples: {str(self.samples_before_begin_EMG_Dreamento)} with shape {str(np.shape(self.samples_before_begin_EMG_Dreamento))}')
-        print(f'sync criterion: {self.flag_sign_samples_before_begin_EMG_Dreamento}')
+
         if self.flag_sync_EEG_EMG == True:
+            
+            print(f'sync samples: {str(self.samples_before_begin_EMG_Dreamento)} with shape {str(np.shape(self.samples_before_begin_EMG_Dreamento))}')
+            print(f'sync criterion: {self.flag_sign_samples_before_begin_EMG_Dreamento}')
             
             if self.flag_sign_samples_before_begin_EMG_Dreamento == 'eeg_event_earlier':
                 print('Detected that the event occured earlier in EEG than the EMG signal')
