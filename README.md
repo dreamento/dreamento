@@ -71,10 +71,8 @@ python OfflineDreamento.py
 
 ![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/177753415-a32ecb4c-a599-4212-bc03-b34b3de662dc.png)
 
-
 #### 2. With no additional EMG
 ![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
-
 
 ### FAQ:
 *1. What sources of informaion we can collect?*
@@ -97,8 +95,8 @@ The *.yml files include the dependencies of real-time and offline Dreamento.
 Please note that this program is provided with no warranty of any kind.
 
 **CITATION:**
-Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. arXiv e-prints, arXiv-2207.
-https://doi.org/10.48550/arXiv.2207.03977
+*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. arXiv e-prints, arXiv-2207.
+https://doi.org/10.48550/arXiv.2207.03977*
 
 
 **CopyRight (2021 - 22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
