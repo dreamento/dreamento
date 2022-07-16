@@ -208,6 +208,7 @@ class OfflineDreamento():
     #%% Activation/inactivation of EMG button depending on the checkbox
     def EMG_button_activator(self):
         
+        
         # EMG load button
         if self.button_EMG_browse['state'] == tk.DISABLED:
             self.button_EMG_browse['state'] = tk.NORMAL
@@ -240,7 +241,30 @@ class OfflineDreamento():
     
         cumsum = np.cumsum(np.insert(x, 0, 0)) 
         return (cumsum[N:] - cumsum[:-N]) / float(N)
-        
+    
+    #%% Def progress bar
+    def progress_bar(self):
+        from tkinter import ttk
+        from time import sleep
+        #start progress bar
+        popup = tk.Toplevel()
+        tk.Label(popup, text="Analysing in progress").grid(row=0,column=0)
+        teams = range(30)
+
+        progress = 0
+        progress_var = tk.DoubleVar()
+        progress_bar = ttk.Progressbar(popup, variable=progress_var, maximum=100)
+        progress_bar.grid(row=1, column=0)#.pack(fill=tk.X, expand=1, side=tk.BOTTOM)
+        popup.pack_slaves()
+    
+        progress_step = float(100.0/len(teams))
+        for team in teams:
+            popup.update()
+            sleep(5) # lauch task
+            progress += progress_step
+            progress_var.set(progress)
+    
+        return 0
     #%% Activation/inactivation of EMG button depending on the checkbox
     def EMG_sync_method_activator(self):
 

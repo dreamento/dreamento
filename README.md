@@ -97,7 +97,7 @@ The *.yml files include the dependencies of real-time and offline Dreamento.
 Please note that this program is provided with no warranty of any kind.
 
 **CITATION:**
-Esfahani, M.J., Daraie, A.H., Weber, F.D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. 
+Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. arXiv e-prints, arXiv-2207.
 https://doi.org/10.48550/arXiv.2207.03977
 
 
