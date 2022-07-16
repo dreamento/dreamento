@@ -49,7 +49,7 @@ python mainwindow.py
 **Enjoy the GUI!**
 
 ## Post-processing:
-- Make sure the post-processing virtual environment is installed on your pc:
+- Make sure the post-processing virtual environment is installed on your pc [(video tutorial)](https://youtu.be/dpnUeIM0XDQ):
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
@@ -59,6 +59,7 @@ cd directory/to/Dreamento
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
+- Demo on post-processing: [LINK](https://youtu.be/NzDdLlAd_F8)
 - Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
 
 
