@@ -979,6 +979,9 @@ class OfflineDreamento():
 
         """
         if int(self.ZMax_Hypno_only.get()) == 0:
+            
+            self.sync_with_dreamento = True
+            
             # Sanitary checks
             if 'hypnodyne_files_list' not in globals():
                 messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The EEG L.edf file is not selected!")
@@ -995,7 +998,10 @@ class OfflineDreamento():
             elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.plot_additional_EMG.get()) == 1:
                 messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
                 
+            
+                
             else: 
+                
                 Dreamento_files_list, hypnodyne_files_list, marker_files_list
             
                 
@@ -1071,6 +1077,8 @@ class OfflineDreamento():
                 self.create_save_options()
                 
         else: # If the user chooses ONLY ZMax Hypnodyne analysis
+        
+            self.sync_with_dreamento = False
             # Sanitary checks
             if 'hypnodyne_files_list' not in globals():
                 messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The EEG L.edf file is not selected!")
@@ -1870,7 +1878,7 @@ class OfflineDreamento():
            #ax2.set_xlim([0, 7680])#len(data)])
            #ax3.set_xlim([0, len(data)])
            #ax4.set_xlim([0, 7680])#len(data)])
-           
+           self.sync_with_dreamento = True
            self.autoscoring()
 
            stages = self.y_pred
@@ -2033,7 +2041,7 @@ class OfflineDreamento():
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=9, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 4, 10]})
             
             ax1 = plt.subplot(9,1,1)
             ax2 = plt.subplot(9,1,2, sharex = ax1)
@@ -2329,7 +2337,7 @@ class OfflineDreamento():
             ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'black')
             
             #ax4.get_xaxis().set_visible(False)
-            
+            self.sync_with_dreamento = True
             self.autoscoring()
             stages = self.y_pred
             #stages = np.row_stack((stages, stages[-1]))
@@ -2394,16 +2402,33 @@ class OfflineDreamento():
         f_max = 30 #Hz
         tic   = time.time()
         
-        if int(self.is_filtering.get()) == 1: 
-            print('already filtered ... proceed with scoring ...')
-            EEG_L_filtered =  self.sigHDRecorder[self.samples_before_begin:]
-            EEG_R_filtered = self.sigHDRecorder_r[self.samples_before_begin:]
-            
+        if self.sync_with_dreamento == True:
+            if int(self.is_filtering.get()) == 1: 
+                print('already filtered ... proceed with scoring ...')
+                EEG_L_filtered =  self.sigHDRecorder[self.samples_before_begin:]
+                EEG_R_filtered = self.sigHDRecorder_r[self.samples_before_begin:]
+                
+            else:
+                print('Filtering ...')
+                # if already filtered, take it, otherwise filter first
+                EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder[self.samples_before_begin:],\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
+                EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r[self.samples_before_begin:],\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
         else:
-            print('Filtering ...')
-            # if already filtered, take it, otherwise filter first
-            EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder, lowcut=.3, highcut=30, fs = 256, order = 2)
-            EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r, lowcut=.3, highcut=30, fs = 256, order = 2)
+            if int(self.is_filtering.get()) == 1: 
+                print('already filtered ... proceed with scoring ...')
+                EEG_L_filtered =  self.sigHDRecorder
+                EEG_R_filtered = self.sigHDRecorder_r
+                
+            else:
+                print('Filtering ...')
+                # if already filtered, take it, otherwise filter first
+                EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder,\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
+                EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r,\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
+            
 
 
         T = 30 #secs
@@ -2868,7 +2893,7 @@ class OfflineDreamento():
         "IMPORTANT: To keep the location navigator accurate, please keep the cursur on "  +\
         "the spectrogrma plot while pressing left/right buttons to navigate.\n\n" +\
         "Matlab compatability: After the analysis you can export an .mat file\n\n\n" +\
-        "Contact: Mahdad.Jafarzadehesfahani@donders.ru.nl" +\
+        "Contact: Mahdad.Jafarzadehesfahani@donders.ru.nl \n" +\
         "CopyRight (2021-2022): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie**" 
             
         
