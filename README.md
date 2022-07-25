@@ -75,6 +75,9 @@ python OfflineDreamento.py
 #### 2. With no additional EMG
 ![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
 
+### Documentation
+The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
+
 ### FAQ:
 *1. What sources of informaion we can collect?*
 
