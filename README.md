@@ -96,7 +96,7 @@ The documentation of Dreamento can be found at: https://dreamento.github.io/docs
 
 Basically whatever that the ZMax Hypnodyne wearable can collect in addition to other information regarding stimulation, annotations assignment, and autoscoring, e.g., stimulation properties (color of light, intensity, etc), exact time (accurate up to the number of sample), autoscoring (real-time scored data output)
 
-*2 Can we use offline Dreamento only if we have a recording by Dreamento?*
+*2. Can we use offline Dreamento only if we have a recording by Dreamento?*
 
 No! offline Dreamento is compatible with any HDRecorder recording as well. So, you can represent, autoscore, and analzye any ZMax recording with Dreamento.
 
