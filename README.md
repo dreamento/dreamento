@@ -92,18 +92,22 @@ DreamentoScorer is a machine-learning based alogorithm which exctracts several l
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
 
 ### FAQ:
-*1. What sources of informaion we can collect?*
+*1. What sources of informaion we can collect with Dreamento?*
 
 Basically whatever that the ZMax Hypnodyne wearable can collect in addition to other information regarding stimulation, annotations assignment, and autoscoring, e.g., stimulation properties (color of light, intensity, etc), exact time (accurate up to the number of sample), autoscoring (real-time scored data output)
 
-*2. How to post-process the data?*  
+*2 Can we use offline Dreamento only if we have a recording by Dreamento?*
+
+No! offline Dreamento is compatible with any HDRecorder recording as well. So, you can represent, autoscore, and analzye any ZMax recording with Dreamento.
+
+*3. How to post-process the data?*  
 
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
-*3. Where can I find the list of dependencies?*
+*4. Where can I find the list of Python package dependencies?*
 
 The *.yml files include the dependencies of real-time and offline Dreamento.
 
