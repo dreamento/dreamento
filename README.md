@@ -74,12 +74,12 @@ DreamentoScorer is a machine-learning based alogorithm which exctracts several l
 
 ## Demo:
 ### The real-time Dreamento GUI
-![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181077650-1ce3938c-b015-4d3f-a6e1-7346f5b1046a.png)
+![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
 
 ### The offline Dreamento GUI 
 #### 1. With additional EMG measurement
 
-![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/177753415-a32ecb4c-a599-4212-bc03-b34b3de662dc.png)
+![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/181077650-1ce3938c-b015-4d3f-a6e1-7346f5b1046a.png)
 
 #### 2. With no additional EMG
 ![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
