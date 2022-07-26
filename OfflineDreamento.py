@@ -664,7 +664,7 @@ class OfflineDreamento():
                                path_Txt=self.ZmaxDondersRecording,\
                                T = 30,\
                                t_start_sync = 100,\
-                               t_end_sync   = 130)
+                               t_end_sync   = 200)
         print('The lag between Dreamento and Hypndoyne EEG computed ...')
         # Filter?
         if int(self.is_filtering.get()) == 1: 
@@ -1044,7 +1044,7 @@ class OfflineDreamento():
                                    path_Txt=self.ZmaxDondersRecording,\
                                    T = 30,\
                                    t_start_sync = 100,\
-                                   t_end_sync   = 130)
+                                   t_end_sync   = 200)
                 # Filter?
                 if int(self.is_filtering.get()) == 1: 
                     print('Bandpass filtering (.3-30 Hz) started')
