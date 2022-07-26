@@ -3,6 +3,7 @@
 ## Overview
 
 Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
+For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977
 
 ## Real-time features:
 1. Open source!
@@ -63,9 +64,12 @@ python OfflineDreamento.py
 - Demo on post-processing: [LINK](https://youtu.be/NzDdLlAd_F8)
 - Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
 
-## Autoscoring
-We have recently introiduced **DreamentoScorer** which is an open-source autoscoring algorithm that comes with Dreamento. The current version of DreamentoScorer is alpha, as it is only trained on ~35 nights of 
-a single citizen neuroscientis. Nevertheless, we are working hard to improve its generalizability by adding around 100 new data overall from more than 30 people! 
+## Automatic sleep scoring (autoscoring):
+We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package. The current version of DreamentoScorer is alpha, as it is only trained on ~35 nights of 
+a single citizen neuroscientist only. Nevertheless, we are working hard to improve its generalizability by adding around 100 new data overall from more than 30 people! 
+
+DreamentoScorer is a machine-learning based alogorithm which exctracts several linear and non-linear features in time and time-frequency domain from each 30-second epoch of data. The classifier is based on the LightGBM and
+ we plan to add other classifiers such that the user can make a consensus of different scoring algorithms. So, stay tuned for the upcoming updates!
 
 ## Demo:
 ### The real-time Dreamento GUI
