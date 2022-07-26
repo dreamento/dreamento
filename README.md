@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dreamento (DREAM ENgineering TOolbox) is a Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
+Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 
 ## Real-time features:
 1. Open source!
@@ -15,6 +15,7 @@ Dreamento (DREAM ENgineering TOolbox) is a Python package to record, monitor, an
 
 ## Post-processing:
 OfflineDreamento.py: Integration of all the collected data for post-processing!
+*N.B. Dreamento can now be used to analyze the recordings by HDRecorder only as well! So, any ZMax user can use Dreamento for data representation, time-freq representation, and autoscoring.*
 
 ## Installation and Prerequisities: 
 - Download and install Anaconda (https://www.anaconda.com/).
@@ -62,10 +63,13 @@ python OfflineDreamento.py
 - Demo on post-processing: [LINK](https://youtu.be/NzDdLlAd_F8)
 - Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
 
+## Autoscoring
+We have recently introiduced **DreamentoScorer** which is an open-source autoscoring algorithm that comes with Dreamento. The current version of DreamentoScorer is alpha, as it is only trained on ~35 nights of 
+a single citizen neuroscientis. Nevertheless, we are working hard to improve its generalizability by adding around 100 new data overall from more than 30 people! 
 
 ## Demo:
 ### The real-time Dreamento GUI
-![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/177725424-9aca75e7-62c9-46c0-8a27-c17579fa8c47.png)
+![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181077650-1ce3938c-b015-4d3f-a6e1-7346f5b1046a.png)
 
 ### The offline Dreamento GUI 
 #### 1. With additional EMG measurement
@@ -74,6 +78,10 @@ python OfflineDreamento.py
 
 #### 2. With no additional EMG
 ![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
+
+### EEG - EMG synchronization
+![EEG_EMG_synchronization](https://user-images.githubusercontent.com/48684369/181077226-31550c51-615f-486c-8b4f-1e5c55d8a20c.png)
+
 
 ### Documentation
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
@@ -99,7 +107,7 @@ The *.yml files include the dependencies of real-time and offline Dreamento.
 Please note that this program is provided with no warranty of any kind.
 
 **CITATION:**
-*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: An open-source dream engineering toolbox utilizing sleep wearable. arXiv e-prints, arXiv-2207.
+*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
 https://doi.org/10.48550/arXiv.2207.03977*
 
 
