@@ -5,6 +5,8 @@
 Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977
 
+**Online/real-time Dreamento** is meant to be used for data collection, whereas **offline/post-processing Dreamento** is capable of analyzing both the data collected by online Dreamento or any ZMax recording that used HDRecorder software.
+
 ## Real-time features:
 1. Open source!
 2. Graphical user interface (GUI)
