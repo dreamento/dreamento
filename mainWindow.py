@@ -197,7 +197,7 @@ class Window:
                           vib=self.dlg.vibrationBox.isChecked(), alt=self.dlg.altEyesBox.isChecked())
         if self.isRecording:
             # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-            stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
+            stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
             color = ""
             if (str(self.dlg.rSlider.value()) == "1" or str(self.dlg.rSlider.value()) == "2") and \
                 self.dlg.gSlider.value() == 0 and self.dlg.bSlider.value() == 0:
@@ -214,7 +214,7 @@ class Window:
             else:
                 color = f"mixed color {self.dlg.rSlider.value()}, {self.dlg.gSlider.value()}, {self.dlg.bSlider.value()}"
 
-            self.stimulationDataBase[f"LIGHT sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
+            self.stimulationDataBase[f"LIGHT sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
                 f"""{color}, \
 pwm: {self.dlg.pwmSlider.value()}, {0}, On: {int(self.dlg.onTimeSpinBox.value() * 10)}, \
 Off: {int(self.dlg.offTimeSpinBox.value() * 10)}, Reps: {self.dlg.repetitionsBox.value()}, \
@@ -238,8 +238,9 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
 
             if self.isRecording:
                 # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-                stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
-                self.stimulationDataBase[f"SOUND sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
+                stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
+
+                self.stimulationDataBase[f"SOUND sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
                     f"""{self.audio_file_path}"""
                 print(self.stimulationDataBase)
 
@@ -250,8 +251,8 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
                 QSound.play(voiceFile)      # plays saved .wav file, which contain speeched-voice
                 if self.isRecording:  # if a recording is in progress...
                     # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-                    stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
-                    self.stimulationDataBase[f"TEXT2SPEECH sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
+                    stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
+                    self.stimulationDataBase[f"TEXT2SPEECH sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
                         f"""{self.dlg.textToSpeechLineEdit.text()}"""
             except:
                 print("No internet connection for playing speech")
@@ -330,8 +331,8 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
     def setMarkerButtonPressed(self):
         if self.isRecording:    # if a recording is in progress...
             # for saving time (sec) and sample number (from 1 to 250:260) of triggered simulation
-            stimulationSampleNum, stimulationSecondNum = self.recordingThread.getCurrentSampleInformation()
-            self.stimulationDataBase[f"MARKER sample {stimulationSampleNum}, second {stimulationSecondNum}"] = \
+            stimulationSampleNum, stimulationSecondNum, stimulationTotalSampleNum = self.recordingThread.getCurrentSampleInformation()
+            self.stimulationDataBase[f"MARKER sample {stimulationSampleNum}, second {stimulationSecondNum}, totalSample {stimulationTotalSampleNum}"] = \
                 f"""{self.dlg.markerLineEdit.text()}"""
             self.dlg.markerLineEdit.setPlaceholderText(f'{self.dlg.markerLineEdit.text()} - SAVED!')
             self.previousMarkerLineEditValue = self.dlg.markerLineEdit.text()
@@ -613,13 +614,14 @@ Vib: {self.dlg.vibrationBox.isChecked()}, Alt: {self.dlg.altEyesBox.isChecked()}
         # to change range automatically with change of spin box
         if int(val) % 5 == 0:
             sec = int(np.floor(self.displayedXrangeCounter / 256))
-            k = int(np.floor(sec / self.desiredXrange))
+            k = int(np.floor(sec / val))
             xMin = val * k
             xMax = val * (k + 1)
             a_X = self.dlg.graphWidget.getAxis('bottom')
             ticks = range(xMin, xMax, 1)
             a_X.setTicks([[(v, str(v)) for v in ticks]])
             self.dlg.graphWidget.setXRange(xMin, xMax, padding=0)
+
 
 class RecordThread(QThread):
     recordingProgessSignal = pyqtSignal(int)    # a sending signal to mainWindow - sends time info of ongoing recording to mainWindow
@@ -635,6 +637,7 @@ class RecordThread(QThread):
         self.stimulationType = ""
         self.secondCounter = 0
         self.dataSampleCounter = 0
+        self.totalDataSampleCounter = 0
         self.epochCounter = 0
         self.samples_db = []
 
@@ -657,7 +660,7 @@ class RecordThread(QThread):
                                ZmaxDataID.dx.value,ZmaxDataID.dy.value,ZmaxDataID.dz.value]
 
     def getCurrentSampleInformation(self):
-        return [self.dataSampleCounter, self.secondCounter]  # returns time info of stimulation, when called
+        return [self.dataSampleCounter, self.secondCounter, self.totalDataSampleCounter]  # returns time info of stimulation, when called
 
     def sendEEGdata2main(self,
                          eegSigR=None, eegSigL=None,
@@ -695,8 +698,7 @@ class RecordThread(QThread):
         sigL_accumulative = []
 
         while True:
-            
-            if int(self.epochCounter)>0 and int(int(self.epochCounter) % 60) ==0 and dataSamplesToAnalyzeCounter == 0:
+            if self.epochCounter%60==0 and dataSamplesToAnalyzeCounter == 0:
                 del hb
                 hb = ZmaxHeadband()
                 print("New HB created after 60 epochs")
@@ -712,6 +714,7 @@ class RecordThread(QThread):
                 x = hb.read(cols[:-2])
                 if x != []:
                     self.dataSampleCounter += 1
+                    self.totalDataSampleCounter += 1
 
                     x.extend([self.dataSampleCounter, self.secondCounter])
                     recording.append(x)
