@@ -698,6 +698,7 @@ class OfflineDreamento():
                                              trimperc=5, cmap='RdBu_r', add_colorbar = False)
         # Activate save section
         self.create_save_options()
+        self.create_save_options_autoscoring()
 
     #%% Manual sync function        
     def onpick(self,event):
@@ -796,25 +797,25 @@ class OfflineDreamento():
         # Label: Save outcome
         self.label_save_path = Label(self.frame_import, text = "Saving path:",
                                   font = 'Calibri 13 ')
-        self.label_save_path.grid(row = 4 , column = 0, padx = 15, pady = 10)
+        self.label_save_path.grid(row = 6 , column = 0, padx = 15, pady = 10)
         
         # Define browse button to import hypnos
         self.button_save_browse = Button(self.frame_import, text = "Browse ...", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.save_path_finder,fg = 'blue',
                                            relief = RIDGE)
-        self.button_save_browse.grid(row = 5, column = 0, padx = 15, pady = 10)
+        self.button_save_browse.grid(row = 7, column = 0, padx = 15, pady = 10)
         
         
         
         # Label: Save name
         self.label_save_filename = Label(self.frame_import, text = "Saving filename:",
                                   font = 'Calibri 13 ')
-        self.label_save_filename.grid(row = 4 , column = 1)#, padx = 15, pady = 10)
+        self.label_save_filename.grid(row = 6 , column = 1)#, padx = 15, pady = 10)
         
         # Create entry for user
         self.entry_save_name = Entry(self.frame_import,text = " enter filename.mat ")#, borderwidth = 2, width = 10)
-        self.entry_save_name.grid(row = 5, column = 1)#, padx = 15, pady = 10)
+        self.entry_save_name.grid(row = 7, column = 1)#, padx = 15, pady = 10)
         
         self.button_save_mat = Button(self.frame_import, text = "Save", padx = 40, pady=8,
                               font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
@@ -825,11 +826,69 @@ class OfflineDreamento():
                                         microphone_data = self.noise_data,\
                                         acc_x = self.acc_x, acc_y = self.acc_y, acc_z = self.acc_z,\
                                         Hypnodyne_EEG_L = self.sigHDRecorder_org_synced))
-        self.button_save_mat.grid(row = 5 , column =2, padx = 15, pady = 10)
+        self.button_save_mat.grid(row = 7 , column =2, padx = 15, pady = 10)
         
+    #%% create save options for autoscoring
+    def create_save_options_autoscoring(self):
+        """
+        Store the scoring results and the sleep metrics as a txt file
+    
+        :param self: access the attributes and methods of the class
+        
+        :returns: user_defined_name.mat
 
+        """
+        
+        
+        
+        # Label: Save outcome
+        self.label_save_path_autoscoring = Label(self.frame_import, text = "Path to save autoscoring results:",
+                                  font = 'Calibri 13 ')
+        self.label_save_path_autoscoring.grid(row = 4 , column = 0, padx = 15, pady = 10)
+        
+        # Define browse button to import hypnos
+        self.button_save_browse_autoscoring = Button(self.frame_import, text = "Browse ...", 
+                                           padx = 40, pady = 10, font = 'Calibri 12 ',
+                                           command = self.save_path_finder,fg = 'blue',
+                                           relief = RIDGE)
+        self.button_save_browse_autoscoring.grid(row = 5, column = 0, padx = 15, pady = 10)
+        
+        
+        
+        # Label: Save name
+        self.label_save_filename_autoscoring = Label(self.frame_import, text = "Saving filename:",
+                                  font = 'Calibri 13 ')
+        self.label_save_filename_autoscoring.grid(row = 4 , column = 1)#, padx = 15, pady = 10)
+        
+        # Create entry for user
+        self.entry_save_name_autoscoring = Entry(self.frame_import,text = "Subject#_night#.txt ")#, borderwidth = 2, width = 10)
+        self.entry_save_name_autoscoring.grid(row = 5, column = 1)#, padx = 15, pady = 10)
+        
+        self.button_save_mat_autoscoring = Button(self.frame_import, text = "Save", padx = 40, pady=8,
+                              font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
+                              command = self.save_autoscoring_button)
+        self.button_save_mat_autoscoring.grid(row = 5 , column =2, padx = 15, pady = 10)
     #%% ################### DEFINE FUNCTIONS OF BUTTON(S) #######################
-    #%% Function: Import EDF (Browse)
+    #%% Save autoscorrig button
+    def save_autoscoring_button(self):
+        
+        if self.entry_save_name_autoscoring.get()[-4:] == '.txt':
+           saving_dir = where_to_save_path + '/' + self.entry_save_name_autoscoring.get()
+        else:
+           saving_dir = where_to_save_path + '/' + self.entry_save_name_autoscoring.get() + '.txt'
+           
+           a_file = open(saving_dir, "w")
+           for row in self.stage_autoscoring[:,np.newaxis]:
+               np.savetxt(a_file, row, fmt='%1.0f')
+           
+           a_file.close()
+           
+           # Save sleep metrics
+           with open(saving_dir[:-4]+'_metrics.txt', 'w') as convert_file:
+               convert_file.write(json.dumps(self.stats))
+        messagebox.showinfo(title = "Done!", message = f'Autoscoring results successfully saved in {saving_dir}!')
+        
+    #%% Function: Import EDF (Browse
     def load_hypnodyne_file_dialog(self):
         """
         The function to load the EEG.L file from the HDrecorder.
@@ -1074,7 +1133,7 @@ class OfflineDreamento():
                                                  win_sec=30, fmin=0.5, fmax=25,\
                                                  trimperc=5, cmap='RdBu_r', add_colorbar = False)
                 # Activate save section
-                self.create_save_options()
+                self.create_save_options_autoscoring()
                 
         else: # If the user chooses ONLY ZMax Hypnodyne analysis
         
@@ -1139,6 +1198,10 @@ class OfflineDreamento():
                     self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
                                             win_sec=30, fmin=0.3, fmax=40,\
                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
+                        
+            # Activate save section
+            
+            self.create_save_options_autoscoring()
                 
             
     #%% band-pass filtering
@@ -1884,7 +1947,7 @@ class OfflineDreamento():
            stages = self.y_pred
            #stages = np.row_stack((stages, stages[-1]))
            x      = np.arange(len(stages))
-            
+           self.stage_autoscoring = stages
             # Change the order of classes: REM and wake on top
            x = []
            y = []
@@ -1902,8 +1965,21 @@ class OfflineDreamento():
                    x.append(i-1)   
            y.append(p)
            x.append(i)
+           ax_autoscoring.step(x, y, where='post', color = 'black')
            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
-           ax_autoscoring.plot(x, y)
+           for i in np.arange(len(rem)) -1:
+               
+               if rem[i+1] - rem[i] == 1:
+                   
+                   ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
+               elif rem[i] - rem[i-1] == 1:
+                   ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+            
+               elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
+                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+           
+           
+           
            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
                                      fontsize = 8)
@@ -2342,7 +2418,7 @@ class OfflineDreamento():
             stages = self.y_pred
             #stages = np.row_stack((stages, stages[-1]))
             x      = np.arange(len(stages))
-            
+            self.stage_autoscoring = stages
             # Change the order of classes: REM and wake on top
             x = []
             y = []
@@ -2358,8 +2434,18 @@ class OfflineDreamento():
                     x.append(i-1)   
             y.append(p)
             x.append(i)
+            ax_autoscoring.step(x, y, where='post', color = 'black')
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
-            ax_autoscoring.plot(x, y)
+            
+            for i in np.arange(len(rem)) -1:
+                if rem[i+1] - rem[i] == 1:
+                    ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
+                elif rem[i] - rem[i-1] == 1:
+                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+            
+                elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
+                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+            
             ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
             ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
@@ -2726,6 +2812,8 @@ class OfflineDreamento():
             stages = self.y_pred
             #stages = np.row_stack((stages, stages[-1]))
             x      = np.arange(len(stages))
+            self.epoch_autoscoring = x
+            self.stage_autoscoring = stages
             
             # Change the order of classes: REM and wake on top
             x = []
@@ -2742,11 +2830,23 @@ class OfflineDreamento():
                     x.append(i-1)   
             y.append(p)
             x.append(i)
-            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
-            ax_autoscoring.plot(x, y)
-            ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
+            
+
+            
+            ax_autoscoring.step(x, y, where='post', color = 'black')
+            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
             ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
+            
+            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
+            for i in np.arange(len(rem)) -1:
+                if rem[i+1] - rem[i] == 1:
+                    ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
+                elif rem[i] - rem[i-1] == 1:
+                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+            
+                elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
+                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
 
             
             # plot acc
