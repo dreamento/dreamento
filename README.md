@@ -64,11 +64,12 @@ cd directory/to/Dreamento
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
+```diff
 - Demo on post-processing (Dreamento + ZMax Hypnodyne + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
 - Demo on post-processing (Dreamento + ZMax Hypnodyne + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
 - Demo on post-processing (**ZMax Hypnodyne only**): [LINK] (https://youtu.be/uv6-D57b97I)
 - Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
-
+```
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package. The current version of DreamentoScorer is alpha, as it is trained on ~35 nights of 
 a single citizen neuroscientist only. Nevertheless, we are working hard to improve its generalizability by adding around 100 new data overall from more than 30 people! 
