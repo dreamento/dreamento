@@ -99,7 +99,7 @@ The documentation of Dreamento can be found at: https://dreamento.github.io/docs
 
 ### FAQ:
 
-*1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), using offline Dreamento?
+*1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), using offline Dreamento?*
 
 Yes! If you have a ZMax recording by Hypnodyne software and want to analyze your results (e.g. automatically score the data) with Dreamento, watch: https://youtu.be/uv6-D57b97I
 
