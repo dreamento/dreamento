@@ -85,7 +85,7 @@ With DreamentoScorer, you can export not only the sleep stage predictions, but a
 ### The offline Dreamento GUI 
 #### 1. With additional EMG measurement
 
-![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/195379950-55dab537-171c-4d1e-a6af-6f33908387dc.png)
+![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/195380607-7b35d89e-d6ff-446c-85f0-154a7b3dae54.png)
 
 #### 2. With no additional EMG
 ![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
