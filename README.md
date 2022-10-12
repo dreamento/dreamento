@@ -98,13 +98,15 @@ With DreamentoScorer, you can export not only the sleep stage predictions, but a
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
 
 ### FAQ:
-*1. What sources of informaion we can collect with Dreamento?*
+
+*1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), using offline Dreamento?
+
+Yes! If you have a ZMax recording by Hypnodyne software and want to analyze your results (e.g. automatically score the data) with Dreamento, watch: https://youtu.be/uv6-D57b97I
+
+*2. What sources of informaion we can collect with Dreamento?*
 
 Basically whatever that the ZMax Hypnodyne wearable can collect in addition to other information regarding stimulation, annotations assignment, and autoscoring, e.g., stimulation properties (color of light, intensity, etc), exact time (accurate up to the number of sample), autoscoring (real-time scored data output)
 
-*2. Can we use offline Dreamento only if we have a recording by Dreamento?*
-
-No! offline Dreamento is compatible with any HDRecorder recording as well. So, you can represent, autoscore, and analzye any ZMax recording with Dreamento.
 
 *3. How to post-process the data?*  
 
