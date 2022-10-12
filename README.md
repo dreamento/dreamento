@@ -64,11 +64,10 @@ cd directory/to/Dreamento
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
-<span style="color:blue">some *blue* text</span>.
-- Demo on post-processing (Dreamento + ZMax Hypnodyne + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
-- Demo on post-processing (Dreamento + ZMax Hypnodyne + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
-- Demo on post-processing (**ZMax Hypnodyne only**): [LINK] (https://youtu.be/uv6-D57b97I)
-- Load the relavant data files (Loading the Hypndoyne recording, Dreamento data (.txt), and annotations (.json) are mandatory, whereas EMG integration is optional (choose the relavant option form the "Plot EMG" checkbox on right of the GUI).
+
+1. Demo on post-processing (Dreamento + ZMax Hypnodyne + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
+2. Demo on post-processing (Dreamento + ZMax Hypnodyne + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
+3. Demo on post-processing (**ZMax Hypnodyne only**): [LINK] (https://youtu.be/uv6-D57b97I)
 
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package. The current version of DreamentoScorer is alpha, as it is trained on ~35 nights of 
@@ -76,6 +75,8 @@ a single citizen neuroscientist only. Nevertheless, we are working hard to impro
 
 DreamentoScorer is a machine-learning based alogorithm which exctracts several linear and non-linear features in time and time-frequency domain from each 30-second epoch of data. The classifier is based on the LightGBM and
  we plan to add other classifiers such that the user can make a consensus of different scoring algorithms. So, stay tuned for the upcoming updates!
+
+With DreamentoScorer, you can export not only the sleep stage predictions, but also the sleep metrics such as sleep efficiency, sleep onset latency, etc as a txt file.
 
 ## Demo:
 ### The real-time Dreamento GUI
