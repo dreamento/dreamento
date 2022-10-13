@@ -5,6 +5,7 @@
 Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977
 
+- **To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming: ** [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
 **Online/real-time Dreamento** is meant to be used for data collection, whereas **offline/post-processing Dreamento** is capable of analyzing both the data collected by online Dreamento or any ZMax recording that used HDRecorder software.
 
 ## Real-time features:
@@ -16,10 +17,10 @@ For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.22
 6. Modulation: sleep modulation by visual, auditory, and tactile stimulation
 7. annotations: The experimenter can set various annotations throughout the experiment.
 
-## Post-processing:
-OfflineDreamento.py: Integration of all the collected data for post-processing!
+## Post-processing features:
+The post-processing Dreamento is not only able to process the data collected by the Dreamento software itself, but we have made it possible that all ZMax users who use the official software of the company (Hypnodyne HDRecorder) can also process their data with Dreamento!
 
-*N.B. Dreamento can now be used to analyze the recordings by HDRecorder only as well! So, any ZMax user can use Dreamento for data representation, time-freq representation, and autoscoring.*
+- OfflineDreamento.py: Integration of all the collected data for post-processing, ZMax data, annotations, TFR, **autoscroing**, and integration with other measurement modalities!
 
 ## Installation and Prerequisities: 
 - Download and install Anaconda (https://www.anaconda.com/).
@@ -64,10 +65,11 @@ cd directory/to/Dreamento
 conda activate offlinedreamento
 python OfflineDreamento.py
 ```
+You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband).
 
-1. Demo on post-processing (Dreamento + ZMax Hypnodyne + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
-2. Demo on post-processing (Dreamento + ZMax Hypnodyne + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
-3. Demo on post-processing (**ZMax Hypnodyne only**): [LINK] (https://youtu.be/uv6-D57b97I)
+1. Demo on post-processing (Dreamento + Hypnodyne HDRecorder + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
+2. Demo on post-processing (Dreamento + Hypnodyne HDRecorder + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
+3. Demo on post-processing (** Hypnodyne HDRecorder only**): [LINK](https://youtu.be/uv6-D57b97I)
 
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package. The current version of DreamentoScorer is alpha, as it is trained on ~35 nights of 
@@ -77,6 +79,8 @@ DreamentoScorer is a machine-learning based alogorithm which exctracts several l
  we plan to add other classifiers such that the user can make a consensus of different scoring algorithms. So, stay tuned for the upcoming updates!
 
 With DreamentoScorer, you can export not only the sleep stage predictions, but also the sleep metrics such as sleep efficiency, sleep onset latency, etc as a txt file.
+
+*N.B: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.*
 
 ## Demo:
 ### The real-time Dreamento GUI
@@ -99,9 +103,9 @@ The documentation of Dreamento can be found at: https://dreamento.github.io/docs
 
 ### FAQ:
 
-*1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), using offline Dreamento?*
+*1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), such as a recording by pushing the record button on the headband using offline Dreamento?*
 
-Yes! If you have a ZMax recording by Hypnodyne software and want to analyze your results (e.g. automatically score the data) with Dreamento, watch: https://youtu.be/uv6-D57b97I
+Yes! If you have a ZMax recording by Hypnodyne software (and consequently the .edf files) and want to analyze your results (e.g. automatically score the data) with Dreamento, have a look at watch: https://youtu.be/uv6-D57b97I.
 
 *2. What sources of informaion we can collect with Dreamento?*
 
