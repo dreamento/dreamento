@@ -2460,7 +2460,7 @@ class OfflineDreamento():
     #%% Autoscoring caution
     def scoring_caution(self):
         if int(self.is_autoscoring.get()) == 1:
-            messagebox.showinfo("Caution",f"The current version of DreamentoScorer is alpha - thus its generalizability is limited! Always double-check with manual scoring!")
+            messagebox.showinfo("Caution",f"The current version of DreamentoScorer is alpha - thus its generalizability is limited! Always double-check with manual scoring! \n N.B. For a proper performance of the DreamentoScorer both EEG channels should have acceptable quality. The scoring for the epochs of data loss is not reliable.")
 
     #%% Autoscoring    
     def autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
@@ -2538,7 +2538,8 @@ class OfflineDreamento():
         # Ensure equalituy of length for arrays:
         assert np.shape(EEG_L_filtered_epoched)[1] == np.shape(EEG_R_filtered_epoched)[1], 'Different epoch numbers!'
         
-        
+        print(f'SHAPE OF EEG_L_filtered_epoched {np.shape(EEG_L_filtered_epoched)}')
+
         # Extract features
         tic = time.time()
         print(f'shape after epoching: {np.shape(EEG_L_filtered_epoched)}')
