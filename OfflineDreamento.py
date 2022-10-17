@@ -878,6 +878,11 @@ class OfflineDreamento():
            saving_dir = where_to_save_path + '/' + self.entry_save_name_autoscoring.get() + '.txt'
            
            a_file = open(saving_dir, "w")
+           a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento')
+           a_file.write('\nThis file has been autoscored by DreamentoScorer! \nSleep stages: Wake:0, N1:1, N2:2, SWS:3, REM:4.\n')
+           a_file.write('N.B. this is an alpha version of DreamentoScorer, always double-check with manual scoring!\n')
+           a_file.write('============================================================================================\n')
+           
            for row in self.stage_autoscoring[:,np.newaxis]:
                np.savetxt(a_file, row, fmt='%1.0f')
            
@@ -1968,16 +1973,8 @@ class OfflineDreamento():
            ax_autoscoring.step(x, y, where='post', color = 'black')
            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
            for i in np.arange(len(rem)) -1:
-               
-               if rem[i+1] - rem[i] == 1:
-                   
-                   ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
-               elif rem[i] - rem[i-1] == 1:
-                   ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
-            
-               elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
-                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
-           
+               ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+
            
            
            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
@@ -2438,14 +2435,9 @@ class OfflineDreamento():
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
             
             for i in np.arange(len(rem)) -1:
-                if rem[i+1] - rem[i] == 1:
-                    ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
-                elif rem[i] - rem[i-1] == 1:
-                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
-            
-                elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
-                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
-            
+                ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+
+                    
             ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
             ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
@@ -2841,13 +2833,7 @@ class OfflineDreamento():
             
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
             for i in np.arange(len(rem)) -1:
-                if rem[i+1] - rem[i] == 1:
-                    ax_autoscoring.plot([rem[i], rem[i+1]], [-1,-1] , linewidth = 5, color = 'red')
-                elif rem[i] - rem[i-1] == 1:
-                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
-            
-                elif ((rem[i+1] - rem[i] != 1) and (rem[i] - rem[i-1] != 1)):
-                    ax_autoscoring.plot([rem[i], rem[i]+1], [-1,-1] , linewidth = 5, color = 'red')
+                ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
 
             
             # plot acc
