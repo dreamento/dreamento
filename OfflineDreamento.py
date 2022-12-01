@@ -27,6 +27,7 @@ from scipy.signal import butter, filtfilt
 import itertools
 import matplotlib
 import os
+import threading
 
 matplotlib.use('TkAgg')
 
@@ -164,28 +165,41 @@ class OfflineDreamento():
         
         self.checkbox_plot_sync_output.grid(row = 3, column = 4, sticky="w")
         
-    #%% Checkbox for plotting spectrograms with markers
-        self.plot_additional_EMG = IntVar(value = 1)
-        self.checkbox_plot_additional_EMG = Checkbutton(self.frame_import, text = "Plot EMG",
-                                  font = 'Calibri 11 ', variable = self.plot_additional_EMG,\
-                                  command=self.EMG_button_activator)
-        
-        self.checkbox_plot_additional_EMG.grid(row = 4, column = 4, sticky="w", pady = 10)
-        
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 5, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 4, column = 4, sticky="w", pady = 10)
+    #%% Label to select the desired analysis
+        #Label to read data and extract features
+        self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
+                                      font = 'Calibri 13 ')
+        self.label_analysis_data.grid(row = 5 , column = 4, sticky="w")
+        
+    #%% Checkbox for plotting spectrograms with markers
+        self.analysis_signal_options = IntVar(value = 1)
+        self.checkbox_plot_additional_EMG = Radiobutton(self.frame_import, text = "Dreamento + HDRecorder + EMG",
+                                  font = 'Calibri 11 ', variable = self.analysis_signal_options,\
+                                  value = 1, command=self.analysis_signal_options_button_activator)
+        
+        self.checkbox_plot_additional_EMG.grid(row = 6, column = 4, sticky="w", pady = 10)
+        
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
-        self.ZMax_Hypno_only = IntVar(value = 0)
-        self.checkbox_ZMax_Hypno_only = Checkbutton(self.frame_import, text = "Analyze only ZMax Hypnodyne",
-                                  font = 'Calibri 11 ', variable = self.ZMax_Hypno_only,\
-                                     command=self.ZMax_Hypno_only_activator, state = tk.DISABLED)
+        self.ZMax_Hypno_Dreamento = IntVar(value = 0)
+        self.checkbox_ZMax_Hypno_Dreamento = Radiobutton(self.frame_import, text = "Dreamento + HDRecorder",
+                                  font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
+                                  command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 6, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 7, column = 4, sticky="w", pady = 10)
+    #%% Checkbox for analyzing ZMax Hypndoyne only
+        self.ZMax_Hypno_only = IntVar(value = 0)
+        self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
+                                  font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
+                                  command=self.analysis_signal_options_button_activator)
+        
+        self.checkbox_ZMax_Hypno_only.grid(row = 8, column = 4, sticky="w", pady = 10)
         
     #%% EMG Y SCALE
         #Label to read data and extract features
@@ -221,83 +235,56 @@ class OfflineDreamento():
         self.WarningNotEnoughDataMessage = "Dear user! \nAll required data are not uploaded! \n Please upload them all and try again."
     
     #%% Activation/inactivation of EMG button depending on the checkbox
-    def EMG_button_activator(self):
+    def analysis_signal_options_button_activator(self):
         
+        int_val = int(self.analysis_signal_options.get())
         
+        if int_val == 1:
         # EMG load button
-        if self.button_EMG_browse['state'] == tk.DISABLED:
             self.button_EMG_browse['state'] = tk.NORMAL
-
-        else:
-            self.button_EMG_browse['state'] = tk.DISABLED
             
         # EMG option menu 
-        if self.EMG_scale_option_menu['state'] == tk.DISABLED:
             self.EMG_scale_option_menu['state'] = tk.NORMAL
 
-        else:
-            self.EMG_scale_option_menu['state'] = tk.DISABLED
-            
         # Sync button
-        if self.button_sync_EMG['state'] == tk.DISABLED:
             self.button_sync_EMG['state'] = tk.NORMAL
 
-        else:
-            self.button_sync_EMG['state'] = tk.DISABLED
-            
         # Sync button
-        if self.button_apply['state'] == tk.NORMAL:
             self.button_apply['state'] = tk.DISABLED
+            
+        elif int_val == 2:
+            
+            # EMG load button
+            self.button_EMG_browse['state'] = tk.DISABLED
+                
+            # EMG option menu 
+            self.EMG_scale_option_menu['state'] = tk.DISABLED
 
-        else:
+            # Sync button
+            self.button_sync_EMG['state'] = tk.DISABLED
+
+            # Sync button
             self.button_apply['state'] = tk.NORMAL
             
-        if self.checkbox_ZMax_Hypno_only['state'] == tk.NORMAL:
-            self.checkbox_ZMax_Hypno_only['state'] = tk.DISABLED
-
-        else:
-            self.checkbox_ZMax_Hypno_only['state'] = tk.NORMAL
-    #%% ZMax_Hypno_only_activator
-    def ZMax_Hypno_only_activator(self):
-# =============================================================================
-#         # EMG load button
-#         if self.button_EMG_browse['state'] == tk.NORMAL:
-#             self.button_EMG_browse['state'] = tk.DISABLED
-# 
-#         else:
-#             self.button_EMG_browse['state'] = tk.NORMAL
-# =============================================================================
-        
-        # EMG checkbox
-        if self.checkbox_plot_additional_EMG['state'] == tk.NORMAL:
-            self.checkbox_plot_additional_EMG['state'] = tk.DISABLED
-
-        else:
-            self.checkbox_plot_additional_EMG['state'] = tk.NORMAL
-
-        # Alignment checkbox
-        if self.checkbox_plot_sync_output['state'] == tk.NORMAL:
-            self.checkbox_plot_sync_output['state'] = tk.DISABLED
-
-        else:
-            self.checkbox_plot_sync_output['state'] = tk.NORMAL
+        elif int_val == 3:
             
+            # EMG load button
+            self.button_EMG_browse['state'] = tk.DISABLED
+                
+            # EMG option menu 
+            self.EMG_scale_option_menu['state'] = tk.DISABLED
 
-        # Dreamento load button
-        if self.button_Dreamento_browse['state'] == tk.DISABLED:
-            self.button_Dreamento_browse['state'] = tk.NORMAL
+            # Sync button
+            self.button_sync_EMG['state'] = tk.DISABLED
 
-        else:
+            # Sync button
+            self.button_apply['state'] = tk.NORMAL
+            
+            # Browse Dreamento button 
             self.button_Dreamento_browse['state'] = tk.DISABLED
             
-        # json load button
-        if self.button_marker_json_browse['state'] == tk.DISABLED:
-            self.button_marker_json_browse['state'] = tk.NORMAL
-
-        else:
+            # Browse Markers browse button 
             self.button_marker_json_browse['state'] = tk.DISABLED
-            
-      
     #%% Moving average filter    
     def MA(self,x, N):
     
@@ -341,10 +328,10 @@ class OfflineDreamento():
         elif 'marker_files_list' not in globals():
             messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .json file of markers is not selected!")
             
-        elif 'EMG_files_list' not in globals() and int(self.plot_additional_EMG.get()) == 1:
+        elif 'EMG_files_list' not in globals() and int(self.analysis_signal_options.get()) == 1:
             messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
             
-        elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.plot_additional_EMG.get()) == 1:
+        elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.analysis_signal_options.get()) == 1:
             messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
             
         else: 
@@ -367,13 +354,18 @@ class OfflineDreamento():
         clench_event = []
         counter_sync = []
         time_sync_event = []
-
-        for counter, marker in enumerate(markers.values()):
-            if marker.split()[0] == 'clench':
-                print(marker.split())
-                counter_sync.append(counter)
         
+        for counter, marker in enumerate(markers.values()):
+            try:
+                if marker.split()[0] == 'clench' or marker.split()[0] == 'Clench':
+                    print(marker.split())
+                    counter_sync.append(counter)
+                    
+            except:
+                print(f'an exception occured for marker = {marker}')
+                continue
         print(counter_sync)
+        
         for counter, marker in enumerate(markers.keys()):
             if counter in counter_sync:
                 time_sync_event.append(int(marker.split()[-1]))
@@ -683,7 +675,7 @@ class OfflineDreamento():
             
         # Plot EMG as well?
         print('Loading the main window of Dreamento ... Please wait')
-        if int(self.plot_additional_EMG.get()) == 1:
+        if int(self.analysis_signal_options.get()) == 1:
             fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
                                              path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
                                              markers_to_show = ['light', 'manual', 'sound'],\
@@ -697,8 +689,11 @@ class OfflineDreamento():
                                              win_sec=30, fmin=0.5, fmax=25,\
                                              trimperc=5, cmap='RdBu_r', add_colorbar = False)
         # Activate save section
+        if int(self.is_autoscoring.get()) == 1: 
+            self.create_save_options_autoscoring()
+            
+        # Create export option
         self.create_save_options()
-        self.create_save_options_autoscoring()
 
     #%% Manual sync function        
     def onpick(self,event):
@@ -819,13 +814,7 @@ class OfflineDreamento():
         
         self.button_save_mat = Button(self.frame_import, text = "Save", padx = 40, pady=8,
                               font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
-                              command = lambda: self.save_results_button(data_EEG_L = self.sigScript_org,\
-                                        data_EEG_R=self.sigScript_org_R, markers = self.markers_details,\
-                                        marker_keys= self.marker_keys, samples_to_sync = self.samples_before_begin,\
-                                        raw_EMG1 = self.EMG_raw, raw_EMG2 = self.EMG_filtered_data2, raw_EMG3 = self.EMG_filtered_data1_minus_2,\
-                                        microphone_data = self.noise_data,\
-                                        acc_x = self.acc_x, acc_y = self.acc_y, acc_z = self.acc_z,\
-                                        Hypnodyne_EEG_L = self.sigHDRecorder_org_synced))
+                              command = self.save_results_button)
         self.button_save_mat.grid(row = 7 , column =2, padx = 15, pady = 10)
         
     #%% create save options for autoscoring
@@ -1042,7 +1031,7 @@ class OfflineDreamento():
         :returns display: The main post-processing Dreamento window, saving options
 
         """
-        if int(self.ZMax_Hypno_only.get()) == 0:
+        if int(self.analysis_signal_options.get()) == 2:
             
             self.sync_with_dreamento = True
             
@@ -1056,91 +1045,80 @@ class OfflineDreamento():
             elif 'marker_files_list' not in globals():
                 messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .json file of markers is not selected!")
                 
-            elif 'EMG_files_list' not in globals() and int(self.plot_additional_EMG.get()) == 1:
-                messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
+# =============================================================================
+#             elif 'EMG_files_list' not in globals() and int(self.analysis_signal_options.get()) == 1:
+#                 messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
+#                 
+#             elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.analysis_signal_options.get()) == 1:
+#                 messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
+#                 
+# =============================================================================
+
                 
-            elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.plot_additional_EMG.get()) == 1:
-                messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
-                
+            Dreamento_files_list, hypnodyne_files_list, marker_files_list
+        
             
-                
-            else: 
-                
-                Dreamento_files_list, hypnodyne_files_list, marker_files_list
+            self.ZmaxDondersRecording = Dreamento_files_list[0]
+            self.HDRecorderRecording  = hypnodyne_files_list[0]
+            self.path_to_json_markers = marker_files_list[0]
             
+            data = mne.io.read_raw_edf(self.HDRecorderRecording)
+            raw_data = data.get_data()
+            self.sigHDRecorder = np.ravel(raw_data)
+            
+            data_r = mne.io.read_raw_edf(self.HDRecorderRecording.split('EEG L.edf')[0] + 'EEG R.edf')
+            raw_data_r = data_r.get_data()
+            self.sigHDRecorder_r = np.ravel(raw_data_r)
+            
+            self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
+            self.noise_obj = mne.io.read_raw_edf(self.noise_path)
+            self.noise_data = self.noise_obj.get_data()[0]
+            
+            # Acc
+            self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
+            self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
+            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+            
+            self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
+            self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
+            self.acc_z_obj = mne.io.read_raw_edf(self.acc_z_path)
+            
+            self.acc_x = self.acc_x_obj.get_data()[0]
+            self.acc_y = self.acc_y_obj.get_data()[0]
+            self.acc_z = self.acc_z_obj.get_data()[0]
+            
+            print('Required files imported successfully ...')
+
+            self.samples_before_begin, self.sigHDRecorder_org_synced, self.sigScript_org, self.sigScript_org_R = self.calculate_lag(
+                               plot=(int(self.plot_sync_output.get()) ==1) , path_EDF=self.HDRecorderRecording,\
+                               path_Txt=self.ZmaxDondersRecording,\
+                               T = 30,\
+                               t_start_sync = 100,\
+                               t_end_sync   = 200)
+            # Filter?
+            if int(self.is_filtering.get()) == 1: 
+                print('Bandpass filtering (.3-30 Hz) started')
+                self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
+                self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
+
+            # Plot psd?
+            if int(self.plot_psd.get()) == 1:
+                print('plotting peridogram ...')
+                self.plot_welch_periodogram(data = self.sigScript_org, sf = 256, win_size = 5)
                 
-                self.ZmaxDondersRecording = Dreamento_files_list[0]
-                self.HDRecorderRecording  = hypnodyne_files_list[0]
-                self.path_to_json_markers = marker_files_list[0]
-                
-                if int(self.plot_additional_EMG.get()) == 1:
-                    self.path_to_EMG          = EMG_files_list[0]
-                
-                data = mne.io.read_raw_edf(self.HDRecorderRecording)
-                raw_data = data.get_data()
-                self.sigHDRecorder = np.ravel(raw_data)
-                
-                data_r = mne.io.read_raw_edf(self.HDRecorderRecording.split('EEG L.edf')[0] + 'EEG R.edf')
-                raw_data_r = data_r.get_data()
-                self.sigHDRecorder_r = np.ravel(raw_data_r)
-                
-                self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
-                self.noise_obj = mne.io.read_raw_edf(self.noise_path)
-                self.noise_data = self.noise_obj.get_data()[0]
-                
-                # Acc
-                self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
-                self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
-                self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
-                
-                self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
-                self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
-                self.acc_z_obj = mne.io.read_raw_edf(self.acc_z_path)
-                
-                self.acc_x = self.acc_x_obj.get_data()[0]
-                self.acc_y = self.acc_y_obj.get_data()[0]
-                self.acc_z = self.acc_z_obj.get_data()[0]
-                
-                print('Required files imported successfully ...')
-    
-                self.samples_before_begin, self.sigHDRecorder_org_synced, self.sigScript_org, self.sigScript_org_R = self.calculate_lag(
-                                   plot=(int(self.plot_sync_output.get()) ==1) , path_EDF=self.HDRecorderRecording,\
-                                   path_Txt=self.ZmaxDondersRecording,\
-                                   T = 30,\
-                                   t_start_sync = 100,\
-                                   t_end_sync   = 200)
-                # Filter?
-                if int(self.is_filtering.get()) == 1: 
-                    print('Bandpass filtering (.3-30 Hz) started')
-                    self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
-                    self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
-                    print(f'EMG scale is: {self.EMG_scale_options_val.get()} uV')
-    
-                # Plot psd?
-                if int(self.plot_psd.get()) == 1:
-                    print('plotting peridogram ...')
-                    self.plot_welch_periodogram(data = self.sigScript_org, sf = 256, win_size = 5)
-                    
-                # Plot spectrogram as well?
-                if int(self.plot_additional_EMG.get()) == 1:
-                    
-                    fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
-                                                 path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
-                                                 markers_to_show = ['light', 'manual', 'sound'],\
-                                                 win_sec=30, fmin=0.5, fmax=25,\
-                                                 trimperc=5, cmap='RdBu_r', add_colorbar = False)
-                        
-                
-                else:
-                    fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR_noEMG(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
-                                                 path_to_json_markers=self.path_to_json_markers,\
-                                                 markers_to_show = ['light', 'manual', 'sound'],\
-                                                 win_sec=30, fmin=0.5, fmax=25,\
-                                                 trimperc=5, cmap='RdBu_r', add_colorbar = False)
-                # Activate save section
+            # Plot spectrogram as well?
+            
+            fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR_noEMG(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
+                                         path_to_json_markers=self.path_to_json_markers,\
+                                         markers_to_show = ['light', 'manual', 'sound'],\
+                                         win_sec=30, fmin=0.5, fmax=25,\
+                                         trimperc=5, cmap='RdBu_r', add_colorbar = False)
+            # Activate save section
+            if int(self.is_autoscoring.get()) == 1:      
                 self.create_save_options_autoscoring()
                 
-        else: # If the user chooses ONLY ZMax Hypnodyne analysis
+        #%% Analyzing only HDRecorder
+        elif int(self.analysis_signal_options.get()) == 3:         
         
             self.sync_with_dreamento = False
             # Sanitary checks
@@ -1204,11 +1182,12 @@ class OfflineDreamento():
                                             win_sec=30, fmin=0.3, fmax=40,\
                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
                         
-            # Activate save section
-            
+        # Activate save section
+        if int(self.is_autoscoring.get()) == 1:     
             self.create_save_options_autoscoring()
-                
             
+        # Create export option
+        self.create_save_options()
     #%% band-pass filtering
     
     def butter_bandpass_filter(self, data, lowcut, highcut, fs, order = 2):
@@ -1234,7 +1213,7 @@ class OfflineDreamento():
         return y
     
     #%% Save button
-    def save_results_button(self, data_EEG_L, data_EEG_R, markers, marker_keys, Hypnodyne_EEG_L, microphone_data, acc_x, acc_y, acc_z, samples_to_sync, raw_EMG1, raw_EMG2, raw_EMG3):
+    def save_results_button(self):
         
         """
         The command to save the results of the ra and processed data to a matfile.
@@ -1256,26 +1235,50 @@ class OfflineDreamento():
 
         :returns:  matfile.mat
 
-        """
-        
+        """    
         from scipy.io import savemat
-        
         self.dict_all_results = dict()
-        self.dict_all_results['EEG_L_Dreamento'] = data_EEG_L #self.sigScript_org
-        self.dict_all_results['EEG_R_Dreamento'] = data_EEG_R # self.sigScript_org_R
-        self.dict_all_results['markers']        = markers # markers_details
-        self.dict_all_results['marker_keys']    = marker_keys # marker_keys
-        self.dict_all_results['Hypnodyne_EEG_L']= Hypnodyne_EEG_L # marker_key
+        if int(self.analysis_signal_options.get()) == 1:    
+            
+            
+            self.dict_all_results['EEG_L_Dreamento'] = self.sigScript_org #self.sigScript_org
+            self.dict_all_results['EEG_R_Dreamento'] = self.sigScript_org_R # self.sigScript_org_R
+            self.dict_all_results['markers']        = self.markers_details # markers_details
+            self.dict_all_results['marker_keys']    = self.marker_keys # marker_keys
+            self.dict_all_results['Hypnodyne_EEG_L']= self.sigHDRecorder_org_synced # marker_key
+    
+            self.dict_all_results['samples_to_sync']= self.samples_before_begin # marker_keys
+            self.dict_all_results['microphone_data']= self.noise_data # marker_keys
+            self.dict_all_results['acc_x']= self.acc_x # marker_keys
+            self.dict_all_results['acc_y']= self.acc_y # marker_keys
+            self.dict_all_results['acc_z']= self.acc_z # marker_keys
+            self.dict_all_results['raw_EMG1']= self.EMG_filtered_data1 # marker_keys
+            self.dict_all_results['raw_EMG2']= self.EMG_filtered_data2 # marker_keys
+            self.dict_all_results['raw_EMG1_minus_EMG2']= self.EMG_filtered_data1_minus_2
+            #self.dict_all_results['sample_to_remove_from_EMG_to_sync_with_Dreamento']=self.samples_before_begin_EMG_Dreamento
+        
+        elif int(self.analysis_signal_options.get()) == 2:    
+            self.dict_all_results = dict()
+            self.dict_all_results['EEG_L_Dreamento'] = self.sigScript_org #self.sigScript_org
+            self.dict_all_results['EEG_R_Dreamento'] = self.sigScript_org_R # self.sigScript_org_R
+            self.dict_all_results['markers']        = self.markers_details # markers_details
+            self.dict_all_results['marker_keys']    = self.marker_keys # marker_keys
+            self.dict_all_results['Hypnodyne_EEG_L']= self.sigHDRecorder_org_synced # marker_key
+    
+            self.dict_all_results['samples_to_sync']= self.samples_before_begin # marker_keys
+            self.dict_all_results['microphone_data']= self.noise_data # marker_keys
+            self.dict_all_results['acc_x']= self.acc_x # marker_keys
+            self.dict_all_results['acc_y']= self.acc_y # marker_keys
+            self.dict_all_results['acc_z']= self.acc_z # marker_keys
 
-        self.dict_all_results['samples_to_sync']= samples_to_sync # marker_keys
-        self.dict_all_results['microphone_data']= microphone_data # marker_keys
-        self.dict_all_results['acc_x']= acc_x # marker_keys
-        self.dict_all_results['acc_y']= acc_y # marker_keys
-        self.dict_all_results['acc_z']= acc_z # marker_keys
-        self.dict_all_results['raw_EMG1']= self.EMG_filtered_data1 # marker_keys
-        self.dict_all_results['raw_EMG2']= self.EMG_filtered_data2 # marker_keys
-        self.dict_all_results['raw_EMG1_minus_EMG2']= self.EMG_filtered_data1_minus_2
+        elif int(self.analysis_signal_options.get()) == 3:         
+            self.dict_all_results['Hypnodyne_EEG_L']= self.sigHDRecorder # marker_key
+            self.dict_all_results['Hypnodyne_EEG_R']= self.sigHDRecorder_r # marker_key
 
+            self.dict_all_results['microphone_data']= self.noise_data # marker_keys
+            self.dict_all_results['acc_x']= self.acc_x # marker_keys
+            self.dict_all_results['acc_y']= self.acc_y # marker_keys
+            self.dict_all_results['acc_z']= self.acc_z # marker_keys
 
         
         if self.entry_save_name.get()[-4:] == '.mat':
@@ -1285,7 +1288,7 @@ class OfflineDreamento():
         #savemat('saving_dir.MAT', self.dict_all_results)
         savemat(saving_dir, self.dict_all_results)
         messagebox.showinfo(title = "Output sucessfully saved", message = f'file saved in {saving_dir}!')
-        
+
     #%% Coimpute correlation
     def plot_xcorr(self, x, y, ax=None):
         """
