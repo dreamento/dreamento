@@ -7,7 +7,8 @@ For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.22
 
 **Online/real-time Dreamento** is meant to be used for data collection, whereas **offline/post-processing Dreamento** is capable of analyzing both the data collected by online Dreamento or any ZMax recording that used HDRecorder software.
 
-- **To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming:** [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
+## Watch Dreamento overview on **YouTube**:
+To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming:** [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
 
 ## Real-time features:
 1. Open source!
