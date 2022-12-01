@@ -27,6 +27,7 @@
                      )
     """
 # %% Import libs
+import time
 import os
 import numpy as np
 import scipy.signal as ssignal
@@ -224,6 +225,7 @@ def Predict_array(output_dir="./DataiBand/output/Fp1-Fp2_filtered",
 
             # Show result
             outcome = test_outs['test/preds']
+            
 
     return outcome
 
