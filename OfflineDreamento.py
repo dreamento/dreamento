@@ -354,22 +354,42 @@ class OfflineDreamento():
         clench_event = []
         counter_sync = []
         time_sync_event = []
-        
+        sync_event_is_selected = 0
+        self.all_markers = []
+        self.all_timestamp_markers = []
+        self.all_markers_with_timestamps = []
         for counter, marker in enumerate(markers.values()):
-            try:
-                if marker.split()[0] == 'clench' or marker.split()[0] == 'Clench':
-                    print(marker.split())
-                    counter_sync.append(counter)
-                    
-            except:
-                print(f'an exception occured for marker = {marker}')
-                continue
-        print(counter_sync)
-        
+            self.all_markers.append(marker)
+            
         for counter, marker in enumerate(markers.keys()):
-            if counter in counter_sync:
-                time_sync_event.append(int(marker.split()[-1]))
+            self.all_timestamp_markers.append(marker)
+        
+        for i in np.arange(len(self.all_markers)):
+            self.all_markers_with_timestamps.append(self.all_markers[i]+ '__'+ self.all_timestamp_markers[i])
+        self.select_marker_for_sync()
 
+        self.selected_marker = self.markers_sync_event.get()
+
+        messagebox.showinfo('syncing in process', f'The syncing event has been selected. Please wait for sync window to pop up.')
+        print(f'lets split the marker into ... {self.selected_marker.split()}')
+        time_sync_event.append(int(self.selected_marker.split()[-1]))
+# =============================================================================
+#         for counter, marker in enumerate(markers.values()):
+#             try:
+#                 if marker.split()[0] == 'clench' or marker.split()[0] == 'Clench':
+#                     print(marker.split())
+#                     counter_sync.append(counter)
+#                     
+#             except:
+#                 print(f'an exception occured for marker = {marker}')
+#                 continue
+#         print(counter_sync)
+#         
+#         for counter, marker in enumerate(markers.keys()):
+#             if counter in counter_sync:
+#                 time_sync_event.append(int(marker.split()[-1]))
+# 
+# =============================================================================
         print('Loading EEG file ... Please wait')                            
         path_Txt = self.ZmaxDondersRecording
 
@@ -405,7 +425,7 @@ class OfflineDreamento():
         EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=5, highcut=100, fs = 256, order = 2)
         EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=5, highcut=100, fs = 256, order = 2)
         EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=5, highcut=100, fs = 256, order = 2)
-        t_sync          = np.arange(time_sync_event[0] - 256*10, time_sync_event[0] + 256*20)
+        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*20)
         
         # Truncate sync period
         EEG_to_sync_period  = sigScript_org[t_sync]
@@ -579,16 +599,20 @@ class OfflineDreamento():
                         
                         # Rectified signal
                         self.EEG = EEG_to_sync_period
-                        EEG_Abs = abs(self.EEG)
+                        #EEG_Abs = abs(self.EEG)
+                        EEG_Abs= self.EEG
                         
                         self.EMG1 = EMG_to_sync_period1
-                        EMG_Abs1= abs(self.EMG1)
+                        #EMG_Abs1= abs(self.EMG1)
+                        EMG_Abs1= self.EMG1
                         
                         self.EMG2 = EMG_to_sync_period2
-                        EMG_Abs2= abs(self.EMG2)
+                        #EMG_Abs2= abs(self.EMG2)
+                        EMG_Abs2= self.EMG2
                         
                         self.EMG3 = EMG_to_sync_period3
-                        EMG_Abs3 = abs(self.EMG3)
+                        #EMG_Abs3 = abs(self.EMG3)
+                        EMG_Abs3 = self.EMG3
                         
                         self.points = []
                         self.n = 2
@@ -3313,7 +3337,24 @@ class OfflineDreamento():
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
                 curr_ax.set_ylim((0.1,25))
-                
+    #%% pop-up markers selection
+    def select_marker_for_sync(self):
+        self.popupWin = Toplevel(root)
+        self.alert = Label(self.popupWin, text='Please select an event to sync EMG and EEG (recommendation: teeth clench')
+        
+        self.markers_sync_event = StringVar()        
+        self.markers_sync_event_option_menu = OptionMenu(self.popupWin, self.markers_sync_event, *self.all_markers_with_timestamps)
+        self.markers_sync_event_option_menu.pack()
+        
+        self.button_popupwin = Button(self.popupWin, text = "OK", command=self.select_marker)
+        self.alert.pack()
+        self.button_popupwin.pack()
+        root.wait_window(self.popupWin)
+        
+    #%% select marker for sync command
+    def select_marker(self):
+        print(f'syncing based on the following event: {self.markers_sync_event.get()}')
+        self.popupWin.destroy()
     #%% Click ZMax Hypnodyne only            
     def onclick_ZMaxHypnodyneOnly(self, event):
         """
