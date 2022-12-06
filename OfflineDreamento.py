@@ -145,37 +145,46 @@ class OfflineDreamento():
         self.label_analysis.grid(row = 0 , column = 4, sticky="w")
         
     #%% init a label to give warning
+    #%% Bulk autoscoring
+        self.bulk_autoscoring_val = IntVar(value = 0)
+        self.checkbox_bulk_autoscoring = Checkbutton(self.frame_import, text = "Bulk autoscoring",
+                                  font = 'Calibri 11 ', variable = self.bulk_autoscoring_val, 
+                                  command = self.bulk_autoscoring_popup)
+        
+        self.checkbox_bulk_autoscoring.grid(row = 1, column = 4, sticky="w")
+    #%% Checkbox for autoscoring
+        self.is_autoscoring = IntVar(value = 0)
+        self.checkbox_is_autoscoring = Checkbutton(self.frame_import, text = "Single-file autoscoring",
+                                  font = 'Calibri 11 ', variable = self.is_autoscoring, command = self.scoring_caution)
+        
+        self.checkbox_is_autoscoring.grid(row = 2, column = 4, sticky="w") 
+        
     #%% Checkbox for filtering
         self.is_filtering = IntVar(value = 1)
         self.checkbox_is_filtering = Checkbutton(self.frame_import, text = "Band-pass filtering (.3-30 Hz)",
                                   font = 'Calibri 11 ', variable = self.is_filtering)
         
-        self.checkbox_is_filtering.grid(row = 1, column = 4, sticky="w")
+        self.checkbox_is_filtering.grid(row = 3, column = 4, sticky="w")
         
-    #%% Checkbox for autoscoring
-        self.is_autoscoring = IntVar(value = 0)
-        self.checkbox_is_autoscoring = Checkbutton(self.frame_import, text = "Autoscoring",
-                                  font = 'Calibri 11 ', variable = self.is_autoscoring, command = self.scoring_caution)
-        
-        self.checkbox_is_autoscoring.grid(row = 2, column = 4, sticky="w") 
+
     #%% Checkbox for plotting syncing process
         self.plot_sync_output = IntVar()
         self.checkbox_plot_sync_output = Checkbutton(self.frame_import, text = "Plot alignment process",
                                   font = 'Calibri 11 ', variable = self.plot_sync_output)
         
-        self.checkbox_plot_sync_output.grid(row = 3, column = 4, sticky="w")
+        self.checkbox_plot_sync_output.grid(row = 4, column = 4, sticky="w")
         
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 4, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 5, column = 4, sticky="w", pady = 10)
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 5 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 6 , column = 4, sticky="w")
         
     #%% Checkbox for plotting spectrograms with markers
         self.analysis_signal_options = IntVar(value = 1)
@@ -183,7 +192,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 6, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 7, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
@@ -192,14 +201,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 7, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 8, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 8, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 9, column = 4, sticky="w", pady = 10)
         
     #%% EMG Y SCALE
         #Label to read data and extract features
@@ -919,8 +928,8 @@ class OfflineDreamento():
     
         global hypnodyne_files_list
         
-        self.filenames        = filedialog.askopenfilenames(title = 'select data files', 
-                                                       filetype = (("edf", "*.edf"), ("All Files", "*.*")))
+        self.filenames        = filedialog.askopenfilenames(title = 'select EEG L.edf file', 
+                                                       filetype = (("EEG L edf", "*.edf"), ("All Files", "*.*")))
         
         # Make a list of imported file names (full path)
         hypnodyne_files_list       = self.frame_import.tk.splitlist(self.filenames)
@@ -1027,6 +1036,53 @@ class OfflineDreamento():
             
             self.label_labels  = Label(self.frame_import, text = "The EMG (.vhdr) file has been loaded!",
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 3)
+    #%% load txt files including paths to the folders for bulk autoscoring
+    def browse_txt_for_bulk_autoscoring(self):
+                
+        """
+        Load the autoscoring bulk (.txt) file comprising paths to all the folders to be scored
+        
+        :param self: access the attributes and methods of the class
+        
+        
+        """        
+        self.filename_paths_for_bulk_autoscoring    = filedialog.askopenfilenames(title = 'select a .txt file including paths to the folders to be autoscored', 
+                                                       filetype = (("txt", "*.txt"),("All Files", "*.*")))
+
+        self.bulk_autoscoring_files_list  = self.popupWin_bulk_autoscoring.tk.splitlist(self.filename_paths_for_bulk_autoscoring)
+        
+        # check if the user chose somthing
+        if not self.bulk_autoscoring_files_list:
+            
+            self.label_no_bulk_scoring  = Label(self.popupWin_bulk_autoscoring , text = "No file has been selected!",
+                                  fg = 'red', font = 'Helvetica 9 bold').grid(row = 3, column = 1)
+        else:
+            
+            self.label_no_bulk_scoring  = Label(self.popupWin_bulk_autoscoring, text = "The (.txt) file has been loaded!",
+                                  fg = 'green', font = 'Helvetica 9 bold').grid(row = 3, column = 1)
+    
+    #%% load txt files including paths to the folders for bulk autoscoring
+    def browse_destination_folder_for_bulk_autoscoring(self):
+                
+        """
+        Load the destination folder of autoscoring bulk (.txt) file
+        :param self: access the attributes and methods of the class
+
+        
+        """
+
+        self.destination_bulk_autoscoring_files_list  = filedialog.askdirectory()
+        
+        # check if the user chose somthing
+        if not self.destination_bulk_autoscoring_files_list:
+            
+            self.label_no_bulk_scoring_destination  = Label(self.popupWin_bulk_autoscoring, text = "No destination folder has been selected!",
+                                  fg = 'red', font = 'Helvetica 9 bold').grid(row = 3, column = 2)
+        else:
+            
+            self.label_no_bulk_scoring_destination  = Label(self.popupWin_bulk_autoscoring, text = "The destination folder has been selectded!",
+                                  fg = 'green', font = 'Helvetica 9 bold').grid(row = 3, column = 2)
+    
      
     #%% Function: Import Hypnogram (Browse)
     def save_path_finder(self):
@@ -2611,7 +2667,279 @@ class OfflineDreamento():
         
         
 
+    #%% Bulk autoscoring function
+    def bulk_autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
+                    model_path = "Dreamento_autoscoring_Lightgbm_td=5_version_alpha.sav",\
+                    standard_scaler_path = "StandardScaler_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.sav",\
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.pickle",\
+                    fs = 256):
+        
+        import joblib
+        path_to_DreamentoScorer = DreamentoScorer_path
+        messagebox.showinfo(title = "Bulk Autoscoring", message = 'Autoscoring started ... \nDepending on the number of scorings, this may take a while ... \nIf you selected to store the results, they will be stored in the data folder ...\nPlease click on OK and be patient ...')
+        # Init dir tio read libraries
+        try:
+            # Change the current working Directory    
+            os.chdir(path_to_DreamentoScorer)
+            print("Loading DreamentoScorer class ... ")
+            
+        except OSError:
+            print("Can't change the Current Working Directory")     
+        print(f'current path is {path_to_DreamentoScorer}')
+        from entropy.entropy import spectral_entropy
+        from DreamentoScorer import DreamentoScorer
+        self.SSN = DreamentoScorer(filename='', channel='', fs = fs, T = 30)
+        f_min = fmin = .3 #Hz
+        f_max = fmax =  30 #Hz
+        tic   = time.time()
+        print(f'i reached here {self.bulk_autoscoring_files_list[0]}')
+        self.folders_to_be_autoscored = pd.read_csv(self.bulk_autoscoring_files_list[0], header=None).to_numpy()
+        print(f'folders to be autoscored are detected as follows: {self.folders_to_be_autoscored}')
+        
+        counter_scoring = 0
+        for folder_autoscoring in self.folders_to_be_autoscored:
+            folder_autoscoring = folder_autoscoring[0]
+            counter_scoring = counter_scoring + 1
+            print(f'autoscoring folder: {folder_autoscoring} [{counter_scoring} / {len(self.folders_to_be_autoscored)}]')
+            
+            #sanity check:
+            if folder_autoscoring[-1] != '/' or folder_autoscoring[-1] != '\\':
+                folder_autoscoring = folder_autoscoring + '\\'
+                
+            data_L = mne.io.read_raw_edf(folder_autoscoring + 'EEG L.edf')
+            raw_data_L = data_L.get_data()
+            self.sigHDRecorder = np.ravel(raw_data_L)
+            
+            data_r = mne.io.read_raw_edf(folder_autoscoring + 'EEG R.edf')
+            raw_data_r = data_r.get_data()
+            self.sigHDRecorder_r = np.ravel(raw_data_r)
+           
 
+            if int(self.is_filtering.get()) == 1: 
+                print('already filtered ... proceed with scoring ...')
+                EEG_L_filtered =  self.sigHDRecorder
+                EEG_R_filtered = self.sigHDRecorder_r
+                
+            else:
+                print('Filtering ...')
+                # if already filtered, take it, otherwise filter first
+                EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder,\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
+                EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r,\
+                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
+
+            T = 30 #secs
+            len_epoch   = fs * T
+            start_epoch = 0
+            n_channels  = 1
+            print(f'Data shape : {np.shape(EEG_R_filtered)}')
+            print('Truncating the last epoch tails ...')
+            EEG_L_filtered = EEG_L_filtered[0:EEG_L_filtered.shape[0] - EEG_L_filtered.shape[0]%len_epoch]
+            EEG_R_filtered = EEG_R_filtered[0:EEG_R_filtered.shape[0] - EEG_R_filtered.shape[0]%len_epoch]
+    
+            print('Segmenting data into 30 s epochs ...')
+            EEG_L_filtered_epoched = np.reshape(EEG_L_filtered,
+                                      (n_channels, len_epoch,
+                                       int(EEG_L_filtered.shape[0]/len_epoch)), order='F' )
+            
+            EEG_R_filtered_epoched = np.reshape(EEG_R_filtered,
+                                      (n_channels, len_epoch,
+                                       int(EEG_R_filtered.shape[0]/len_epoch)), order='F' )
+    
+            # Ensure equalituy of length for arrays:
+            assert np.shape(EEG_L_filtered_epoched)[1] == np.shape(EEG_R_filtered_epoched)[1], 'Different epoch numbers!'
+            
+            print(f'SHAPE OF EEG_L_filtered_epoched {np.shape(EEG_L_filtered_epoched)}')
+    
+            # Extract features
+            tic = time.time()
+            print(f'shape after epoching: {np.shape(EEG_L_filtered_epoched)}')
+            print('Extracting features for DreamentoScorer ...')
+            for k in np.arange(np.shape(EEG_L_filtered_epoched)[0]):
+                print('Extracting features from channel 1 ...')
+                feat_L = self.SSN.FeatureExtraction_per_subject(Input_data = EEG_L_filtered_epoched[k,:,:], fs = fs)
+                print('Extracting features from channel 2 ...')
+                feat_R = self.SSN.FeatureExtraction_per_subject(Input_data = EEG_R_filtered_epoched[k,:,:], fs = fs)
+                # Concatenate features
+                print(f'concatenating features of size {np.shape(feat_L)} and {np.shape(feat_R)}')
+                Feat_all_channels = np.column_stack((feat_L,feat_R))
+                
+            # Scoring
+            X_test  = Feat_all_channels
+            X_test  = self.SSN.replace_NaN_with_mean(X_test)
+    
+            # Replace any probable inf
+            X_test  = self.SSN.replace_inf_with_mean(X_test)
+    
+            # Z-score features
+            print('Importing DreamentoScorer model ...')
+            sc_fname = standard_scaler_path#'StandardScaler_TrainedonQS_1st_iter_To_transform_ZmaxDonders'
+            sc = joblib.load(sc_fname)
+            X_test = sc.transform(X_test)
+    
+            # Add time dependence to the data classification
+            td = 5 # epochs of memory
+            print('Adding time dependency ...')
+            X_test_td  = self.SSN.add_time_dependence_backward(X_test,  n_time_dependence=td,\
+                                                             padding_type = 'sequential')
+    
+            # Load selected features
+            print('loading results of feature selection from the trained data')
+            path_selected_feats = feat_selection_path
+            with open(path_selected_feats, "rb") as f: 
+                selected_feats_ind = pickle.load(f)
+                
+            X_test  = X_test_td[:, selected_feats_ind]
+    
+            # Load DreamentoScorer
+            print('Loading scoring model ...')
+            model_dir = model_path
+            DreamentoScorer = joblib.load(model_dir)
+    
+            self.y_pred = DreamentoScorer.predict(X_test)
+            
+            self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
+                                                         sleep_stages = [0, 1, 2, 3, 4])
+                
+            # Increase font size while preserving original
+            old_fontsize = plt.rcParams["font.size"]
+            plt.rcParams.update({"font.size": 5})
+            
+            data1 = EEG_L_filtered
+            data2 = EEG_R_filtered
+            
+            # Safety checks
+            sf = 256
+            win_sec = 30
+            trimperc=2.5
+            cmap="RdBu_r"
+            vmin=None
+            vmax=None
+            assert isinstance(data1, np.ndarray), "data1 must be a 1D NumPy array."
+            assert isinstance(data2, np.ndarray), "data1 must be a 1D NumPy array."
+            assert isinstance(sf, (int, float)), "sf must be int or float."
+            assert data1.ndim == 1, "data1 must be a 1D (single-channel) NumPy array."
+            assert data2.ndim == 1, "data1 must be a 1D (single-channel) NumPy array."
+            assert isinstance(win_sec, (int, float)), "win_sec must be int or float."
+            assert isinstance(fmin, (int, float)), "fmin must be int or float."
+            assert isinstance(fmax, (int, float)), "fmax must be int or float."
+            assert fmin < fmax, "fmin must be strictly inferior to fmax."
+            assert fmax < sf / 2, "fmax must be less than Nyquist (sf / 2)."
+        
+            # Calculate multi-taper spectrogram
+            nperseg = int(win_sec * sf)
+            assert data1.size > 2 * nperseg, "Data length must be at least 2 * win_sec."
+            assert data2.size > 2 * nperseg, "Data length must be at least 2 * win_sec."
+            
+            f, t, Sxx = spectrogram_lspopt(data1, sf, nperseg=nperseg, noverlap=0)
+            Sxx = 10 * np.log10(Sxx)  # Convert uV^2 / Hz --> dB / Hz
+            
+            f2, t2, Sxx2 = spectrogram_lspopt(data2, sf, nperseg=nperseg, noverlap=0)
+            Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+        
+            # Select only relevant frequencies (up to 30 Hz)
+            good_freqs = np.logical_and(f >= fmin, f <= fmax)
+            Sxx = Sxx[good_freqs, :]
+            f = f[good_freqs]
+            t /= 3600  # Convert t to hours
+            
+            good_freqs2 = np.logical_and(f2>= fmin, f2 <= fmax)
+            Sxx2 = Sxx2[good_freqs2, :]
+            f2 = f2[good_freqs2]
+            t2 /= 3600  # Convert t to hours
+            
+            # Normalization
+            if vmin is None:
+                vmin, vmax = np.percentile(Sxx, [0 + trimperc, 100 - trimperc])
+                norm = Normalize(vmin=vmin, vmax=vmax)
+            else:
+                norm = Normalize(vmin=vmin, vmax=vmax)
+                
+            fig, axs = plt.subplots(3, 1)
+            
+            axs[0].pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            axs[1].pcolormesh(t2, f2, Sxx2, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            
+            stages = self.y_pred
+            #stages = np.row_stack((stages, stages[-1]))
+            x      = np.arange(len(stages))
+            self.stage_autoscoring = stages
+             # Change the order of classes: REM and wake on top
+            x = []
+            y = []
+            for i in np.arange(len(stages)):
+                
+                s = stages[i]
+                if s== 0 :  p = -0
+                if s== 4 :  p = -1
+                if s== 1 :  p = -2
+                if s== 2 :  p = -3
+                if s== 3 :  p = -4
+                if i!=0:
+                    
+                    y.append(p)
+                    x.append(i-1)   
+            y.append(p)
+            x.append(i)
+            axs[2].step(x, y, where='post', color = 'black', linewidth = 1)
+            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
+            for i in np.arange(len(rem)) -1:
+                axs[2].plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+
+            
+            
+            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
+            axs[2].set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
+                                      fontsize = 8)
+            axs[2].set_xlim([np.min(x), np.max(x)])
+            
+            axs[0].set_title(folder_autoscoring + 'EEG L')
+            axs[1].set_title(folder_autoscoring + 'EEG R')
+            
+            # Save results?
+            if int(self.checkbox_save_bulk_autoscoring_txt_results_val.get()) == 1:
+                
+                save_path_autoscoring = folder_autoscoring + 'DreamentoScorer_autoscoring_vAlpha.txt'
+                
+                if os.path.exists(save_path_autoscoring):
+                    os.remove(save_path_autoscoring)
+                    
+                saving_dir = save_path_autoscoring
+                
+                a_file = open(saving_dir, "w")
+                a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento')
+                a_file.write('\nThis file has been autoscored by DreamentoScorer! \nSleep stages: Wake:0, N1:1, N2:2, SWS:3, REM:4.\n')
+                a_file.write('N.B. this is an alpha version of DreamentoScorer, always double-check with manual scoring!\n')
+                a_file.write('============================================================================================\n')
+                
+                for row in self.stage_autoscoring[:,np.newaxis]:
+                    np.savetxt(a_file, row, fmt='%1.0f')
+                a_file.close()
+                
+                # Save sleep metrics
+                save_path_stats = folder_autoscoring + 'DreamentoScorer_autoscoring_vAlpha_stats.json'
+                
+                if os.path.exists(save_path_stats):
+                    os.remove(save_path_stats)
+                    
+                with open(save_path_stats, 'w') as convert_file:
+                    convert_file.write(json.dumps(self.stats))
+                    
+            #save_figure
+            if int(self.checkbox_save_bulk_autoscoring_plot_val.get()) == 1:
+                save_path_plots = folder_autoscoring + 'Dreamento_TFR_autoscoring.png'
+                
+                if os.path.exists(save_path_plots):
+                    os.remove(save_path_plots)
+                    
+                plt.savefig(save_path_plots,dpi = 300)  
+                
+            if int(self.checkbox_close_plots_val.get()) == 1:
+                plt.close()
+                
+           
     #%% AssignMarkersToRecordedData EEG + TFR
     def AnalyzeZMaxHypnodyne(self, data, data_R, sf,\
                                 win_sec=30, fmin=0.3, fmax=40,
@@ -3350,7 +3678,65 @@ class OfflineDreamento():
         self.alert.pack()
         self.button_popupwin.pack()
         root.wait_window(self.popupWin)
+    
+    #%% pop-up markers selection
+    def bulk_autoscoring_popup(self):
+        self.popupWin_bulk_autoscoring = Toplevel(root)
         
+        # button: load a txt file including paths of folders to be autoscored
+        self.load_txt_bulk_autoscoring_paths_label = Label(self.popupWin_bulk_autoscoring, text='select a txt file including paths to folders')
+        self.load_txt_bulk_autoscoring_paths_label.grid(row = 1 , column =1)
+        self.button_load_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Browse ...",
+                              font = 'Calibri 13 bold', relief = RIDGE,
+                              command = self.browse_txt_for_bulk_autoscoring)
+        self.button_load_bulk_autoscoring.grid(row = 2 , column =1)
+        
+        # button: Path to export autoscoring
+# =============================================================================
+#         self.select_folder_export_bulk_autoscoring_bulk_autoscoring_label = Label(self.popupWin_bulk_autoscoring, text='select destination folder')
+#         self.select_folder_export_bulk_autoscoring_bulk_autoscoring_label.grid(row = 1 , column =2)
+#         self.button_select_folder_export_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Browse ...",
+#                               font = 'Calibri 13 bold', relief = RIDGE,
+#                               command = self.browse_destination_folder_for_bulk_autoscoring)
+#         self.button_select_folder_export_bulk_autoscoring.grid(row = 2 , column =2)
+# =============================================================================
+        
+        # Button: start bulk autoscoring
+        self.button_start_bulk_autoscoring_label = Label(self.popupWin_bulk_autoscoring, text='start autoscoring!')
+        self.button_start_bulk_autoscoring_label.grid(row = 1 , column =3)
+        self.button_start_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Start!",
+                              font = 'Calibri 13 bold', relief = RIDGE,
+                              command = self.bulk_autoscoring)
+        self.button_start_bulk_autoscoring.grid(row = 2 , column =3)
+        
+        
+        self.checkbox_save_bulk_autoscoring_txt_results_val = IntVar(value = 0)
+        self.checkbox_bulk_autoscoring_txt_results = Checkbutton(self.popupWin_bulk_autoscoring, text = "Save autoscoring results?",
+                                  font = 'Calibri 11 ', variable = self.checkbox_save_bulk_autoscoring_txt_results_val)
+        self.checkbox_bulk_autoscoring_txt_results.grid(row = 1, column = 3)
+        
+        
+        self.checkbox_save_bulk_autoscoring_plot_val = IntVar(value = 1)
+        self.checkbox_bulk_autoscoring_plot = Checkbutton(self.popupWin_bulk_autoscoring, text = "Save TFR + autoscoring plots?",
+                                  font = 'Calibri 11 ', variable = self.checkbox_save_bulk_autoscoring_plot_val)
+        self.checkbox_bulk_autoscoring_plot.grid(row = 1, column = 4)
+        
+        self.checkbox_close_plots_val = IntVar(value = 1)
+        self.checkbox_close_plot = Checkbutton(self.popupWin_bulk_autoscoring, text = "Close plots after save?",
+                                  font = 'Calibri 11 ', variable = self.checkbox_close_plots_val)
+        self.checkbox_close_plot.grid(row = 1, column = 5)
+# =============================================================================
+#         self.alert = Label(self.popupWin, text='Please select an event to sync EMG and EEG (recommendation: teeth clench')
+#         
+#         self.markers_sync_event = StringVar()        
+#         self.markers_sync_event_option_menu = OptionMenu(self.popupWin, self.markers_sync_event, *self.all_markers_with_timestamps)
+#         self.markers_sync_event_option_menu.pack()
+#         
+#         self.button_popupwin = Button(self.popupWin, text = "OK", command=self.select_marker)
+#         self.alert.pack()
+#         self.button_popupwin.pack()
+# =============================================================================
+        root.wait_window(self.popupWin_bulk_autoscoring)
     #%% select marker for sync command
     def select_marker(self):
         print(f'syncing based on the following event: {self.markers_sync_event.get()}')
