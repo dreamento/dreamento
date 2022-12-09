@@ -2,27 +2,31 @@
 
 ## Overview
 
-Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package to record, monitor, analyze, and modulate sleep in **real-time**. The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
-For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977
+Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data.  
+- You can analyze your ZMax data with Dreamento even if you have not recorded it via Dreamento (see **Post-processing** section for details)!
+- The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
+- **For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977** (see also citation section in the bottom of page)
 
+## Online (real-time) vs Offline Dreamento
 **Online/real-time Dreamento** is meant to be used for data collection, whereas **offline/post-processing Dreamento** is capable of analyzing both the data collected by online Dreamento or any ZMax recording that used HDRecorder software.
 
-## Watch Dreamento overview on **YouTube**:
-To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming:** [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
+## Watch Dreamento overview on YouTube:
+To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming: [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
 
 ## Real-time features:
-1. Open source!
-2. Graphical user interface (GUI)
-3. Data navigation and monitoring: Real-time representation of the EEG channels with adjustable time axis and amplitude scales
-4. Analysis: Real-time spectrogram and peridogoram analysis
-5. Autoscoring: Real-time sleep staging, open to any algorithm  (is not ideal yet, still under development)
-6. Modulation: sleep modulation by visual, auditory, and tactile stimulation
-7. annotations: The experimenter can set various annotations throughout the experiment.
+1. **Open source!**
+2. **Graphical user interface (GUI)**
+3. **Data navigation and monitoring**: Real-time representation of the EEG channels with adjustable time axis and amplitude scales
+4. **Analysis**: Real-time spectrogram and peridogoram analysis
+5. **Autoscoring**: Real-time sleep staging, open to any algorithm  (is not ideal yet, still under development)
+6. **Modulation**: sleep modulation by visual, auditory, and tactile stimulation
+7. **annotations**: The experimenter can set various annotations throughout the experiment.
 
 ## Post-processing features:
 The post-processing Dreamento is not only able to process the data collected by the Dreamento software itself, but we have made it possible that all ZMax users who use the official software of the company (Hypnodyne HDRecorder) can also process their data with Dreamento!
 
 - OfflineDreamento.py: Integration of all the collected data for post-processing, ZMax data, annotations, TFR, **autoscroing**, and integration with other measurement modalities!
+- Recently, you can also do **bulk autoscoring** with Dreamento!
 
 ## Installation and Prerequisities: 
 - Download and install Anaconda (https://www.anaconda.com/).
@@ -38,6 +42,8 @@ A complete **tutorial on how to install Dreamento** can be found [HERE](https://
 ```
 conda env create --name dreamento --file dreamento.yml
 ```
+
+- N.B. for those who are not able to use anaconda, the software package can be installled through ```pip install -r requirements_dreamento.txt```
 ## How to start a recording?
 A complete **tutorial on how to run Dreamento** can be found [HERE](https://youtu.be/vpmh_LiOjdw).
 
@@ -131,7 +137,7 @@ Please note that this program is provided with no warranty of any kind.
 
 ## Citation
 
-*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
+*Esfahani, M. J., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
 https://doi.org/10.48550/arXiv.2207.03977*
 
 
