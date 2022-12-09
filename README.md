@@ -88,7 +88,11 @@ DreamentoScorer is a machine-learning based alogorithm which exctracts several l
 
 With DreamentoScorer, you can export not only the sleep stage predictions, but also the sleep metrics such as sleep efficiency, sleep onset latency, etc as a txt file.
 
-*N.B: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.*
+*N.B: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.* 
+
+### Bulk data scoring:
+
+In the recent update, we added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
 
 ## Demo:
 ### The real-time Dreamento GUI
