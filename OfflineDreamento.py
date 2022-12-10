@@ -2538,12 +2538,17 @@ class OfflineDreamento():
             messagebox.showinfo("Caution",f"The current version of DreamentoScorer is alpha - thus its generalizability is limited! Always double-check with manual scoring! \n N.B. For a proper performance of the DreamentoScorer both EEG channels should have acceptable quality. The scoring for the epochs of data loss is not reliable.")
 
     #%% Autoscoring    
-    def autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
-                    model_path = "Dreamento_autoscoring_Lightgbm_td=5_version_alpha.sav",\
-                    standard_scaler_path = "StandardScaler_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.sav",\
-                    feat_selection_path = "Selected_Features_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.pickle",\
+    def autoscoring(self, DreamentoScorer_path = '.\\DreamentoScorer\\',\
+                    model_path = "Dreamento_autoscoring_Lightgbm_td=5_version_alpha.sav",
+                    standard_scaler_path = "StandardScaler_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.sav",
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.pickle",
                     fs = 256):
         
+        # old CS model
+        # 'Dreamento_autoscoring_Lightgbm_td=3_bidirectional_version_alpha_trained_on_69_data.sav',\
+        # 'StandardScaler_Trainedon_3013097-06_1st_iter_091222.sav',\
+        # 'Selected_Features_BoturaAfterTD=3_Bidirectional_3013097-06_061222.pickle',\
+        # ==================================
         import joblib
         path_to_DreamentoScorer = DreamentoScorer_path
         
@@ -2642,9 +2647,9 @@ class OfflineDreamento():
         X_test = sc.transform(X_test)
 
         # Add time dependence to the data classification
-        td = 5 # epochs of memory
+        td = 3 # 5epochs of memory
         print('Adding time dependency ...')
-        X_test_td  = self.SSN.add_time_dependence_backward(X_test,  n_time_dependence=td,\
+        X_test_td  = self.SSN.add_time_dependence_bidirectional(X_test,  n_time_dependence=td,\
                                                          padding_type = 'sequential')
 
         # Load selected features
