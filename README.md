@@ -3,12 +3,14 @@
 ## Overview
 
 Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data.  
-- You can analyze your ZMax data with Dreamento even if you have not recorded it via Dreamento (see **Post-processing** section for details)!
 - The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 - **For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977** (see also citation section in the bottom of page)
+![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
 
 ## Online (real-time) vs Offline Dreamento
-**Online/real-time Dreamento** is meant to be used for data collection, whereas **offline/post-processing Dreamento** is capable of analyzing both the data collected by online Dreamento or any ZMax recording that used HDRecorder software.
+- **Online/real-time Dreamento** is meant to be used for data collection
+- **offline/post-processing Dreamento** is capable of analyzing both the acquired data.
+- N.B. *you can analyze any ZMax data with Dreamento even if you have not recorded it via Dreamento, for instance if you recorded on the sd card or via HDRecorder! see **Post-processing** section for details)!*
 
 ## Watch Dreamento overview on YouTube:
 To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming: [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
@@ -23,10 +25,10 @@ To have a complete overview of the Dreamento package, you can watch the followin
 7. **annotations**: The experimenter can set various annotations throughout the experiment.
 
 ## Post-processing features:
-The post-processing Dreamento is not only able to process the data collected by the Dreamento software itself, but we have made it possible that all ZMax users who use the official software of the company (Hypnodyne HDRecorder) can also process their data with Dreamento!
 
-- OfflineDreamento.py: Integration of all the collected data for post-processing, ZMax data, annotations, TFR, **autoscroing**, and integration with other measurement modalities!
+- **OfflineDreamento.py:** Integration of all the collected data for post-processing, ZMax data, annotations, TFR, **autoscroing**, and integration with other measurement modalities!
 - Recently, you can also do **bulk autoscoring** with Dreamento!
+![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/195380607-7b35d89e-d6ff-446c-85f0-154a7b3dae54.png)
 
 ## Installation and Prerequisities: 
 - Download and install Anaconda (https://www.anaconda.com/).
@@ -94,21 +96,11 @@ With DreamentoScorer, you can export not only the sleep stage predictions, but a
 
 In the recent update, we added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
 
-## Demo:
-### The real-time Dreamento GUI
-![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
+### Synchronization
+You can collect ExG data using other device in parallel with ZMax and then use Dreamento to synchronize the outputs!
+An example, is EMG recording in parallel with Dreamento, based on which the user can sync the data.
 
-### The offline Dreamento GUI 
-#### 1. With additional EMG measurement
-
-![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/195380607-7b35d89e-d6ff-446c-85f0-154a7b3dae54.png)
-
-#### 2. With no additional EMG
-![OfflineDreamento_noEMG](https://user-images.githubusercontent.com/48684369/177753749-0a9b27d6-5586-4e4b-84e4-8a2284c14807.png)
-
-### EEG - EMG synchronization
 ![EEG_EMG_synchronization](https://user-images.githubusercontent.com/48684369/181077226-31550c51-615f-486c-8b4f-1e5c55d8a20c.png)
-
 
 ### Documentation
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
