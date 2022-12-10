@@ -2647,9 +2647,9 @@ class OfflineDreamento():
         X_test = sc.transform(X_test)
 
         # Add time dependence to the data classification
-        td = 3 # 5epochs of memory
+        td = 5 # 5epochs of memory
         print('Adding time dependency ...')
-        X_test_td  = self.SSN.add_time_dependence_bidirectional(X_test,  n_time_dependence=td,\
+        X_test_td  = self.SSN.add_time_dependence_backward(X_test,  n_time_dependence=td,\
                                                          padding_type = 'sequential')
 
         # Load selected features
