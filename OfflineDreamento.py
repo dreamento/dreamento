@@ -28,6 +28,7 @@ import itertools
 import matplotlib
 import os
 import threading
+import yasa
 
 matplotlib.use('TkAgg')
 
@@ -169,22 +170,29 @@ class OfflineDreamento():
 
     #%% Checkbox for plotting syncing process
         self.plot_sync_output = IntVar()
-        self.checkbox_plot_sync_output = Checkbutton(self.frame_import, text = "Plot alignment process",
+        self.checkbox_plot_sync_output = Checkbutton(self.frame_import, text = "Plot EEG alignment process",
                                   font = 'Calibri 11 ', variable = self.plot_sync_output)
         
         self.checkbox_plot_sync_output.grid(row = 4, column = 4, sticky="w")
+    
+    #%% Checkbox for plotting EMG quality TFR
+        self.plot_EMG_quality_evaluation = IntVar()
+        self.checkbox_plot_EMG_quality_evaluation = Checkbutton(self.frame_import, text = "EMG quality evaluation",
+                                  font = 'Calibri 11 ', variable = self.plot_EMG_quality_evaluation)
+        
+        self.checkbox_plot_EMG_quality_evaluation.grid(row = 5, column = 4, sticky="w")
         
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 5, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 6, column = 4, sticky="w", pady = 10)
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 6 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 7 , column = 4, sticky="w")
         
     #%% Checkbox for plotting spectrograms with markers
         self.analysis_signal_options = IntVar(value = 1)
@@ -192,7 +200,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 7, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 8, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
@@ -201,14 +209,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 8, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 9, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 9, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 10, column = 4, sticky="w", pady = 10)
         
     #%% EMG Y SCALE
         #Label to read data and extract features
@@ -261,6 +269,8 @@ class OfflineDreamento():
         # Sync button
             self.button_apply['state'] = tk.DISABLED
             
+        # EMG Evaluation
+            self.checkbox_plot_EMG_quality_evaluation['state'] = tk.NORMAL
         elif int_val == 2:
             
             # EMG load button
@@ -274,6 +284,9 @@ class OfflineDreamento():
 
             # Sync button
             self.button_apply['state'] = tk.NORMAL
+            
+            # EMG Evaluation
+            self.checkbox_plot_EMG_quality_evaluation['state'] = tk.DISABLED
             
         elif int_val == 3:
             
@@ -294,6 +307,10 @@ class OfflineDreamento():
             
             # Browse Markers browse button 
             self.button_marker_json_browse['state'] = tk.DISABLED
+            
+            # EMG Evaluation
+            self.checkbox_plot_EMG_quality_evaluation['state'] = tk.DISABLED
+        
     #%% Moving average filter    
     def MA(self,x, N):
     
@@ -1864,6 +1881,16 @@ class OfflineDreamento():
             plt.tight_layout()
             plt.show()
             
+            global sig_emg_1, sig_emg_2, sig_emg_3
+             
+            sig_emg_1 = self.EMG_filtered_data1
+            sig_emg_2 = self.EMG_filtered_data2
+            sig_emg_3 = self.EMG_filtered_data1_minus_2
+            
+            if int(self.plot_EMG_quality_evaluation.get()) == 1:
+                
+                self.assess_EMG_data_quality()
+            
         else:
             
            fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 1,1, 2, 2,4, 4, 4, 4, 10]})
@@ -2113,6 +2140,11 @@ class OfflineDreamento():
            #plt.subplots_adjust(left=0.1, right=0.1, top=0.9, bottom=0.1)
            plt.tight_layout()
            plt.show()
+           
+           if int(self.plot_EMG_quality_evaluation.get()) == 1:
+               
+               self.assess_EMG_data_quality()           
+
 # =============================================================================
 #         ax_EMG.set_xticks([])
 #         ax_EMG2.set_xticks([])
@@ -2539,9 +2571,9 @@ class OfflineDreamento():
 
     #%% Autoscoring    
     def autoscoring(self, DreamentoScorer_path = '.\\DreamentoScorer\\',\
-                    model_path = "Dreamento_autoscoring_Lightgbm_td=5_version_alpha.sav",
-                    standard_scaler_path = "StandardScaler_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.sav",
-                    feat_selection_path = "Selected_Features_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.pickle",
+                    model_path = "Dreamento_autoscoring_Lightgbm_td=3_bidirectional_500_estimator_version_alpha_trained_on_69_data.sav",
+                    standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",
                     fs = 256):
         
         # old CS model
@@ -2647,9 +2679,9 @@ class OfflineDreamento():
         X_test = sc.transform(X_test)
 
         # Add time dependence to the data classification
-        td = 5 # 5epochs of memory
+        td = 3 # 5epochs of memory
         print('Adding time dependency ...')
-        X_test_td  = self.SSN.add_time_dependence_backward(X_test,  n_time_dependence=td,\
+        X_test_td  = self.SSN.add_time_dependence_bidirectional(X_test,  n_time_dependence=td,\
                                                          padding_type = 'sequential')
 
         # Load selected features
@@ -2674,9 +2706,9 @@ class OfflineDreamento():
 
     #%% Bulk autoscoring function
     def bulk_autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
-                    model_path = "Dreamento_autoscoring_Lightgbm_td=5_version_alpha.sav",\
-                    standard_scaler_path = "StandardScaler_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.sav",\
-                    feat_selection_path = "Selected_Features_BoturaAfterTD=5_train_test_split_Backward_Dreamento_180722.pickle",\
+                    model_path = "Dreamento_autoscoring_Lightgbm_td=3_bidirectional_500_estimator_version_alpha_trained_on_69_data.sav",\
+                    standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",\
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",\
                     fs = 256):
         
         import joblib
@@ -2783,9 +2815,9 @@ class OfflineDreamento():
             X_test = sc.transform(X_test)
     
             # Add time dependence to the data classification
-            td = 5 # epochs of memory
+            td = 3 # epochs of memory
             print('Adding time dependency ...')
-            X_test_td  = self.SSN.add_time_dependence_backward(X_test,  n_time_dependence=td,\
+            X_test_td  = self.SSN.add_time_dependence_bidirectional(X_test,  n_time_dependence=td,\
                                                              padding_type = 'sequential')
     
             # Load selected features
@@ -3071,7 +3103,7 @@ class OfflineDreamento():
                        
             # Opening JSON file]
             ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
     
             ax_acc.spines[["top", "bottom"]].set_visible(False)
             ax_noise.spines[["top", "bottom"]].set_visible(False)
@@ -3088,7 +3120,7 @@ class OfflineDreamento():
             ax_acc.plot(np.arange(len(self.acc_z))/256, self.acc_z, linewidth = 2, color = 'green')
             
             # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'black')
+            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'olive')
             
             #ax4.get_xaxis().set_visible(False)
             
@@ -3313,6 +3345,167 @@ class OfflineDreamento():
         stats['SME']   = "{:.2f}".format(100 * stats['TST'] / stats['SPT'])
         
         self.stats = stats
+        
+    #%% Assess EMG quality
+    def assess_EMG_data_quality(self, 
+                                win_sec = 30,
+                                fmin = 10,
+                                fmax = 100,
+                                sf = 256,
+                                noverlap = 0,
+                                trimperc=5,
+                                cmap='RdBu_r',
+                                log_power = False):
+        
+        from lspopt import spectrogram_lspopt
+        from matplotlib.colors import Normalize, ListedColormap
+
+        """        
+        source: https://github.com/raphaelvallat/yasa/blob/master/notebooks/10_spectrogram.ipynb
+       
+        Adjusted by Mahdad for comparative purposes
+        """
+        
+        sig1 = self.EMG_filtered_data1
+        sig2 = self.EMG_filtered_data2
+        sig3 = self.EMG_filtered_data1_minus_2
+        print('EMG signals for quality assessment were loaded')
+        # parameters
+        win_sec = win_sec
+        fmin = fmin
+        fmax = fmax
+        sf = sf
+        noverlap = noverlap
+        trimperc=trimperc
+        cmap=cmap
+
+        # Increase font size while preserving original
+        old_fontsize = plt.rcParams['font.size']
+        plt.rcParams.update({'font.size': 12})
+
+        # Safety checks
+        assert isinstance(sig1, np.ndarray), 'Data1 must be a 1D NumPy array.'
+        assert isinstance(sig2, np.ndarray), 'Data2 must be a 1D NumPy array.'
+        assert isinstance(sig3, np.ndarray), 'Data1 must be a 1D NumPy array.'
+
+        assert isinstance(sf, (int, float)), 'sf must be int or float.'
+
+        assert sig1.ndim == 1, 'Data1 must be a 1D (single-channel) NumPy array.'
+        assert sig2.ndim == 1, 'Data2 must be a 1D (single-channel) NumPy array.'
+        assert sig3.ndim == 1, 'Data1 must be a 1D (single-channel) NumPy array.'
+
+        assert isinstance(win_sec, (int, float)), 'win_sec must be int or float.'
+        assert isinstance(fmin, (int, float)), 'fmin must be int or float.'
+        assert isinstance(fmax, (int, float)), 'fmax must be int or float.'
+        assert fmin < fmax, 'fmin must be strictly inferior to fmax.'
+        assert fmax < sf / 2, 'fmax must be less than Nyquist (sf / 2).'
+
+        print('Sanity checks completed!')
+        # Calculate multi-taper spectrogram
+        nperseg = int(win_sec * sf)
+
+        assert sig1.size > 2 * nperseg, 'Data1 length must be at least 2 * win_sec.'
+        assert sig2.size > 2 * nperseg, 'Data2 length must be at least 2 * win_sec.'
+        assert sig3.size > 2 * nperseg, 'Data1 length must be at least 2 * win_sec.'
+
+
+        f1, t1, Sxx1 = spectrogram_lspopt(sig1, sf, nperseg=nperseg, noverlap=noverlap)
+        f2, t2, Sxx2 = spectrogram_lspopt(sig2, sf, nperseg=nperseg, noverlap=noverlap)
+        f3, t3, Sxx3 = spectrogram_lspopt(sig3, sf, nperseg=nperseg, noverlap=noverlap)
+
+        Sxx1 = 10 * np.log10(Sxx1)  # Convert uV^2 / Hz --> dB / Hz
+        Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+        Sxx3 = 10 * np.log10(Sxx3)  # Convert uV^2 / Hz --> dB / Hz
+
+        # Select only relevant frequencies (up to 30 Hz)
+        good_freqs1 = np.logical_and(f1 >= fmin, f1 <= fmax)
+        good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+        good_freqs3 = np.logical_and(f3 >= fmin, f3 <= fmax)
+
+        Sxx1 = Sxx1[good_freqs1, :]
+        Sxx2 = Sxx2[good_freqs2, :]
+        Sxx3 = Sxx3[good_freqs3, :]
+
+
+        f1 = f1[good_freqs1]
+        f2 = f2[good_freqs2]
+        f3 = f3[good_freqs3]
+
+
+        t1 /= 3600  # Convert t to hours
+        t2 /= 3600  # Convert t to hours
+        t3 /= 3600  # Convert t to hours
+
+
+        # Normalization
+        vmin1, vmax1 = np.percentile(Sxx1, [0 + trimperc, 100 - trimperc])
+        vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+        vmin3, vmax3 = np.percentile(Sxx3, [0 + trimperc, 100 - trimperc])
+
+        norm1 = Normalize(vmin=vmin1, vmax=vmax1)
+        norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+        norm3 = Normalize(vmin=vmin3, vmax=vmax3)
+            
+        # Plot signal 1
+        #fig, ax = plt.subplots(3, 2)
+        fig, ax = plt.subplots(nrows=3, ncols=2, figsize=(10, 5), gridspec_kw={'width_ratios':[2,1], 'height_ratios':[1,1,1]})
+
+
+        im = ax[0,0].pcolormesh(t1, f1, Sxx1, norm=norm1, cmap=cmap, antialiased=True,
+                           shading="auto")
+        ax[0,0].set_xlim(0, t1.max())
+        ax[0,0].set_ylabel('Frequency [Hz]')
+        ax[0,0].set_xlabel('Time [hrs]')
+        ax[0,0].set_title('EMG 1')
+        # Add colorbar
+        # =============================================================================
+        #         cbar = fig.colorbar(im, ax=ax[0], shrink=0.95, fraction=0.1, aspect=25)
+        #         cbar.ax.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=20)
+        # =============================================================================
+
+        # Plot signal 2
+        im = ax[1,0].pcolormesh(t2, f2, Sxx2, norm=norm1, cmap=cmap, antialiased=True,
+                           shading="auto") # Normalized with respect to the same freq range as sig1
+        ax[1,0].set_xlim(0, t2.max())
+        ax[1,0].set_ylabel('Frequency [Hz]')
+        ax[1,0].set_title('EMG 2')
+        # =============================================================================
+        #         cbar = fig.colorbar(im, ax=ax[1], shrink=0.95, fraction=0.1, aspect=25)
+        #         cbar.ax.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=20)
+        # =============================================================================
+        # Plot signal 3
+        im = ax[2,0].pcolormesh(t3, f3, Sxx3, norm=norm1, cmap=cmap, antialiased=True,
+                           shading="auto") # Normalized with respect to the same freq range as sig1
+        ax[2,0].set_xlim(0, t3.max())
+        ax[2,0].set_ylabel('Frequency [Hz]')
+        ax[2,0].set_title('EMG 1 - EMG 2')
+
+        # Periodogram
+        win_size = 5
+        win = win_size * sf
+        freqs1, psd1 = signal.welch(x=sig1, fs=sf, nperseg=win)
+        freqs2, psd2 = signal.welch(x=sig2, fs=sf, nperseg=win)
+        freqs3, psd3 = signal.welch(x=sig3, fs=sf, nperseg=win)
+
+        log_power = log_power
+        if log_power:
+            psd1 = 20 * np.log10(psd1)
+            psd2 = 20 * np.log10(psd2)
+            psd3 = 20 * np.log10(psd3)
+
+        # Compute vvalues: 
+        ret1 = yasa.bandpower(data=sig1, sf=sf)
+        ret2 = yasa.bandpower(data=sig2, sf=sf)
+        ret3 = yasa.bandpower(data=sig3, sf=sf)
+
+        ax[0,1].plot(freqs1, psd1, color='k', lw=2)
+        ax[0,1].set_title('EMG 1')
+        ax[1,1].plot(freqs2, psd2, color='k', lw=2)
+        ax[1,1].set_title('EMG 2')
+        ax[2,1].plot(freqs3, psd3, color='k', lw=2)
+        ax[2,1].set_title('EMG 1 - EMG 2')
+        
+        plt.subplots_adjust(hspace = 0.2)
     #%% Function: Help pop-up
     def help_pop_up_func(self):
         """
