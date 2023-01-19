@@ -15,7 +15,8 @@ Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package for (1)
 ![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
 
 ### Offline Dreamento:
-![OfflineDreamento_withEMG](https://user-images.githubusercontent.com/48684369/195380607-7b35d89e-d6ff-446c-85f0-154a7b3dae54.png)
+![OfflineDreamentoScreenshot](https://user-images.githubusercontent.com/48684369/212293402-de503bb8-121f-4deb-a121-595380119315.png)
+
 
 ## Watch Dreamento overview on YouTube:
 To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming: [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
@@ -86,13 +87,15 @@ You can post-process your recordings with Dreamento in three cases: (1) While ha
 3. Demo on post-processing (** Hypnodyne HDRecorder only**): [LINK](https://youtu.be/uv6-D57b97I)
 
 ## Automatic sleep scoring (autoscoring):
-We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package. The current version of DreamentoScorer is alpha, as it is trained on ~35 nights of 
-a single citizen neuroscientist only. Nevertheless, we are working hard to improve its generalizability by adding around 100 new data overall from more than 30 people! 
-
+We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package.
 DreamentoScorer is a machine-learning based alogorithm which exctracts several linear and non-linear features in time and time-frequency domain from each 30-second epoch of data. The classifier is based on the LightGBM and
  we plan to add other classifiers such that the user can make a consensus of different scoring algorithms. So, stay tuned for the upcoming updates!
 
+This model is currently trained on 42 data and should have a reasonbable generalizability.
+
 With DreamentoScorer, you can export not only the sleep stage predictions, but also the sleep metrics such as sleep efficiency, sleep onset latency, etc as a txt file.
+
+DreamentoScorer not only provides the sleep stages, but also the level of certainty for each scoring (the probability of each sleep stage for each epoch).
 
 *N.B: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.* 
 

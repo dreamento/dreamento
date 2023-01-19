@@ -75,7 +75,7 @@ class OfflineDreamento():
         
         #### ==================== Import Hypnodyne data  ========================####
         # Label: Import EDF
-        self.label_Hypnodyne = Label(self.frame_import, text = "Import Hypnodyne EDF file:",
+        self.label_Hypnodyne = Label(self.frame_import, text = "Import Hypnodyne EEG L.edf file:",
                                   font = 'Calibri 13 ')
         self.label_Hypnodyne.grid(row = 0 , column = 0, padx = 10, pady = 10)
         
@@ -156,7 +156,7 @@ class OfflineDreamento():
     #%% Checkbox for autoscoring
         self.is_autoscoring = IntVar(value = 0)
         self.checkbox_is_autoscoring = Checkbutton(self.frame_import, text = "Single-file autoscoring",
-                                  font = 'Calibri 11 ', variable = self.is_autoscoring, command = self.scoring_caution)
+                                  font = 'Calibri 11 ', variable = self.is_autoscoring)#, command = self.scoring_caution)
         
         self.checkbox_is_autoscoring.grid(row = 2, column = 4, sticky="w") 
         
@@ -510,7 +510,7 @@ class OfflineDreamento():
     
                     fig, axs = plt.subplots(6, figsize = (15,10))
                     axs[0].plot(EEG_Abs, color = 'powderblue')
-                    axs[0].plot(MA_EEG, color = 'navy', linewidth=3)
+                    axs[0].plot(MA_EEG, color = 'olive', linewidth=3)
                     axs[0].set_title('EEG', fontsize = 10)
                     
                     axs[1].plot(EMG_Abs1, color = 'plum')
@@ -564,7 +564,7 @@ class OfflineDreamento():
                     
                     if samples_before_begin < 0:
                         axs[5].plot(EEG, color ='powderblue')
-                        axs[5].plot(MA_EEG, color = 'navy', linewidth=3)
+                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
                         
                         axs[5].plot(EMG1[-samples_before_begin:], color = 'plum')
                         axs[5].plot(MA_EMG1[-samples_before_begin:], color = 'purple', linewidth=3)
@@ -581,7 +581,7 @@ class OfflineDreamento():
                         self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
                     else:
                         axs[5].plot(EEG, color ='powderblue')
-                        axs[5].plot(MA_EEG, color = 'navy', linewidth=3)
+                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
                         
                         tmp = np.zeros(samples_before_begin)
                         
@@ -672,6 +672,11 @@ class OfflineDreamento():
                             plt.show()
                             break
                         
+         
+        self.ppg_path = hypnodyne_files_list[0].split('EEG')[0] + 'OXY_IR_AC.edf'
+        self.ppg_obj = mne.io.read_raw_edf(self.ppg_path)
+        self.ppg_data = self.ppg_obj.get_data()[0]
+        self.ppg_data = self.butter_bandpass_filter(data = self.ppg_data, lowcut=.3, highcut=100, fs = 256, order = 2)
             
         # Loading all available data            
         self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
@@ -781,7 +786,7 @@ class OfflineDreamento():
                 
                 if mean_x1 > mean_x2:
                     self.axs[4].plot(self.EEG, color = 'powderblue')
-                    self.axs[4].plot(self.MA_EEG, color = 'navy', linewidth = 2)
+                    self.axs[4].plot(self.MA_EEG, color = 'olive', linewidth = 2)
                     
                     tmp_sync = np.zeros(int(mean_x1-mean_x2))
                     self.synced_EMG1    = np.append(tmp_sync, self.EMG1)
@@ -809,7 +814,7 @@ class OfflineDreamento():
                     tmp_sync = int(mean_x2-mean_x1)
                     
                     self.axs[4].plot(self.EEG, color = 'powderblue')
-                    self.axs[4].plot(self.MA_EEG, color = 'navy', linewidth = 2)
+                    self.axs[4].plot(self.MA_EEG, color = 'olive', linewidth = 2)
                     
                     self.axs[4].plot(self.EMG1[tmp_sync:], color = 'plum')
                     self.axs[4].plot(self.MA_EMG1[tmp_sync:], color = 'purple', linewidth = 2)
@@ -1171,6 +1176,11 @@ class OfflineDreamento():
             self.noise_obj = mne.io.read_raw_edf(self.noise_path)
             self.noise_data = self.noise_obj.get_data()[0]
             
+            self.ppg_path = hypnodyne_files_list[0].split('EEG')[0] + 'OXY_IR_AC.edf'
+            self.ppg_obj = mne.io.read_raw_edf(self.ppg_path)
+            self.ppg_data = self.ppg_obj.get_data()[0]
+            self.ppg_data = self.butter_bandpass_filter(data = self.ppg_data, lowcut=.3, highcut=100, fs = 256, order = 2)
+            
             # Acc
             self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
             self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
@@ -1246,6 +1256,10 @@ class OfflineDreamento():
                 self.acc_y = self.acc_y_obj.get_data()[0]
                 self.acc_z = self.acc_z_obj.get_data()[0]
                 
+                self.ppg_path = hypnodyne_files_list[0].split('EEG')[0] + 'OXY_IR_AC.edf'
+                self.ppg_obj = mne.io.read_raw_edf(self.ppg_path)
+                self.ppg_data = self.ppg_obj.get_data()[0]
+                self.ppg_data = self.butter_bandpass_filter(data = self.ppg_data, lowcut=.3, highcut=100, fs = 256, order = 2)
                 print('Required files imported successfully ...')
                 
                 data = mne.io.read_raw_edf(self.HDRecorderRecording)
@@ -1268,16 +1282,11 @@ class OfflineDreamento():
                     print('plotting peridogram ...')
                     self.plot_welch_periodogram(data = self.sigHDRecorder, sf = 256, win_size = 5)
                     print('PSD plotted successfully')
-                if int(self.is_autoscoring.get()) == 1: 
-                    self.autoscoring()
-                    self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
-                                            win_sec=30, fmin=0.3, fmax=40,\
-                                            trimperc=5, cmap='RdBu_r', add_colorbar = False)
-                
-                else:    
-                    self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
-                                            win_sec=30, fmin=0.3, fmax=40,\
-                                            trimperc=5, cmap='RdBu_r', add_colorbar = False)
+                    
+                self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
+                                        win_sec=30, fmin=0.3, fmax=25,\
+                                        trimperc=5, cmap='RdBu_r', add_colorbar = False)
+
                         
         # Activate save section
         if int(self.is_autoscoring.get()) == 1:     
@@ -1667,25 +1676,26 @@ class OfflineDreamento():
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2,4, 4, 4, 4, 10]})
+            fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
             
-            ax1 = plt.subplot(12,1,1)
-            ax2 = plt.subplot(12,1,2, sharex = ax1)
-            ax3 = plt.subplot(12,1,3, sharex = ax1)
+            ax1 = plt.subplot(13,1,1)
+            ax2 = plt.subplot(13,1,2, sharex = ax1)
+            ax3 = plt.subplot(13,1,3, sharex = ax1)
             
-            ax_epoch_marker = plt.subplot(12,1,4, )
-            ax_epoch_light = plt.subplot(12,1,5, sharex = ax_epoch_marker)
+            ax_epoch_marker = plt.subplot(13,1,4, )
+            ax_epoch_light = plt.subplot(13,1,5, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(12,1,6, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(12,1,7, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(13,1,6, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(13,1,7, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)
             
     
             
-            ax_EMG = plt.subplot(12,1,8, sharex = ax_epoch_marker)
-            ax_EMG2 = plt.subplot(12,1,9, sharex = ax_epoch_marker)
-            ax_EMG3 = plt.subplot(12,1,10, sharex = ax_epoch_marker)
-            ax_TFR_short = plt.subplot(12,1,11, sharex = ax_epoch_marker)
-            ax4 = plt.subplot(12,1,12, sharex = ax_epoch_marker)
+            ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
+            ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
+            ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+            ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
             ax4.grid(True)
     
             ax1.get_xaxis().set_visible(False)
@@ -1724,7 +1734,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -1787,8 +1797,8 @@ class OfflineDreamento():
             ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
             ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
             ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
             ax_EMG.set_ylabel('EMG1 (uV)',rotation = 0, labelpad=30, fontsize=8)
             ax_EMG2.set_ylabel('EMG2 (uV)',rotation = 0, labelpad=30, fontsize=8)
             ax_EMG3.set_ylabel(' EMG1 - EMG2 (uV) ',rotation = 0, labelpad=30, fontsize=8)
@@ -1818,8 +1828,15 @@ class OfflineDreamento():
             ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
             ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
             
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+
             # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'black')
+            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
             
             #ax4.get_xaxis().set_visible(False)
             
@@ -1893,26 +1910,26 @@ class OfflineDreamento():
             
         else:
             
-           fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 1,1, 2, 2,4, 4, 4, 4, 10]})
+           fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 4,1,1,2, 2, 2,4, 4, 4, 4, 10]})
            
-           ax1 = plt.subplot(13,1,1)
-           ax2 = plt.subplot(13,1,2, sharex = ax1)
-           ax3 = plt.subplot(13,1,3, sharex = ax1)
+           ax1 = plt.subplot(15,1,1)
+           ax2 = plt.subplot(15,1,2, sharex = ax1)
+           ax3 = plt.subplot(15,1,3, sharex = ax1)
            
-           ax_autoscoring = plt.subplot(13,1,4, )
-           ax_epoch_marker = plt.subplot(13,1,5, )
-           ax_epoch_light = plt.subplot(13,1,6, sharex = ax_epoch_marker)
+           ax_autoscoring = plt.subplot(15,1,4, )
+           ax_proba = plt.subplot(15,1,5, )
+           ax_epoch_marker = plt.subplot(15,1,6, )
+           ax_epoch_light = plt.subplot(15,1,7, sharex = ax_epoch_marker)
            
-           ax_acc = plt.subplot(13,1,7, sharex = ax_epoch_marker)
-           ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)
-           
-
-           
-           ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
-           ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
-           ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
-           ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
-           ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
+           ax_acc = plt.subplot(15,1,8, sharex = ax_epoch_marker)
+           ax_ppg = plt.subplot(15,1,9, sharex = ax_epoch_marker)
+           ax_noise = plt.subplot(15,1,10, sharex = ax_epoch_marker)
+                      
+           ax_EMG = plt.subplot(15,1,11, sharex = ax_epoch_marker)
+           ax_EMG2 = plt.subplot(15,1,12, sharex = ax_epoch_marker)
+           ax_EMG3 = plt.subplot(15,1,13, sharex = ax_epoch_marker)
+           ax_TFR_short = plt.subplot(15,1,14, sharex = ax_epoch_marker)
+           ax4 = plt.subplot(15,1,15, sharex = ax_epoch_marker)
            ax4.grid(True)
 
            ax1.get_xaxis().set_visible(False)
@@ -1951,7 +1968,7 @@ class OfflineDreamento():
            #ax4.set_xlim([0, len(data)])
            ax4.set_ylabel('EEG (uV)')
            ax4.set_ylim([-150, 150])
-           ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
+           ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
 
                       
            # Opening JSON file
@@ -2014,8 +2031,8 @@ class OfflineDreamento():
            ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
            ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
            ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-           ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-           ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
+           ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+           ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
            ax_EMG.set_ylabel('EMG1 (uV)',rotation = 0, labelpad=30, fontsize=8)
            ax_EMG2.set_ylabel('EMG2 (uV)',rotation = 0, labelpad=30, fontsize=8)
            ax_EMG3.set_ylabel(' EMG1 - EMG2 (uV) ',rotation = 0, labelpad=30, fontsize=8)
@@ -2045,8 +2062,15 @@ class OfflineDreamento():
            ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
            ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
            
+           # Plot ppg
+           ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+           ax_ppg.set_ylim([-100, 100])
+           ax_ppg.set_ylabel('PPG')
+           ax_ppg.set_yticks([])
+           
+           
            # plot noise
-           ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'black')
+           ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
            
            #ax4.get_xaxis().set_visible(False)
            
@@ -2057,6 +2081,7 @@ class OfflineDreamento():
            #ax3.set_xlim([0, len(data)])
            #ax4.set_xlim([0, 7680])#len(data)])
            self.sync_with_dreamento = True
+           
            self.autoscoring()
 
            stages = self.y_pred
@@ -2085,13 +2110,18 @@ class OfflineDreamento():
            for i in np.arange(len(rem)) -1:
                ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
 
-           
-           
            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
                                      fontsize = 8)
            ax_autoscoring.set_xlim([np.min(x), np.max(x)])
-                   
+           
+           ax_proba.set_xlim([np.min(x), np.max(x)])
+           self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
+           ax_proba.legend(loc = 'right', prop={'size': 6})
+           
+           ax_proba.set_yticks([])
+           ax_proba.set_xticks([])
+
            # read EMG
            self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
            self.EMG_raw = self.EMG_raw.resample(int(256))
@@ -2229,170 +2259,19 @@ class OfflineDreamento():
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=9, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 4, 10]})
-            
-            ax1 = plt.subplot(9,1,1)
-            ax2 = plt.subplot(9,1,2, sharex = ax1)
-            ax3 = plt.subplot(9,1,3, sharex = ax1)
-            
-            ax_epoch_marker = plt.subplot(9,1,4, )
-            ax_epoch_light = plt.subplot(9,1,5, sharex = ax_epoch_marker)
-            
-            ax_acc = plt.subplot(9,1,6, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(9,1,7, sharex = ax_epoch_marker)
-            
-    
-            ax_TFR_short = plt.subplot(9,1,8, sharex = ax_epoch_marker)
-            ax4 = plt.subplot(9,1,9, sharex = ax_epoch_marker)
-            ax4.grid(True)
-    
-            ax1.get_xaxis().set_visible(False)
-            ax2.get_xaxis().set_visible(False)
-            ax3.get_xaxis().set_visible(False)
-            ax_epoch_marker.get_xaxis().set_visible(False)
-            ax_epoch_light.get_xaxis().set_visible(False)
-            ax_acc.get_xaxis().set_visible(False)
-            ax_acc.set_yticks([])
-            ax_noise.set_yticks([])
-            ax_noise.get_xaxis().set_visible(False)
-            
-            ax_acc.set_ylim([-1.4, 1.4])
-            
-            plt.subplots_adjust(hspace = 0)
-            ax1.set_title('Dreamento: post-processing ')
-            im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
-                               shading="auto")
-            ax3.set_xlim([0, len(data)/256])
-            ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
-            
-            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
-                               shading="auto")
-            
-            # Add colorbar
-            if add_colorbar == True:
-                cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
-                cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
-                
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
-            #axes[1].set_ylim([-200, 200])
-            #ax4.set_xlim([0, len(data)])
-            ax4.set_ylabel('EEG (uV)')
-            ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
-    
-                       
-            # Opening JSON file
-            f = open(path_to_json_markers,)
-             
-            # returns JSON object as a dictionary
-            markers = json.load(f)
-            markers_details = list(markers.values())
-            
-            self.markers_details = markers_details
-            self.marker_keys = list(markers.keys())
-    
-            self.counter_markers = 0
-            self.palette = itertools.cycle(sns.color_palette())
-    
-            for counter, marker in enumerate(markers.keys()):
-                    
-                if marker.split()[0] == 'MARKER':
-                    if 'manual' in markers_to_show:
-                        self.counter_markers = self.counter_markers + 1
-                        self.color_markers = next(self.palette)
-                        marker_loc = int(marker.split()[-1])
-                        ax1.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  str(self.counter_markers)+'. '+markers_details[counter], linewidth = 3, color = self.color_markers)
-                        ax1.set_ylim([fmin, fmax])
-                        ax_epoch_marker.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  markers_details[counter], linewidth = 3, color = self.color_markers)
-                        
-                        ax_epoch_marker.text(marker_loc/256+.1, int((fmin+fmax)/2), str(self.counter_markers ), verticalalignment='center', color = self.color_markers)
-    
-                if marker.split()[0] == 'SOUND':
-                    if 'sound' in markers_to_show:
-                        marker_loc = int(marker.split()[-1])
-                        ax2.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  'Audio: '+markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
-                        ax2.set_ylim([fmin, fmax])
-                        ax_epoch_light.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label = 'Audio: '+ markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
-                        ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Audio', verticalalignment='center', color = 'blue')
-    
-                elif marker.split()[0] == 'LIGHT':
-                    if 'light' in markers_to_show:
-                        marker_loc = int(marker.split()[-1])
-                        if 'Vib: False' in markers_details[counter]:
-                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
-                            ax2.set_ylim([fmin, fmax])
-                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
-                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Light', verticalalignment='center', color = 'red')
-    
-                        elif 'Vib: True' in markers_details[counter]:
-                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
-                            ax2.set_ylim([fmin, fmax])
-                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
-                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Vibration', verticalalignment='center', color = 'green')
-                        
-            ax1.set_yticks([])
-            ax2.set_yticks([])
-            ax_epoch_marker.set_yticks([])
-            ax_epoch_light.set_yticks([])
-            #ax_epoch_marker.set_xticks([])
-            #ax_epoch_light.set_xticks([])
-        
-            ax2.set_ylabel('Stimulation(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
-            ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
-            ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
-            ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
-            
-            ax2.spines["right"].set_visible(False)
-            ax2.spines["left"].set_visible(False)
-            ax2.spines["left"].set_visible(False)
-            ax1.spines["right"].set_visible(False)
-            ax1.spines["left"].set_visible(False)
-            ax_epoch_light.spines[["left", 'right']].set_visible(False)
-            ax_epoch_marker.spines[["left", 'right']].set_visible(False)
-            ax_acc.spines[["top", "bottom"]].set_visible(False)
-            ax_noise.spines[["top", "bottom"]].set_visible(False)
-            
-            time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
-        
-            ax4.set_xlabel('time (s)')
-            #ax4.set_xticks(np.arange(len(data)), time_axis)
-            ax4.set_xlim([0, 30])#len(data)])
-            leg = ax1.legend(fontsize=9, bbox_to_anchor=(1, 0), loc = 'upper left')
-            leg.set_draggable(state=True)
-            
-            # plot acc
-            ax_acc.plot(np.arange(len(self.acc_x[self.samples_before_begin:]))/256, self.acc_x[self.samples_before_begin:], linewidth = 2 , color = 'blue')
-            ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
-            ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
-            
-            # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'black')
-            
-            #ax4.get_xaxis().set_visible(False)
-            
-            fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
-            fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
-        else:
-            
-            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,4,1,1, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 10]})
             
             ax1 = plt.subplot(10,1,1)
             ax2 = plt.subplot(10,1,2, sharex = ax1)
             ax3 = plt.subplot(10,1,3, sharex = ax1)
             
-            ax_autoscoring = plt.subplot(10,1,4, )
-            ax_epoch_marker = plt.subplot(10,1,5, )
-            ax_epoch_light = plt.subplot(10,1,6, sharex = ax_epoch_marker)
+            ax_epoch_marker = plt.subplot(10,1,4, )
+            ax_epoch_light = plt.subplot(10,1,5, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(10,1,7, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(10,1,6, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(10,1,7, sharex = ax_epoch_marker)
             ax_noise = plt.subplot(10,1,8, sharex = ax_epoch_marker)
-            
-    
+
             ax_TFR_short = plt.subplot(10,1,9, sharex = ax_epoch_marker)
             ax4 = plt.subplot(10,1,10, sharex = ax_epoch_marker)
             ax4.grid(True)
@@ -2432,7 +2311,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -2495,8 +2374,8 @@ class OfflineDreamento():
             ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
             ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
             ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
             
             ax2.spines["right"].set_visible(False)
             ax2.spines["left"].set_visible(False)
@@ -2521,8 +2400,173 @@ class OfflineDreamento():
             ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
             ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
             
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+            
             # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'black')
+            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
+            
+            #ax4.get_xaxis().set_visible(False)
+            
+            fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
+            fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
+        else:
+            
+            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,4,4,1,1,2, 2, 2, 4, 10]})
+            
+            ax1 = plt.subplot(12,1,1)
+            ax2 = plt.subplot(12,1,2, sharex = ax1)
+            ax3 = plt.subplot(12,1,3, sharex = ax1)
+            
+            ax_autoscoring = plt.subplot(12,1,4, )
+            ax_proba = plt.subplot(12,1,5, )
+            ax_epoch_marker = plt.subplot(12,1,6, )
+            ax_epoch_light = plt.subplot(12,1,7, sharex = ax_epoch_marker)
+            
+            ax_acc = plt.subplot(12,1,8, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(12,1,9, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(12,1,10, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(12,1,11, sharex = ax_epoch_marker)
+            ax4 = plt.subplot(12,1,12, sharex = ax_epoch_marker)
+            ax4.grid(True)
+    
+            ax1.get_xaxis().set_visible(False)
+            ax2.get_xaxis().set_visible(False)
+            ax3.get_xaxis().set_visible(False)
+            ax_epoch_marker.get_xaxis().set_visible(False)
+            ax_epoch_light.get_xaxis().set_visible(False)
+            ax_acc.get_xaxis().set_visible(False)
+            ax_acc.set_yticks([])
+            ax_noise.set_yticks([])
+            ax_noise.get_xaxis().set_visible(False)
+            
+            ax_acc.set_ylim([-1.4, 1.4])
+            
+            plt.subplots_adjust(hspace = 0)
+            ax1.set_title('Dreamento: post-processing ')
+            im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            ax3.set_xlim([0, len(data)/256])
+            ax3.set_ylim((fmin, 25))
+            ax3.set_ylabel('Frequency [Hz]')
+            
+            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
+                               shading="auto")
+            
+            # Add colorbar
+            if add_colorbar == True:
+                cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
+                cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
+                
+            # PLOT EEG
+            ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+            ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+            #axes[1].set_ylim([-200, 200])
+            #ax4.set_xlim([0, len(data)])
+            ax4.set_ylabel('EEG (uV)')
+            ax4.set_ylim([-150, 150])
+            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+    
+                       
+            # Opening JSON file
+            f = open(path_to_json_markers,)
+             
+            # returns JSON object as a dictionary
+            markers = json.load(f)
+            markers_details = list(markers.values())
+            
+            self.markers_details = markers_details
+            self.marker_keys = list(markers.keys())
+    
+            self.counter_markers = 0
+            self.palette = itertools.cycle(sns.color_palette())
+    
+            for counter, marker in enumerate(markers.keys()):
+                    
+                if marker.split()[0] == 'MARKER':
+                    if 'manual' in markers_to_show:
+                        self.counter_markers = self.counter_markers + 1
+                        self.color_markers = next(self.palette)
+                        marker_loc = int(marker.split()[-1])
+                        ax1.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  str(self.counter_markers)+'. '+markers_details[counter], linewidth = 3, color = self.color_markers)
+                        ax1.set_ylim([fmin, fmax])
+                        ax_epoch_marker.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  markers_details[counter], linewidth = 3, color = self.color_markers)
+                        
+                        ax_epoch_marker.text(marker_loc/256+.1, int((fmin+fmax)/2), str(self.counter_markers ), verticalalignment='center', color = self.color_markers)
+    
+                if marker.split()[0] == 'SOUND':
+                    if 'sound' in markers_to_show:
+                        marker_loc = int(marker.split()[-1])
+                        ax2.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  'Audio: '+markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
+                        ax2.set_ylim([fmin, fmax])
+                        ax_epoch_light.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label = 'Audio: '+ markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
+                        ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Audio', verticalalignment='center', color = 'blue')
+    
+                elif marker.split()[0] == 'LIGHT':
+                    if 'light' in markers_to_show:
+                        marker_loc = int(marker.split()[-1])
+                        if 'Vib: False' in markers_details[counter]:
+                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
+                            ax2.set_ylim([fmin, fmax])
+                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
+                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Light', verticalalignment='center', color = 'red')
+    
+                        elif 'Vib: True' in markers_details[counter]:
+                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
+                            ax2.set_ylim([fmin, fmax])
+                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
+                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Vibration', verticalalignment='center', color = 'green')
+                        
+            ax1.set_yticks([])
+            ax2.set_yticks([])
+            ax_epoch_marker.set_yticks([])
+            ax_epoch_light.set_yticks([])
+            #ax_epoch_marker.set_xticks([])
+            #ax_epoch_light.set_xticks([])
+        
+            ax2.set_ylabel('Stimulation(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
+            ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
+            ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
+            ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
+            
+            ax2.spines["right"].set_visible(False)
+            ax2.spines["left"].set_visible(False)
+            ax2.spines["left"].set_visible(False)
+            ax1.spines["right"].set_visible(False)
+            ax1.spines["left"].set_visible(False)
+            ax_epoch_light.spines[["left", 'right']].set_visible(False)
+            ax_epoch_marker.spines[["left", 'right']].set_visible(False)
+            ax_acc.spines[["top", "bottom"]].set_visible(False)
+            ax_noise.spines[["top", "bottom"]].set_visible(False)
+            
+            time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
+        
+            ax4.set_xlabel('time (s)')
+            #ax4.set_xticks(np.arange(len(data)), time_axis)
+            ax4.set_xlim([0, 30])#len(data)])
+            leg = ax1.legend(fontsize=9, bbox_to_anchor=(1, 0), loc = 'upper left')
+            leg.set_draggable(state=True)
+            
+            # plot acc
+            ax_acc.plot(np.arange(len(self.acc_x[self.samples_before_begin:]))/256, self.acc_x[self.samples_before_begin:], linewidth = 2 , color = 'blue')
+            ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
+            ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
+            
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+            
+            # plot noise
+            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
             
             #ax4.get_xaxis().set_visible(False)
             self.sync_with_dreamento = True
@@ -2553,9 +2597,14 @@ class OfflineDreamento():
                 ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
 
                     
-            ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
             ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
+            
+            ax_proba.set_xlim([np.min(x), np.max(x)])
+            self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'navy', 'deepskyblue', 'purple', 'red'])
+            ax_proba.legend(loc = 'right', prop={'size': 6})
+            ax_proba.set_yticks([])
+            ax_proba.set_xticks([])
             
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
             fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
@@ -2565,13 +2614,15 @@ class OfflineDreamento():
         return fig, markers_details
     
     #%% Autoscoring caution
-    def scoring_caution(self):
-        if int(self.is_autoscoring.get()) == 1:
-            messagebox.showinfo("Caution",f"The current version of DreamentoScorer is alpha - thus its generalizability is limited! Always double-check with manual scoring! \n N.B. For a proper performance of the DreamentoScorer both EEG channels should have acceptable quality. The scoring for the epochs of data loss is not reliable.")
+# =============================================================================
+#     def scoring_caution(self):
+#         if int(self.is_autoscoring.get()) == 1:
+#             messagebox.showinfo("Caution",f"The current version of DreamentoScorer is alpha - thus its generalizability is limited! Always double-check with manual scoring! \n N.B. For a proper performance of the DreamentoScorer both EEG channels should have acceptable quality. The scoring for the epochs of data loss is not reliable.")
+# =============================================================================
 
     #%% Autoscoring    
     def autoscoring(self, DreamentoScorer_path = '.\\DreamentoScorer\\',\
-                    model_path = "Dreamento_autoscoring_Lightgbm_td=3_bidirectional_500_estimator_version_alpha_trained_on_69_data.sav",
+                    model_path = "DreamentoScorer_model_beta_January2023.sav",
                     standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",
                     feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",
                     fs = 256):
@@ -2602,11 +2653,13 @@ class OfflineDreamento():
         
         if self.sync_with_dreamento == True:
             if int(self.is_filtering.get()) == 1: 
+                # If it was initially set to filter data, there is no need to re-filter here     
                 print('already filtered ... proceed with scoring ...')
                 EEG_L_filtered =  self.sigHDRecorder[self.samples_before_begin:]
                 EEG_R_filtered = self.sigHDRecorder_r[self.samples_before_begin:]
                 
             else:
+                # If it was not initially set to filter data, it has to be filtered here
                 print('Filtering ...')
                 # if already filtered, take it, otherwise filter first
                 EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder[self.samples_before_begin:],\
@@ -2615,11 +2668,13 @@ class OfflineDreamento():
                                                                  lowcut=.3, highcut=30, fs = 256, order = 2)
         else:
             if int(self.is_filtering.get()) == 1: 
+                # If it was initially set to filter data, there is no need to re-filter here     
                 print('already filtered ... proceed with scoring ...')
                 EEG_L_filtered =  self.sigHDRecorder
                 EEG_R_filtered = self.sigHDRecorder_r
                 
             else:
+                # If it was not initially set to filter data, it has to be filtered here
                 print('Filtering ...')
                 # if already filtered, take it, otherwise filter first
                 EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder,\
@@ -2698,6 +2753,9 @@ class OfflineDreamento():
         DreamentoScorer = joblib.load(model_dir)
 
         self.y_pred = DreamentoScorer.predict(X_test)
+        
+        y_pred_proba = DreamentoScorer.predict_proba(X_test)
+        self.y_pred_proba = pd.DataFrame(y_pred_proba, columns = ['Wake', 'N1', 'N2', 'SWS', 'REM'])
         self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
                                                      sleep_stages = [0, 1, 2, 3, 4])
         
@@ -2706,7 +2764,7 @@ class OfflineDreamento():
 
     #%% Bulk autoscoring function
     def bulk_autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
-                    model_path = "Dreamento_autoscoring_Lightgbm_td=3_bidirectional_500_estimator_version_alpha_trained_on_69_data.sav",\
+                    model_path = "DreamentoScorer_model_beta_January2023.sav",\
                     standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",\
                     feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",\
                     fs = 256):
@@ -2751,18 +2809,12 @@ class OfflineDreamento():
             raw_data_r = data_r.get_data()
             self.sigHDRecorder_r = np.ravel(raw_data_r)
            
-
-            if int(self.is_filtering.get()) == 1: 
-                print('already filtered ... proceed with scoring ...')
-                EEG_L_filtered =  self.sigHDRecorder
-                EEG_R_filtered = self.sigHDRecorder_r
-                
-            else:
-                print('Filtering ...')
-                # if already filtered, take it, otherwise filter first
-                EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder,\
-                                                                 lowcut=.3, highcut=30, fs = 256, order = 2)
-                EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r,\
+            # There has to be filtering in her anyways 
+            print('Filtering ...')
+            # if already filtered, take it, otherwise filter first
+            EEG_L_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder,\
+                                                             lowcut=.3, highcut=30, fs = 256, order = 2)
+            EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r,\
                                                                  lowcut=.3, highcut=30, fs = 256, order = 2)
 
             T = 30 #secs
@@ -2793,6 +2845,7 @@ class OfflineDreamento():
             print(f'shape after epoching: {np.shape(EEG_L_filtered_epoched)}')
             print('Extracting features for DreamentoScorer ...')
             for k in np.arange(np.shape(EEG_L_filtered_epoched)[0]):
+                t_st = time.time()
                 print('Extracting features from channel 1 ...')
                 feat_L = self.SSN.FeatureExtraction_per_subject(Input_data = EEG_L_filtered_epoched[k,:,:], fs = fs)
                 print('Extracting features from channel 2 ...')
@@ -2800,7 +2853,8 @@ class OfflineDreamento():
                 # Concatenate features
                 print(f'concatenating features of size {np.shape(feat_L)} and {np.shape(feat_R)}')
                 Feat_all_channels = np.column_stack((feat_L,feat_R))
-                
+                t_end = time.time()
+                print(f'Features extracted in {t_end - t_st} s')
             # Scoring
             X_test  = Feat_all_channels
             X_test  = self.SSN.replace_NaN_with_mean(X_test)
@@ -2831,16 +2885,20 @@ class OfflineDreamento():
             # Load DreamentoScorer
             print('Loading scoring model ...')
             model_dir = model_path
+            print(f'DreamentoScorer model retrieved from: {model_dir}')
             DreamentoScorer = joblib.load(model_dir)
     
             self.y_pred = DreamentoScorer.predict(X_test)
-            
+            y_pred_proba = DreamentoScorer.predict_proba(X_test)
+            self.y_pred_proba = pd.DataFrame(y_pred_proba, columns = ['Wake', 'N1', 'N2', 'SWS', 'REM'])
+            plt.legend(loc = 'right', prop={'size': 6})
+
             self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
                                                          sleep_stages = [0, 1, 2, 3, 4])
                 
             # Increase font size while preserving original
             old_fontsize = plt.rcParams["font.size"]
-            plt.rcParams.update({"font.size": 5})
+            plt.rcParams.update({"font.size": 9})
             
             data1 = EEG_L_filtered
             data2 = EEG_R_filtered
@@ -2892,13 +2950,21 @@ class OfflineDreamento():
             else:
                 norm = Normalize(vmin=vmin, vmax=vmax)
                 
-            fig, axs = plt.subplots(3, 1)
             
-            axs[0].pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
-                               shading="auto")
-            axs[1].pcolormesh(t2, f2, Sxx2, norm=norm, cmap=cmap, antialiased=True,
-                               shading="auto")
+            fig,AX = plt.subplots(nrows=4, figsize=(12, 6), gridspec_kw={'height_ratios': [3,3,1,1]})
+            print('initiating the plot')
             
+            ax0 = plt.subplot(4,1,1)
+            ax1 = plt.subplot(4,1,2)
+            ax2 = plt.subplot(4,1,3)
+            ax3 = plt.subplot(4,1,4)
+            
+            print('Subplots assigned')
+            ax0.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            ax1.pcolormesh(t2, f2, Sxx2, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            print('plots completed')
             stages = self.y_pred
             #stages = np.row_stack((stages, stages[-1]))
             x      = np.arange(len(stages))
@@ -2920,21 +2986,24 @@ class OfflineDreamento():
                     x.append(i-1)   
             y.append(p)
             x.append(i)
-            axs[2].step(x, y, where='post', color = 'black', linewidth = 1)
+            ax2.step(x, y, where='post', color = 'black', linewidth = 1)
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
             for i in np.arange(len(rem)) -1:
-                axs[2].plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+                ax2.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
 
             
             
             #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
-            axs[2].set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
+            ax2.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
                                       fontsize = 8)
-            axs[2].set_xlim([np.min(x), np.max(x)])
+            ax2.set_xlim([np.min(x), np.max(x)])
+            ax3.set_xlim([np.min(x), np.max(x)])
+            ax0.set_title(folder_autoscoring + 'EEG L')
+            ax1.set_title(folder_autoscoring + 'EEG R')
             
-            axs[0].set_title(folder_autoscoring + 'EEG L')
-            axs[1].set_title(folder_autoscoring + 'EEG R')
+            self.y_pred_proba.plot(ax = ax3, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
             
+            #plt.tight_layout()
             # Save results?
             if int(self.checkbox_save_bulk_autoscoring_txt_results_val.get()) == 1:
                 
@@ -3005,6 +3074,7 @@ class OfflineDreamento():
         # Increase font size while preserving original
         old_fontsize = plt.rcParams['font.size']
         plt.rcParams.update({'font.size': 12})
+        #plt.rcParams["figure.autolayout"] = True
         
         # Safety checks
         assert isinstance(data, np.ndarray), 'Data must be a 1D NumPy array.'
@@ -3053,29 +3123,27 @@ class OfflineDreamento():
     # =============================================================================
     
         if int(self.is_autoscoring.get()) == 0: 
-            fig,AX = plt.subplots(nrows=5, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,2]})
+            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,2]})
             
     
-            ax3 = plt.subplot(5,1,1, )
-            
-            ax_acc = plt.subplot(5,1,2,)
-            ax_noise = plt.subplot(5,1,3,  sharex = ax_acc)
-            
-    
-            ax_TFR_short = plt.subplot(5,1,4, sharex = ax_acc)
-            ax4 = plt.subplot(5,1,5, sharex = ax_acc)
+            ax3 = plt.subplot(6,1,1, )
+            ax_acc = plt.subplot(6,1,2,)
+            ax_ppg = plt.subplot(6,1,3, sharex = ax_acc)
+            ax_noise = plt.subplot(6,1,4,  sharex = ax_acc)
+            ax_TFR_short = plt.subplot(6,1,5, sharex = ax_acc)
+            ax4 = plt.subplot(6,1,6, sharex = ax_acc)
             ax4.grid(True)
     
             ax3.get_xaxis().set_visible(False)
     
-            ax_acc.get_xaxis().set_visible(False)
+            ax_acc.get_xaxis().set_visible(True)
             ax_acc.set_yticks([])
             ax_noise.set_yticks([])
             ax_noise.get_xaxis().set_visible(False)
             
             ax_acc.set_ylim([-1.4, 1.4])
             
-            plt.subplots_adjust(hspace = 0)
+            
             ax3.set_title('Dreamento: post-processing ')
             im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3098,11 +3166,94 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
-            ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 90)#, labelpad=30, fontsize=8)
+    
+            ax_acc.spines[["top", "bottom"]].set_visible(False)
+            ax_noise.spines[["top", "bottom"]].set_visible(False)
+            
+            time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
+        
+            ax4.set_xlabel('time (s)')
+            #ax4.set_xticks(np.arange(len(data)), time_axis)
+            ax4.set_xlim([0, 30])#len(data)])
+            # plot acc
+            ax_acc.plot(np.arange(len(self.acc_x))/256, self.acc_x, linewidth = 2 , color = 'blue')
+            ax_acc.plot(np.arange(len(self.acc_y))/256, self.acc_y, linewidth = 2, color = 'red')
+            ax_acc.plot(np.arange(len(self.acc_z))/256, self.acc_z, linewidth = 2, color = 'green')
+            
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+            # plot noise
+            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'navy')
+            
+            #
+            
+            fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
+            fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
+            #ax1.set_xlim([0, 7680])#len(data)])
+            #ax2.set_xlim([0, 7680])#len(data)])
+            #ax3.set_xlim([0, len(data)])
+            #ax4.set_xlim([0, 7680])#len(data)])
+            plt.subplots_adjust(hspace = 0)
+        elif int(self.is_autoscoring.get()) == 1:
+            print('Plot results with autoscoring')
+            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,1,1,2]})
+    
+            ax3 = plt.subplot(8,1,1, )
+            ax_autoscoring = plt.subplot(8,1,2, )
+            ax_proba = plt.subplot(8,1,3, )
+            ax_acc = plt.subplot(8,1,4,)
+            ax_ppg = plt.subplot(8,1,5, sharex = ax_acc)
+            ax_noise = plt.subplot(8,1,6,  sharex = ax_acc)    
+            ax_TFR_short = plt.subplot(8,1,7, sharex = ax_acc)
+            ax4 = plt.subplot(8,1,8, sharex = ax_acc)
+            ax4.grid(True)
+    
+            ax3.get_xaxis().set_visible(False)
+    
+            ax_acc.get_xaxis().set_visible(True)
+            ax_acc.set_yticks([])
+            ax_noise.set_yticks([])
+            ax_noise.get_xaxis().set_visible(False)
+            
+            ax_acc.set_ylim([-1.4, 1.4])
+            
+            ax3.set_title('Dreamento: post-processing ')
+            im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            ax3.set_xlim([0, len(data)/256])
+            ax3.set_ylim((fmin, 25))
+            ax3.set_ylabel('Frequency [Hz]')
+            
+            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
+                               shading="auto")
+            
+            # Add colorbar
+            if add_colorbar == True:
+                cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
+                cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
+                
+            # PLOT EEG
+            ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
+            ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
+            #axes[1].set_ylim([-200, 200])
+            #ax4.set_xlim([0, len(data)])
+            ax4.set_ylabel('EEG (uV)')
+            ax4.set_ylim([-150, 150])
+            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+    
+                       
+            # Opening JSON file]
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
             ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
     
             ax_acc.spines[["top", "bottom"]].set_visible(False)
@@ -3114,85 +3265,8 @@ class OfflineDreamento():
             #ax4.set_xticks(np.arange(len(data)), time_axis)
             ax4.set_xlim([0, 30])#len(data)])
             
-            # plot acc
-            ax_acc.plot(np.arange(len(self.acc_x))/256, self.acc_x, linewidth = 2 , color = 'blue')
-            ax_acc.plot(np.arange(len(self.acc_y))/256, self.acc_y, linewidth = 2, color = 'red')
-            ax_acc.plot(np.arange(len(self.acc_z))/256, self.acc_z, linewidth = 2, color = 'green')
-            
-            # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'olive')
-            
-            #ax4.get_xaxis().set_visible(False)
-            
-            fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
-            fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
-            #ax1.set_xlim([0, 7680])#len(data)])
-            #ax2.set_xlim([0, 7680])#len(data)])
-            #ax3.set_xlim([0, len(data)])
-            #ax4.set_xlim([0, 7680])#len(data)])
-            
-        elif int(self.is_autoscoring.get()) == 1:
-            print('Plot results with autoscoring')
-            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,2]})
-            
-    
-            ax3 = plt.subplot(6,1,1, )
-            ax_autoscoring = plt.subplot(6,1,2, )
-            ax_acc = plt.subplot(6,1,3,)
-            ax_noise = plt.subplot(6,1,4,  sharex = ax_acc)
-            
-    
-            ax_TFR_short = plt.subplot(6,1,5, sharex = ax_acc)
-            ax4 = plt.subplot(6,1,6, sharex = ax_acc)
-            ax4.grid(True)
-    
-            ax3.get_xaxis().set_visible(False)
-    
-            ax_acc.get_xaxis().set_visible(False)
-            ax_acc.set_yticks([])
-            ax_noise.set_yticks([])
-            ax_noise.get_xaxis().set_visible(False)
-            
-            ax_acc.set_ylim([-1.4, 1.4])
-            
-            plt.subplots_adjust(hspace = 0)
-            ax3.set_title('Dreamento: post-processing ')
-            im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
-                               shading="auto")
-            ax3.set_xlim([0, len(data)/256])
-            ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
-            
-            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
-                               shading="auto")
-            
-            # Add colorbar
-            if add_colorbar == True:
-                cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
-                cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
-                
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
-            #axes[1].set_ylim([-200, 200])
-            #ax4.set_xlim([0, len(data)])
-            ax4.set_ylabel('EEG (uV)')
-            ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR (current window', rotation = 0, labelpad=30, fontsize=8)
-    
-                       
-            # Opening JSON file]
-            ax_acc.set_ylabel('Acceleration', rotation = 0, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Noise', rotation = 0, labelpad=30, fontsize=8)
-    
-            ax_acc.spines[["top", "bottom"]].set_visible(False)
-            ax_noise.spines[["top", "bottom"]].set_visible(False)
-            
-            time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
-        
-            ax4.set_xlabel('time (s)')
-            #ax4.set_xticks(np.arange(len(data)), time_axis)
-            ax4.set_xlim([0, 30])#len(data)])
+            self.samples_before_begin = 0
+            self.autoscoring()
             
             stages = self.y_pred
             #stages = np.row_stack((stages, stages[-1]))
@@ -3222,6 +3296,11 @@ class OfflineDreamento():
             #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
             ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
+            ax_proba.set_xlim([np.min(x), np.max(x)])
+            self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
+            ax_proba.legend(loc = 'right', prop={'size': 6})
+            ax_proba.set_yticks([])
+            ax_proba.set_xticks([])
             
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
             for i in np.arange(len(rem)) -1:
@@ -3233,11 +3312,18 @@ class OfflineDreamento():
             ax_acc.plot(np.arange(len(self.acc_y))/256, self.acc_y, linewidth = 2, color = 'red')
             ax_acc.plot(np.arange(len(self.acc_z))/256, self.acc_z, linewidth = 2, color = 'green')
             
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+            
             # plot noise
-            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'black')
+            ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'navy')
             
-            #ax4.get_xaxis().set_visible(False)
-            
+            ax4.get_xaxis().set_visible(True)
+            plt.subplots_adjust(hspace = 0)
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
             fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
             messagebox.showinfo(title = "AASM sleep metrics", message = self.stats)
@@ -3557,7 +3643,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67;0.775x0.175)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3582,7 +3668,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67;0.775x0.175)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3621,7 +3707,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67;0.775x0.175)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -3645,7 +3731,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.160417)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3670,7 +3756,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.160417)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3709,7 +3795,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.160417)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -3732,7 +3818,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)' or str(curr_ax) =='AxesSubplot(0.125,0.623333;0.775x0.213889)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3756,7 +3842,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)' or str(curr_ax) =='AxesSubplot(0.125,0.623333;0.775x0.213889)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3796,7 +3882,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.22)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3820,7 +3906,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.22)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3858,7 +3944,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.59125;0.775x0.240625)' or str(curr_ax) =='AxesSubplot(0.125,0.623333;0.775x0.213889)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -3923,6 +4009,15 @@ class OfflineDreamento():
         self.checkbox_close_plot = Checkbutton(self.popupWin_bulk_autoscoring, text = "Close plots after save?",
                                   font = 'Calibri 11 ', variable = self.checkbox_close_plots_val)
         self.checkbox_close_plot.grid(row = 1, column = 5)
+        
+        self.auotscoring_model_Optionmenu_Label = Label(self.popupWin_bulk_autoscoring, text='Autoscoring model')
+        self.auotscoring_model_Optionmenu_Label.grid(row = 2, column = 0)
+        
+        self.autoscoring_model_options = ['Select model','Lightgbm_td=3_Bidirectional', 'Usleep for ZMax']
+        self.autoscoring_model_options_val = StringVar()
+
+        self.auotscoring_model_Optionmenu = Optionmenu(self.popupWin_bulk_autoscoring, self.autoscoring_model_options_val, *self.autoscoring_model_options)
+
 # =============================================================================
 #         self.alert = Label(self.popupWin, text='Please select an event to sync EMG and EEG (recommendation: teeth clench')
 #         
@@ -3957,7 +4052,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.22)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')

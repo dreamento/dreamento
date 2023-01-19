@@ -14,7 +14,7 @@ from matplotlib.colors import Normalize, ListedColormap
 
 %matplotlib qt
 
-path_data = "P:\\3013097.06\\Data\\s36\\n15\\zmax\\EEG L.edf"
+path_data = "P:\\3013097.06\\Data\\s37\\n15\\zmax\\EEG L.edf"
 
 data = mne.io.read_raw_edf(path_data)
 raw_data = data.get_data()
@@ -86,32 +86,32 @@ def on_click(event):
 # =============================================================================
 
 def Unscorable(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [1, 1], color = 'gray')
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [6, 6], color = 'gray')
     fig.canvas.draw()
     print("marked as Unscorable!")
     
 def Wake(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [0, 0], color = 'black')
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [5, 5], color = 'black')
     fig.canvas.draw()
     print("marked as Wake!")
 
 def REM(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [-1, -1], color = 'red', linewidth = 2)
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [4, 4], color = 'red', linewidth = 2)
     fig.canvas.draw()
     print("marked as REM!")
     
 def N1(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [-2, -2], color = 'black')
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [3, 3], color = 'blue')
     fig.canvas.draw()
     print("marked as N1!")
     
 def N2(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [-3, -3], color = 'black')
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [2, 2], color = 'deepskyblue')
     fig.canvas.draw()
     print("marked as N2!")
     
 def N3(event):
-    ax[1].plot([coords[counter_event-3][0], coords[counter_event-2][0]], [-4, -4], color = 'black')
+    ax[1].fill_between([coords[counter_event-3][0], coords[counter_event-2][0]], [1, 1], color = 'slateblue')
     fig.canvas.draw()
     print("marked as SWS!")
      
@@ -122,7 +122,7 @@ standardDeviation = np.std(dataY)
 ax[0].pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
                                shading="auto")
 ax[1].set_xlim([t.min(), t.max()])
-ax[1].set_yticks([1, 0,-1,-2,-3,-4], ['Unscorable', 'Wake','REM', 'N1', 'N2', 'SWS'])
+ax[1].set_yticks([6, 5, 4, 3, 2, 1], ['Unscorable', 'Wake','REM', 'N1', 'N2', 'SWS'])
 plt.connect('button_press_event', on_click)
 
 axcut = plt.axes([0.15, 0.0, 0.15, 0.075])
