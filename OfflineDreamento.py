@@ -176,7 +176,7 @@ class OfflineDreamento():
         self.checkbox_plot_sync_output.grid(row = 4, column = 4, sticky="w")
     
     #%% Checkbox for plotting EMG quality TFR
-        self.plot_EMG_quality_evaluation = IntVar()
+        self.plot_EMG_quality_evaluation = IntVar(value=1)
         self.checkbox_plot_EMG_quality_evaluation = Checkbutton(self.frame_import, text = "EMG quality evaluation",
                                   font = 'Calibri 11 ', variable = self.plot_EMG_quality_evaluation)
         
@@ -1676,26 +1676,45 @@ class OfflineDreamento():
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
             
-            ax1 = plt.subplot(13,1,1)
-            ax2 = plt.subplot(13,1,2, sharex = ax1)
-            ax3 = plt.subplot(13,1,3, sharex = ax1)
+            # If plotting EMG TFR is required
+            if int(self.plot_EMG_quality_evaluation.get()) == 1:
+                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 3, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                ax1 = plt.subplot(16,1,1)
+                ax2 = plt.subplot(16,1,2, sharex = ax1)
+                ax3 = plt.subplot(16,1,3, sharex = ax1)
+                ax_TFR_EMG1 = plt.subplot(16,1,4)
+                ax_TFR_EMG2 = plt.subplot(16,1,5)
+                ax_TFR_EMG3 = plt.subplot(16,1,6)
+                ax_epoch_marker = plt.subplot(16,1,7, )
+                ax_epoch_light = plt.subplot(16,1,8, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(16,1,9, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(16,1,10, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(16,1,11, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(16,1,12, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(16,1,13, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                ax4 = plt.subplot(16,1,16, sharex = ax_epoch_marker)
+
+            # If plotting EMG TFR is NOT required
+            else:
+                fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                ax1 = plt.subplot(13,1,1)
+                ax2 = plt.subplot(13,1,2, sharex = ax1)
+                ax3 = plt.subplot(13,1,3, sharex = ax1)
+                ax_epoch_marker = plt.subplot(13,1,4, )
+                ax_epoch_light = plt.subplot(13,1,5, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(13,1,6, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(13,1,7, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+                ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
             
-            ax_epoch_marker = plt.subplot(13,1,4, )
-            ax_epoch_light = plt.subplot(13,1,5, sharex = ax_epoch_marker)
-            
-            ax_acc = plt.subplot(13,1,6, sharex = ax_epoch_marker)
-            ax_ppg = plt.subplot(13,1,7, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)
-            
-    
-            
-            ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
-            ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
-            ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
-            ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
-            ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
+
             ax4.grid(True)
     
             ax1.get_xaxis().set_visible(False)
@@ -1904,11 +1923,36 @@ class OfflineDreamento():
             sig_emg_2 = self.EMG_filtered_data2
             sig_emg_3 = self.EMG_filtered_data1_minus_2
             
+            print('Computing EMG TFR ...')
             if int(self.plot_EMG_quality_evaluation.get()) == 1:
                 
                 self.assess_EMG_data_quality()
-            
+                
+                print('preparing EMG TFR ...')
+                
+                # TFR EMG 1 
+                ax_TFR_EMG1.pcolormesh(self.t1_EMG, self.f1_EMG, self.Sxx1_EMG, norm=self.norm1_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG1.set_xlim(0, self.t1_EMG.max())
+                ax_TFR_EMG1.set_xticks([])
+                ax_TFR_EMG1.set_yticks([])
+                
+                # TFR EMG 2
+                ax_TFR_EMG2.pcolormesh(self.t2_EMG, self.f2_EMG, self.Sxx2_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG2.set_xlim(0, self.t2_EMG.max())
+                ax_TFR_EMG2.set_xticks([])
+                ax_TFR_EMG2.set_yticks([])
+                ax_TFR_short.set_ylabel('EMG TFR', rotation = 90)
+                # TFR EMG 3
+                ax_TFR_EMG3.pcolormesh(self.t3_EMG, self.f3_EMG, self.Sxx3_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG3.set_xlim(0, self.t3_EMG.max())
+                ax_TFR_EMG3.set_xticks([])
+                ax_TFR_EMG3.set_yticks([])
         else:
+            
+            
             
            fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 4,1,1,2, 2, 2,4, 4, 4, 4, 10]})
            
@@ -2173,7 +2217,8 @@ class OfflineDreamento():
            
            if int(self.plot_EMG_quality_evaluation.get()) == 1:
                
-               self.assess_EMG_data_quality()           
+               self.assess_EMG_data_quality()
+               
 
 # =============================================================================
 #         ax_EMG.set_xticks([])
@@ -2768,7 +2813,7 @@ class OfflineDreamento():
                     standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",\
                     feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",\
                     fs = 256):
-        
+               
         import joblib
         path_to_DreamentoScorer = DreamentoScorer_path
         messagebox.showinfo(title = "Bulk Autoscoring", message = 'Autoscoring started ... \nDepending on the number of scorings, this may take a while ... \nIf you selected to store the results, they will be stored in the data folder ...\nPlease click on OK and be patient ...')
@@ -2792,6 +2837,7 @@ class OfflineDreamento():
         print(f'folders to be autoscored are detected as follows: {self.folders_to_be_autoscored}')
         
         counter_scoring = 0
+        self.all_stats = dict()
         for folder_autoscoring in self.folders_to_be_autoscored:
             folder_autoscoring = folder_autoscoring[0]
             counter_scoring = counter_scoring + 1
@@ -2891,14 +2937,10 @@ class OfflineDreamento():
             self.y_pred = DreamentoScorer.predict(X_test)
             y_pred_proba = DreamentoScorer.predict_proba(X_test)
             self.y_pred_proba = pd.DataFrame(y_pred_proba, columns = ['Wake', 'N1', 'N2', 'SWS', 'REM'])
-            plt.legend(loc = 'right', prop={'size': 6})
+            
 
             self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
                                                          sleep_stages = [0, 1, 2, 3, 4])
-                
-            # Increase font size while preserving original
-            old_fontsize = plt.rcParams["font.size"]
-            plt.rcParams.update({"font.size": 9})
             
             data1 = EEG_L_filtered
             data2 = EEG_R_filtered
@@ -2953,7 +2995,10 @@ class OfflineDreamento():
             
             fig,AX = plt.subplots(nrows=4, figsize=(12, 6), gridspec_kw={'height_ratios': [3,3,1,1]})
             print('initiating the plot')
-            
+            # Increase font size while preserving original
+            plt.legend(loc = 'right', prop={'size': 6})
+            old_fontsize = plt.rcParams["font.size"]
+            plt.rcParams.update({"font.size": 9})
             ax0 = plt.subplot(4,1,1)
             ax1 = plt.subplot(4,1,2)
             ax2 = plt.subplot(4,1,3)
@@ -3007,7 +3052,7 @@ class OfflineDreamento():
             # Save results?
             if int(self.checkbox_save_bulk_autoscoring_txt_results_val.get()) == 1:
                 
-                save_path_autoscoring = folder_autoscoring + 'DreamentoScorer_autoscoring_vAlpha.txt'
+                save_path_autoscoring = folder_autoscoring + 'DreamentoScorer.txt'
                 
                 if os.path.exists(save_path_autoscoring):
                     os.remove(save_path_autoscoring)
@@ -3025,7 +3070,7 @@ class OfflineDreamento():
                 a_file.close()
                 
                 # Save sleep metrics
-                save_path_stats = folder_autoscoring + 'DreamentoScorer_autoscoring_vAlpha_stats.json'
+                save_path_stats = folder_autoscoring + 'DreamentoScorer_sleep_stats.json'
                 
                 if os.path.exists(save_path_stats):
                     os.remove(save_path_stats)
@@ -3033,6 +3078,7 @@ class OfflineDreamento():
                 with open(save_path_stats, 'w') as convert_file:
                     convert_file.write(json.dumps(self.stats))
                     
+                self.all_stats[folder_autoscoring] = self.stats
             #save_figure
             if int(self.checkbox_save_bulk_autoscoring_plot_val.get()) == 1:
                 save_path_plots = folder_autoscoring + 'Dreamento_TFR_autoscoring.png'
@@ -3044,8 +3090,16 @@ class OfflineDreamento():
                 
             if int(self.checkbox_close_plots_val.get()) == 1:
                 plt.close()
-                
-           
+        # Store all stats in a single excel file
+        df = pd.DataFrame(data=self.all_stats)
+        df = (df.T)
+        path_to_save_all_stats = os.path.dirname(self.bulk_autoscoring_files_list[0]) + '\\Dreamento_all_sleep_stats.xlsx'
+        print(f'stroing all stats in: {path_to_save_all_stats}')
+        
+        # Remove if there is already a file with the same name ...
+        if os.path.exists(path_to_save_all_stats):
+            os.remove(path_to_save_all_stats)
+        df.to_excel(path_to_save_all_stats)
     #%% AssignMarkersToRecordedData EEG + TFR
     def AnalyzeZMaxHypnodyne(self, data, data_R, sf,\
                                 win_sec=30, fmin=0.3, fmax=40,
@@ -3434,14 +3488,15 @@ class OfflineDreamento():
         
     #%% Assess EMG quality
     def assess_EMG_data_quality(self, 
-                                win_sec = 30,
+                                win_sec = 10,
                                 fmin = 10,
                                 fmax = 100,
                                 sf = 256,
                                 noverlap = 0,
                                 trimperc=5,
                                 cmap='RdBu_r',
-                                log_power = False):
+                                log_power = False,
+                                Plot_EMG_Separately = False):
         
         from lspopt import spectrogram_lspopt
         from matplotlib.colors import Normalize, ListedColormap
@@ -3534,64 +3589,86 @@ class OfflineDreamento():
             
         # Plot signal 1
         #fig, ax = plt.subplots(3, 2)
-        fig, ax = plt.subplots(nrows=3, ncols=2, figsize=(10, 5), gridspec_kw={'width_ratios':[2,1], 'height_ratios':[1,1,1]})
+        
+        # Hold the values
+        self.t1_EMG = t1
+        self.f1_EMG = f1
+        self.Sxx1_EMG = Sxx1
+        self.norm1_EMG = norm1
+        
+        self.t2_EMG = t2
+        self.f2_EMG = f2
+        self.Sxx2_EMG = Sxx2
+        self.norm2_EMG = norm1
+        
+        self.t3_EMG = t3
+        self.f3_EMG = f3
+        self.Sxx3_EMG = Sxx3
+        self.norm3_EMG = norm1
+        
+        if Plot_EMG_Separately == True:
+            fig, ax = plt.subplots(nrows=3, ncols=2, figsize=(10, 5), gridspec_kw={'width_ratios':[2,1], 'height_ratios':[1,1,1]})
 
 
-        im = ax[0,0].pcolormesh(t1, f1, Sxx1, norm=norm1, cmap=cmap, antialiased=True,
-                           shading="auto")
-        ax[0,0].set_xlim(0, t1.max())
-        ax[0,0].set_ylabel('Frequency [Hz]')
-        ax[0,0].set_xlabel('Time [hrs]')
-        ax[0,0].set_title('EMG 1')
+            im = ax[0,0].pcolormesh(t1, f1, Sxx1, norm=norm1, cmap=cmap, antialiased=True,
+                               shading="auto")
+            ax[0,0].set_xlim(0, t1.max())
+            ax[0,0].set_ylabel('Frequency [Hz]')
+            ax[0,0].set_xlabel('Time [hrs]')
+            ax[0,0].set_title('EMG 1')
+    
+
         # Add colorbar
         # =============================================================================
         #         cbar = fig.colorbar(im, ax=ax[0], shrink=0.95, fraction=0.1, aspect=25)
         #         cbar.ax.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=20)
         # =============================================================================
 
-        # Plot signal 2
-        im = ax[1,0].pcolormesh(t2, f2, Sxx2, norm=norm1, cmap=cmap, antialiased=True,
-                           shading="auto") # Normalized with respect to the same freq range as sig1
-        ax[1,0].set_xlim(0, t2.max())
-        ax[1,0].set_ylabel('Frequency [Hz]')
-        ax[1,0].set_title('EMG 2')
-        # =============================================================================
-        #         cbar = fig.colorbar(im, ax=ax[1], shrink=0.95, fraction=0.1, aspect=25)
-        #         cbar.ax.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=20)
-        # =============================================================================
-        # Plot signal 3
-        im = ax[2,0].pcolormesh(t3, f3, Sxx3, norm=norm1, cmap=cmap, antialiased=True,
-                           shading="auto") # Normalized with respect to the same freq range as sig1
-        ax[2,0].set_xlim(0, t3.max())
-        ax[2,0].set_ylabel('Frequency [Hz]')
-        ax[2,0].set_title('EMG 1 - EMG 2')
-
-        # Periodogram
-        win_size = 5
-        win = win_size * sf
-        freqs1, psd1 = signal.welch(x=sig1, fs=sf, nperseg=win)
-        freqs2, psd2 = signal.welch(x=sig2, fs=sf, nperseg=win)
-        freqs3, psd3 = signal.welch(x=sig3, fs=sf, nperseg=win)
-
-        log_power = log_power
-        if log_power:
-            psd1 = 20 * np.log10(psd1)
-            psd2 = 20 * np.log10(psd2)
-            psd3 = 20 * np.log10(psd3)
-
-        # Compute vvalues: 
-        ret1 = yasa.bandpower(data=sig1, sf=sf)
-        ret2 = yasa.bandpower(data=sig2, sf=sf)
-        ret3 = yasa.bandpower(data=sig3, sf=sf)
-
-        ax[0,1].plot(freqs1, psd1, color='k', lw=2)
-        ax[0,1].set_title('EMG 1')
-        ax[1,1].plot(freqs2, psd2, color='k', lw=2)
-        ax[1,1].set_title('EMG 2')
-        ax[2,1].plot(freqs3, psd3, color='k', lw=2)
-        ax[2,1].set_title('EMG 1 - EMG 2')
+            # Plot signal 2
+            im = ax[1,0].pcolormesh(t2, f2, Sxx2, norm=norm1, cmap=cmap, antialiased=True,
+                               shading="auto") # Normalized with respect to the same freq range as sig1
+            ax[1,0].set_xlim(0, t2.max())
+            ax[1,0].set_ylabel('Frequency [Hz]')
+            ax[1,0].set_title('EMG 2')
         
-        plt.subplots_adjust(hspace = 0.2)
+            # =============================================================================
+            #         cbar = fig.colorbar(im, ax=ax[1], shrink=0.95, fraction=0.1, aspect=25)
+            #         cbar.ax.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=20)
+            # =============================================================================
+            # Plot signal 3
+            im = ax[2,0].pcolormesh(t3, f3, Sxx3, norm=norm1, cmap=cmap, antialiased=True,
+                               shading="auto") # Normalized with respect to the same freq range as sig1
+            ax[2,0].set_xlim(0, t3.max())
+            ax[2,0].set_ylabel('Frequency [Hz]')
+            ax[2,0].set_title('EMG 1 - EMG 2')
+    
+        
+            # Periodogram
+            win_size = 5
+            win = win_size * sf
+            freqs1, psd1 = signal.welch(x=sig1, fs=sf, nperseg=win)
+            freqs2, psd2 = signal.welch(x=sig2, fs=sf, nperseg=win)
+            freqs3, psd3 = signal.welch(x=sig3, fs=sf, nperseg=win)
+    
+            log_power = log_power
+            if log_power:
+                psd1 = 20 * np.log10(psd1)
+                psd2 = 20 * np.log10(psd2)
+                psd3 = 20 * np.log10(psd3)
+    
+            # Compute vvalues: 
+            ret1 = yasa.bandpower(data=sig1, sf=sf)
+            ret2 = yasa.bandpower(data=sig2, sf=sf)
+            ret3 = yasa.bandpower(data=sig3, sf=sf)
+    
+            ax[0,1].plot(freqs1, psd1, color='k', lw=2)
+            ax[0,1].set_title('EMG 1')
+            ax[1,1].plot(freqs2, psd2, color='k', lw=2)
+            ax[1,1].set_title('EMG 2')
+            ax[2,1].plot(freqs3, psd3, color='k', lw=2)
+            ax[2,1].set_title('EMG 1 - EMG 2')
+            
+            plt.subplots_adjust(hspace = 0.2)
     #%% Function: Help pop-up
     def help_pop_up_func(self):
         """
@@ -3643,7 +3720,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3668,7 +3745,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3707,7 +3784,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.67913;0.775x0.167391)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
