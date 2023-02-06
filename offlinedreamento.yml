@@ -187,6 +187,7 @@ dependencies:
     - notebook==6.4.12
     - numba==0.55.2
     - numpy==1.22.4
+    - openpyxl==3.0.9
     - outdated==0.2.1
     - pandas==1.4.3
     - pillow==9.2.0
