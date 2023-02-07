@@ -922,9 +922,8 @@ class OfflineDreamento():
            saving_dir = where_to_save_path + '/' + self.entry_save_name_autoscoring.get() + '.txt'
            
            a_file = open(saving_dir, "w")
-           a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento')
+           a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento/dreamento')
            a_file.write('\nThis file has been autoscored by DreamentoScorer! \nSleep stages: Wake:0, N1:1, N2:2, SWS:3, REM:4.\n')
-           a_file.write('N.B. this is an alpha version of DreamentoScorer, always double-check with manual scoring!\n')
            a_file.write('============================================================================================\n')
            
            for row in self.stage_autoscoring[:,np.newaxis]:
@@ -2670,6 +2669,7 @@ class OfflineDreamento():
                     model_path = "DreamentoScorer_model_beta_January2023.sav",
                     standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",
                     feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",
+                    apply_post_scoring_N1_correction = True,
                     fs = 256):
         
         # old CS model
@@ -2801,22 +2801,47 @@ class OfflineDreamento():
         
         y_pred_proba = DreamentoScorer.predict_proba(X_test)
         self.y_pred_proba = pd.DataFrame(y_pred_proba, columns = ['Wake', 'N1', 'N2', 'SWS', 'REM'])
+        
+        if apply_post_scoring_N1_correction == True:
+            # Post-scoring: Replacing the REM deetcted before the first N2 with N1
+            self.post_scoring_N1(print_replaced_epochs = True, replace_values_in_prediciton = True)
+        
         self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
                                                      sleep_stages = [0, 1, 2, 3, 4])
         
         
         
+    #%% Post-scoring to imrpove N1 detection
+    def post_scoring_N1(self, print_replaced_epochs = True, replace_values_in_prediciton = True):
+        
+        self.y_pred_post_processed = self.y_pred
+        first_N2_index = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==2)][0]
+        scores_before_first_N2 = self.y_pred[:first_N2_index]
+        REM_before_first_N2 = [i for i,j in enumerate(scores_before_first_N2) if (scores_before_first_N2[i]==4)]
+        
+        for idx_actual_N1 in REM_before_first_N2:
+            
+            self.y_pred_post_processed[idx_actual_N1] = 1
+            
+            if print_replaced_epochs == True:
+                
+                print(f'the REM detected in epoch {idx_actual_N1} has been replaced by N1 ...')
+                
+            if replace_values_in_prediciton ==True:
+                               
+                self.y_pred[idx_actual_N1] = 1              
 
     #%% Bulk autoscoring function
     def bulk_autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
                     model_path = "DreamentoScorer_model_beta_January2023.sav",\
                     standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",\
                     feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",\
+                    apply_post_scoring_N1_correction = True,\
                     fs = 256):
                
         import joblib
         path_to_DreamentoScorer = DreamentoScorer_path
-        messagebox.showinfo(title = "Bulk Autoscoring", message = 'Autoscoring started ... \nDepending on the number of scorings, this may take a while ... \nIf you selected to store the results, they will be stored in the data folder ...\nPlease click on OK and be patient ...')
+        messagebox.showinfo(title = "Bulk Autoscoring", message = 'Autoscoring started ... \nDepending on the number of scorings, this may take a while ... \nIf you selected to store the results, they will be stored in the data folder ...\n An Excel file including the results from all subjects will be stored in the same directory as the initial .txt file\nPlease click on OK and be patient ...')
         # Init dir tio read libraries
         try:
             # Change the current working Directory    
@@ -2938,6 +2963,9 @@ class OfflineDreamento():
             y_pred_proba = DreamentoScorer.predict_proba(X_test)
             self.y_pred_proba = pd.DataFrame(y_pred_proba, columns = ['Wake', 'N1', 'N2', 'SWS', 'REM'])
             
+            if apply_post_scoring_N1_correction == True: 
+                # Post-scoring: Replacing the REM deetcted before the first N2 with N1
+                self.post_scoring_N1(print_replaced_epochs = True, replace_values_in_prediciton = True)
 
             self.sleep_stats = self.retrieve_sleep_statistics(hypno = self.y_pred, sf_hyp = 1 / 30,\
                                                          sleep_stages = [0, 1, 2, 3, 4])
@@ -3060,9 +3088,8 @@ class OfflineDreamento():
                 saving_dir = save_path_autoscoring
                 
                 a_file = open(saving_dir, "w")
-                a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento')
+                a_file.write('=================== Dreamento: an open-source dream engineering toolbox! ===================\nhttps://github.com/dreamento/dreamento')
                 a_file.write('\nThis file has been autoscored by DreamentoScorer! \nSleep stages: Wake:0, N1:1, N2:2, SWS:3, REM:4.\n')
-                a_file.write('N.B. this is an alpha version of DreamentoScorer, always double-check with manual scoring!\n')
                 a_file.write('============================================================================================\n')
                 
                 for row in self.stage_autoscoring[:,np.newaxis]:
@@ -3382,7 +3409,8 @@ class OfflineDreamento():
             fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
             messagebox.showinfo(title = "AASM sleep metrics", message = self.stats)
             
-        return fig
+        return fig        
+    
     #%% Retrieve sleep statistics (from yasa)
     def retrieve_sleep_statistics(self, hypno, sf_hyp = 1 / 30, sleep_stages = [0, 1, 2, 3, 5],\
                                   show_sleep_stats = True):
