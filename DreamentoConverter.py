@@ -4,9 +4,9 @@ DreamentoConverter: This file is meant to convert several 'raw' .hyp ZMax record
 into the corresponding .edf files.
 
 === Inputs ===
-1. path to HDRecorder.exe (specify the folder name only, e.g., C:/Program Files (x86)/Hypnodyne/ZMax)
-2. path to the files to be converted, e.g., see 'filenames' below
-3. Destination folders, e.g., see 'destination_folders' below
+1. path_to_HDRecorder: path to HDRecorder.exe (specify the folder name only, e.g., C:/Program Files (x86)/Hypnodyne/ZMax)
+2. filenames: path to the files to be converted, e.g., see 'filenames' below
+3. destination_folders: destination folders, e.g., see 'destination_folders' below
 
 === Outputs ===
 Converted edf files in destination folders!
@@ -40,7 +40,6 @@ for conv in np.arange(len(filenames)):
     current_file = filenames[conv].split('\\')[-1]
     dst_path = path_to_HDRecorder + current_file
     shutil.copy(src_path, dst_path)
-   
                     
     # Create a batch file to run conversion syntax
     myBat = open(r'DreamentoConverter.bat','w+')
@@ -58,4 +57,5 @@ for conv in np.arange(len(filenames)):
     # Remove the .hyp and .bat files from HDRecorder folder
     os.remove(path_to_HDRecorder + 'DreamentoConverter.bat')
     os.remove(dst_path)
+    
 print('All files have been successfully converted!')
