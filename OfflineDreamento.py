@@ -28,6 +28,7 @@ import itertools
 import matplotlib
 import os
 import threading
+from sklearn.preprocessing import MinMaxScaler
 import yasa
 
 matplotlib.use('TkAgg')
@@ -69,7 +70,7 @@ class OfflineDreamento():
         self.popup_button.grid(row = 1, column = 7)
         
         ###### ================== CopyRight ============================ ######
-        self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie",
+        self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-23): Mahdad Jafarzadeh Esfahani",
                                   font = 'Calibri 10 italic')
         self.label_CopyRight.grid(row = 1 , column = 0, padx = 10, pady = 10)
         
@@ -447,53 +448,90 @@ class OfflineDreamento():
         EMG_data_get3 = EMG_data_get1 - EMG_data_get2
         
         #Filtering 
-        sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=5, highcut=100, fs = 256, order = 2)
-        EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=5, highcut=100, fs = 256, order = 2)
-        EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=5, highcut=100, fs = 256, order = 2)
-        EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=5, highcut=100, fs = 256, order = 2)
-        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*20)
+        sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=10, highcut=100, fs = 256, order = 2)
+        EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=10, highcut=100, fs = 256, order = 2)
+        EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=10, highcut=100, fs = 256, order = 2)
+        EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=10, highcut=100, fs = 256, order = 2)
+        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*15)
+
+        # notch filtering
+        notch_freq = 50  # set the notch frequency to 50 Hz
+
+        # Create the notch filter
+        q = 30  # quality factor
+        b, a = signal.iirnotch(notch_freq, q, EEG_sf)
         
+        # Apply the notch filter to the data
+        EMG_data_get1 = signal.filtfilt(b, a, EMG_data_get1, axis=0)
+        EMG_data_get2 = signal.filtfilt(b, a, EMG_data_get2, axis=0)
+        EMG_data_get3 = signal.filtfilt(b, a, EMG_data_get3, axis=0)
+    
+
         # Truncate sync period
-        EEG_to_sync_period  = sigScript_org[t_sync]
-        EMG_to_sync_period1 = EMG_data_get1[t_sync]
-        EMG_to_sync_period2 = EMG_data_get2[t_sync]
-        EMG_to_sync_period3 = EMG_data_get3[t_sync]
+        try:
+            EEG_to_sync_period  = sigScript_org[t_sync]
+            EMG_to_sync_period1 = EMG_data_get1[t_sync]
+            EMG_to_sync_period2 = EMG_data_get2[t_sync]
+            EMG_to_sync_period3 = EMG_data_get3[t_sync]
+
+        except IndexError:
+            messagebox.showerror("Dreamento", "IndexError: t_sync not long enough for sync ... Either select another event or adjust t_sync ")
         
         # Rectified signal
-        EEG = EEG_to_sync_period
-        EEG_Abs = abs(EEG)
-        
+        EEG = EEG_to_sync_period        
         EMG1 = EMG_to_sync_period1
         EMG2 = EMG_to_sync_period2
         EMG3 = EMG_to_sync_period3
-        EMG_Abs1= abs(EMG1)
-        EMG_Abs2= abs(EMG2)
-        EMG_Abs3= abs(EMG3)
+
+        
+        # Normalizing signals:
+        scaler = MinMaxScaler()
+        normalized_EEG = scaler.fit_transform([[i] for i in EEG])
+        
+        scaler = MinMaxScaler()
+        normalized_EMG1 = scaler.fit_transform([[i] for i in EMG1])
+        
+        scaler = MinMaxScaler()
+        normalized_EMG2 = scaler.fit_transform([[i] for i in EMG2])
+        
+        scaler = MinMaxScaler()
+        normalized_EMG3 = scaler.fit_transform([[i] for i in EMG3])
+        
+        EEG  = normalized_EEG        
+        EMG1 = normalized_EMG1
+        EMG2 = normalized_EMG2
+        EMG3 = normalized_EMG3
+
+        EEG_Abs  = abs(normalized_EEG)
+        EMG_Abs1 = abs(normalized_EMG1)
+        EMG_Abs2 = abs(normalized_EMG2)
+        EMG_Abs3 = abs(normalized_EMG3)
         
         MA_EEG  = self.MA(EEG_Abs, 512)
         
         MA_EMG1 = self.MA(EMG_Abs1, 512)
         MA_EMG2 = self.MA(EMG_Abs2, 512)
         MA_EMG3 = self.MA(EMG_Abs3, 512)
-        
+
+            
         fig, axs = plt.subplots(5, figsize = (10,10))
         axs[0].set_title('EEG during sync event')
-        axs[0].plot(EEG_Abs, color = 'powderblue')
+        axs[0].plot(normalized_EEG, color = 'powderblue')
         
         axs[1].set_title('EMG 1 during sync event')
-        axs[1].plot(EMG_Abs1, color = 'plum')
+        axs[1].plot(normalized_EMG1, color = 'plum')
         
         axs[2].set_title('EMG 2 during sync event')
-        axs[2].plot(EMG_Abs2, color = 'orchid')
+        axs[2].plot(normalized_EMG2, color = 'orchid')
         
         axs[3].set_title('EMG 1 - EMG 2 during sync event')
-        axs[3].plot(EMG_Abs3, color = 'thistle')
+        axs[3].plot(normalized_EMG3, color = 'thistle')
         
-        axs[4].plot(EEG_Abs, color = 'powderblue')
-        axs[4].set_title('EMG vs EEG plotted on top of each other')
-        axs[4].plot(EMG_Abs1, color = 'plum')
-        axs[4].plot(EMG_Abs2, color = 'orchid')
-        axs[4].plot(EMG_Abs3, color = 'thistle')
+        axs[4].set_title('EMG vs EEG (normalized signals)')
+        axs[4].plot(normalized_EEG, color = 'powderblue')
+        axs[4].plot(normalized_EMG1, color = 'plum')
+        axs[4].plot(normalized_EMG2, color = 'orchid')
+        axs[4].plot(normalized_EMG3, color = 'thistle')
         
         plt.tight_layout()
         MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization (recommended to sync further)?',icon = 'warning')
@@ -507,7 +545,10 @@ class OfflineDreamento():
             while True:
                 MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
                 if MsgBox == 'yes':
-    
+                    
+                    # close previous plot 
+                    plt.close()
+                    
                     fig, axs = plt.subplots(6, figsize = (15,10))
                     axs[0].plot(EEG_Abs, color = 'powderblue')
                     axs[0].plot(MA_EEG, color = 'olive', linewidth=3)
@@ -562,6 +603,7 @@ class OfflineDreamento():
                     print(f"index_end_script {index_end_script}")
                     
                     
+                    
                     if samples_before_begin < 0:
                         axs[5].plot(EEG, color ='powderblue')
                         axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
@@ -580,8 +622,6 @@ class OfflineDreamento():
                         self.samples_before_begin_EMG_Dreamento = -samples_before_begin
                         self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
                     else:
-                        axs[5].plot(EEG, color ='powderblue')
-                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
                         
                         tmp = np.zeros(samples_before_begin)
                         
@@ -603,6 +643,9 @@ class OfflineDreamento():
                         axs[5].plot(synced_EMG3, color = 'thistle')
                         axs[5].plot(synced_EMG_MA3, color = 'blueviolet', linewidth=3)
                         
+                        axs[5].plot(EEG, color ='powderblue')
+                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
+                        
                         axs[5].set_title('EEG and EMG after sync', fontsize = 10)
                         self.samples_before_begin_EMG_Dreamento = tmp
                         self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_earlier'
@@ -617,40 +660,34 @@ class OfflineDreamento():
                 else: 
                     MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
                     if MsgBox == 'yes':
+                        
+                        # close previous plot 
+                        plt.close()
+                        
                         # Truncate sync period
-                        EEG_to_sync_period = sigScript_org[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                        EMG_to_sync_period1 = EMG_data_get1[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                        EMG_to_sync_period2 = EMG_data_get2[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
-                        EMG_to_sync_period3 = EMG_data_get3[(time_sync_event[0] - 256*5):(time_sync_event[0] + 256*20)]
+                        self.EEG = EEG
+                        self.EMG1 = EMG1
+                        self.EMG2 = EMG2
+                        self.EMG3 = EMG3
                         
                         # Rectified signal
-                        self.EEG = EEG_to_sync_period
-                        #EEG_Abs = abs(self.EEG)
-                        EEG_Abs= self.EEG
+                        self.EEG_Abs  = EEG_Abs
+                        self.EMG_Abs1 = EMG_Abs1
+                        self.EMG_Abs2 = EMG_Abs2                        
+                        self.EMG_Abs3 = EMG_Abs3
                         
-                        self.EMG1 = EMG_to_sync_period1
-                        #EMG_Abs1= abs(self.EMG1)
-                        EMG_Abs1= self.EMG1
-                        
-                        self.EMG2 = EMG_to_sync_period2
-                        #EMG_Abs2= abs(self.EMG2)
-                        EMG_Abs2= self.EMG2
-                        
-                        self.EMG3 = EMG_to_sync_period3
-                        #EMG_Abs3 = abs(self.EMG3)
-                        EMG_Abs3 = self.EMG3
-                        
+                        # defining points to be selected by cursor for sync
                         self.points = []
                         self.n = 2
         
                         self.fig, self.axs = plt.subplots(5 ,figsize=(15, 10))
-                        line = self.axs[0].plot(EEG_Abs, picker=2, color = 'powderblue')
+                        line = self.axs[0].plot(self.EEG, picker=2, color = 'powderblue')
                         self.axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
                         
-                        self.MA_EEG = self.MA(EEG_Abs, 512)
-                        self.MA_EMG1 = self.MA(EMG_Abs1, 512)
-                        self.MA_EMG2 = self.MA(EMG_Abs2, 512)
-                        self.MA_EMG3 = self.MA(EMG_Abs3, 512)
+                        self.MA_EEG  = MA_EEG
+                        self.MA_EMG1 = MA_EMG1
+                        self.MA_EMG2 = MA_EMG2
+                        self.MA_EMG3 = MA_EMG3
         
                         self.axs[0].set_xlim([0,len(self.EMG1)])
                         self.axs[1].set_xlim([0,len(self.EMG1)])
@@ -660,9 +697,9 @@ class OfflineDreamento():
         
                         self.axs[0].set_ylabel('Lag (samples)')
         
-                        line = self.axs[1].plot(EMG_Abs1, picker=2, color = 'plum')
-                        line = self.axs[2].plot(EMG_Abs2, picker=2, color = 'orchid')
-                        line = self.axs[3].plot(EMG_Abs3, picker=2, color = 'thistle')
+                        line = self.axs[1].plot(self.EMG_Abs1, picker=2, color = 'plum')
+                        line = self.axs[2].plot(self.EMG_Abs2, picker=2, color = 'orchid')
+                        line = self.axs[3].plot(self.EMG_Abs3, picker=2, color = 'thistle')
                         plt.tight_layout()
                         plt.show()
                         self.fig.canvas.mpl_connect('pick_event', self.onpick)
@@ -1875,6 +1912,18 @@ class OfflineDreamento():
             self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
             self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
             
+            # Notch filter EMG
+            notch_freq = 50  # set the notch frequency to 50 Hz
+            
+            # Create the notch filter
+            q = 30  # quality factor
+            b, a = signal.iirnotch(notch_freq, q, int(256))
+            
+            # Apply the notch filter to the data
+            self.EMG_filtered_data1 = signal.filtfilt(b, a, self.EMG_filtered_data1, axis=0)
+            self.EMG_filtered_data2 = signal.filtfilt(b, a, self.EMG_filtered_data2, axis=0)
+            self.EMG_filtered_data1_minus_2 = signal.filtfilt(b, a, self.EMG_filtered_data1_minus_2, axis=0)
+
             self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
             self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
             
@@ -3725,7 +3774,7 @@ class OfflineDreamento():
         "the spectrogrma plot while pressing left/right buttons to navigate.\n\n" +\
         "Matlab compatability: After the analysis you can export an .mat file\n\n\n" +\
         "Contact: Mahdad.Jafarzadehesfahani@donders.ru.nl \n" +\
-        "CopyRight (2021-2022): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie**" 
+        "CopyRight (2021-2023): Mahdad Jafarzadeh Esfahani**" 
             
         
         messagebox.showinfo(title = "Help", message = line_msg)
