@@ -3300,7 +3300,7 @@ class OfflineDreamento():
     
                        
             # Opening JSON file]
-            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc')#, labelpad=30, fontsize=8)
             ax_noise.set_ylabel('Sound', rotation = 90)#, labelpad=30, fontsize=8)
     
             ax_acc.spines[["top", "bottom"]].set_visible(False)
