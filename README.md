@@ -9,7 +9,7 @@ Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for
 ## Online (real-time) vs Offline Dreamento
 - **Online/real-time Dreamento** is meant to be used for data collection
 ![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
-- **offline/post-processing Dreamento** is capable of analyzing both the acquired data.
+- **offline/post-processing Dreamento** is capable of analyzing the acquired data.
 ![OfflineDreamentoScreenshot](https://user-images.githubusercontent.com/48684369/212293402-de503bb8-121f-4deb-a121-595380119315.png)
 - N.B. *you can analyze any ZMax data with Dreamento even if you have not recorded it via Dreamento, for instance if you recorded on the sd card or via HDRecorder! see **Post-processing** section for details)!*
 
@@ -33,6 +33,7 @@ Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for
 Option 1: installation through Anaconda (recommended)
 - Download and install Anaconda (https://www.anaconda.com/).
 - Download and install Dreamento (see section *Step-by-step installation guide*)
+
 Option 2: Using ```pip```:
 - ```pip install -r requirements_dreamento.txt```
 
