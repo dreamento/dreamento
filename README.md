@@ -2,33 +2,27 @@
 
 ## Overview
 
-Dreamento (DREAM ENgineering TOolbox) is a an open-source Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data.  
+Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data, both in a **graphical user interface (GUI)**..  
 - The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 - **For any use, please cite our preprint article: https://doi.org/10.48550/arXiv.2207.03977** (see also citation section in the bottom of page)
 
 ## Online (real-time) vs Offline Dreamento
 - **Online/real-time Dreamento** is meant to be used for data collection
+![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
 - **offline/post-processing Dreamento** is capable of analyzing both the acquired data.
+![OfflineDreamentoScreenshot](https://user-images.githubusercontent.com/48684369/212293402-de503bb8-121f-4deb-a121-595380119315.png)
 - N.B. *you can analyze any ZMax data with Dreamento even if you have not recorded it via Dreamento, for instance if you recorded on the sd card or via HDRecorder! see **Post-processing** section for details)!*
 
-### Online Dreamento:
-![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
-
-### Offline Dreamento:
-![OfflineDreamentoScreenshot](https://user-images.githubusercontent.com/48684369/212293402-de503bb8-121f-4deb-a121-595380119315.png)
-
-
-## Watch Dreamento overview on YouTube:
-To have a complete overview of the Dreamento package, you can watch the following episode of the tech for dreaming: [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
+## Watch us!:
+1. **Tech for dreaming**: [link](https://www.youtube.com/watch?v=ev78rlclxrI&ab_channel=TechforDreaming)
+2. **Dream x Engineering** seminars 2023: [link](https://www.dropbox.com/sh/ztbsgvn85xavp6q/AAAUGBv2Lq8m55Gpvr7iD1iRa?dl=0&preview=DxE-2023-3.mp4)
 
 ## Real-time features:
-1. **Open source!**
-2. **Graphical user interface (GUI)**
-3. **Data navigation and monitoring**: Real-time representation of the EEG channels with adjustable time axis and amplitude scales
-4. **Analysis**: Real-time spectrogram and peridogoram analysis
-5. **Autoscoring**: Real-time sleep staging, open to any algorithm  (is not ideal yet, still under development)
-6. **Modulation**: sleep modulation by visual, auditory, and tactile stimulation
-7. **annotations**: The experimenter can set various annotations throughout the experiment.
+1. **Data navigation and monitoring**: Real-time representation of the EEG channels with adjustable time axis and amplitude scales
+2. **Analysis**: Real-time spectrogram and peridogoram analysis
+3. **Autoscoring**: Real-time sleep staging, open to any algorithm (is not ideal yet, still under development)
+4. **Sensory stimulation**: Sensory stimulatio using visual, auditory, and tactile stimuli
+5. **annotations**: Capability of adding manual and automatic markers
 
 ## Post-processing features:
 
@@ -36,12 +30,16 @@ To have a complete overview of the Dreamento package, you can watch the followin
 - Recently, you can also do **bulk autoscoring** with Dreamento!
 
 ## Installation and Prerequisities: 
+Option 1: installation through Anaconda (recommended)
 - Download and install Anaconda (https://www.anaconda.com/).
-- Download and install [the ZMax Hypnodyne software](https://hypnodynecorp.com/downloads.php).
-- Download and install Dreamento (see section below).
+- Download and install Dreamento (see section *Step-by-step installation guide*)
+Option 2: Using ```pip```:
+- ```pip install -r requirements_dreamento.txt```
 
-## How to install Dreamento?
-A complete **tutorial on how to install Dreamento** can be found [HERE](https://youtu.be/bDRXnMZEIyI).
+## Step-by-step installation guide
+Please note that the installation **Offline** and **real-time** are different, and thus two different virtual environments are required as follows: 
+
+1. Real-time Dreamento: (*A complete tutorial on how to install **real-time Dreamento** can be found [HERE](https://youtu.be/bDRXnMZEIyI).*)
 
 - Open anaconda prompt.
 
@@ -49,12 +47,18 @@ A complete **tutorial on how to install Dreamento** can be found [HERE](https://
 ```
 conda env create --name dreamento --file dreamento.yml
 ```
+2. Offline Dreamento installation: (*A complete tutorial on how to install **Offline Dreamento**[(video tutorial)](https://youtu.be/dpnUeIM0XDQ))
 
-- N.B. for those who are not able to use anaconda, the software package can be installled through ```pip install -r requirements_dreamento.txt```
+- Open anaconda prompt.
+
+- Create all the required packages on a virtual environment with the following syntax (only at the first use): 
+```
+conda env create --name offlinedreamento --file offlinedreamento.yml
+```
+
 ## How to start a recording?
-A complete **tutorial on how to run Dreamento** can be found [HERE](https://youtu.be/vpmh_LiOjdw).
 
-When you have Dreamento and Hypndoyne software installed (see sections above), follow these steps:
+When you have **real-time Dreamento** and Hypndoyne software installed, follow these steps:
 1. Connect the USB dongle to your pc.
 2. Run HDServer.exe
 3. Run HDRecorder.exe and click on "connect".
@@ -69,11 +73,10 @@ python mainwindow.py
 
 **Enjoy the GUI!**
 
-## Post-processing:
-- Make sure the post-processing virtual environment is installed on your pc [(video tutorial)](https://youtu.be/dpnUeIM0XDQ):
-```
-conda env create --name offlinedreamento --file offlinedreamento.yml
-```
+N.B. A complete **tutorial on how to run real-time Dreamento** can be found [HERE](https://youtu.be/vpmh_LiOjdw).
+
+## How to Analyze ZMax data (post-processing)
+- Make sure you have installed **offline Dreamento** (see section Step-by-step installation guide)
 - Open Anaconda prompt and change the directory to where you installed Dreamento:
 ```
 cd directory/to/Dreamento
