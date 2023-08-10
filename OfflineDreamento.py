@@ -183,17 +183,23 @@ class OfflineDreamento():
         
         self.checkbox_plot_EMG_quality_evaluation.grid(row = 5, column = 4, sticky="w")
         
+    #%% Checkbox for automatic eye movement detector
+        self.automatic_REM_event_deetction = IntVar(value=1)
+        self.checkbox_automatic_REM_event_deetction = Checkbutton(self.frame_import, text = "Automatic REM event detection",
+                                  font = 'Calibri 11 ', variable = self.automatic_REM_event_deetction)
+        
+        self.checkbox_automatic_REM_event_deetction.grid(row = 6, column = 4, sticky="w")
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 6, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 7, column = 4, sticky="w", pady = 10)
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 7 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 8 , column = 4, sticky="w")
         
     #%% Checkbox for plotting spectrograms with markers
         self.analysis_signal_options = IntVar(value = 1)
@@ -201,7 +207,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 8, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 9, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
@@ -210,14 +216,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 9, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 10, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 10, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 11, column = 4, sticky="w", pady = 10)
         
     #%% EMG Y SCALE
         #Label to read data and extract features
@@ -427,8 +433,14 @@ class OfflineDreamento():
         sigScript_org = sigScript_org[:, 1]
 
         # Read EMG
-        print('Loading EEG file ... Please wait')                            
-        EMG_data = mne.io.read_raw_brainvision(self.path_to_EMG , preload = True)
+        print('Loading EEG file ... Please wait')
+        if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+            
+            EMG_data = mne.io.read_raw_brainvision(self.path_to_EMG , preload = True)
+
+        elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+            EMG_data = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
+                            
         
         print('EEG and EMG imported successfully')
         # Read annotations
@@ -452,7 +464,7 @@ class OfflineDreamento():
         EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=10, highcut=100, fs = 256, order = 2)
         EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=10, highcut=100, fs = 256, order = 2)
         EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=10, highcut=100, fs = 256, order = 2)
-        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*15)
+        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*30)
 
         # notch filtering
         notch_freq = 50  # set the notch frequency to 50 Hz
@@ -1079,8 +1091,8 @@ class OfflineDreamento():
     
         global EMG_files_list
         
-        self.filenames    = filedialog.askopenfilenames(title = 'select EMG file (.vhdr)', 
-                                                       filetype = (("vhdr", "*.vhdr"),("vhdr", "*.vhdr"), ("All Files", "*.*")))
+        self.filenames    = filedialog.askopenfilenames(title = 'select EMG file (.vhdr or .edf)', 
+                                                       filetype = (("vhdr", "*.vhdr"),("edf", "*.edf"), ("All Files", "*.*")))
         EMG_files_list  = self.frame_import.tk.splitlist(self.filenames)
         self.n_label_files     = len(EMG_files_list)
         
@@ -1905,9 +1917,18 @@ class OfflineDreamento():
         
                     
             # read EMG
-            self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
-            self.EMG_raw = self.EMG_raw.resample(int(256))
+            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+                
+                self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
+                self.EMG_raw = self.EMG_raw.resample(int(256))
+
+                 
+            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+                
+                self.EMG_raw = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
+            
             self.EMG_filtered = self.EMG_raw.filter(l_freq=10, h_freq=100)
+            self.EMG_filtered = self.EMG_filtered.resample(int(256))
             self.EMG_filtered_data1 = self.EMG_filtered.get_data()[0] 
             self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
             self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
@@ -1925,8 +1946,15 @@ class OfflineDreamento():
             self.EMG_filtered_data1_minus_2 = signal.filtfilt(b, a, self.EMG_filtered_data1_minus_2, axis=0)
 
             self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
-            self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-            
+            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+                
+
+                self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+                
+
+                self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
+
             # Check whether the user already synced EMG vs. EEG or not
             print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
     
@@ -2215,16 +2243,27 @@ class OfflineDreamento():
            ax_proba.set_xticks([])
 
            # read EMG
-           self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
-           self.EMG_raw = self.EMG_raw.resample(int(256))
+           if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+               
+               self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
+               self.EMG_raw = self.EMG_raw.resample(int(256))
+
+           elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+               self.EMG_raw = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
+                          
            self.EMG_filtered = self.EMG_raw.filter(l_freq=10, h_freq=100)
            self.EMG_filtered_data1 = self.EMG_filtered.get_data()[0] 
            self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
            self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
            
            self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
-           self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-           
+           if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+
+               self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+           elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+
+               self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
+
            # Check whether the user already synced EMG vs. EEG or not
            print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
 
@@ -2882,9 +2921,9 @@ class OfflineDreamento():
 
     #%% Bulk autoscoring function
     def bulk_autoscoring(self, DreamentoScorer_path = ".\\DreamentoScorer\\",\
-                    model_path = "DreamentoScorer_model_beta_January2023.sav",\
-                    standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",\
-                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",\
+                    model_path = "PooledData_Full_20percent_valid.sav",\
+                    standard_scaler_path = "StandardScaler_PooledDataset_Full_20percent_valid.sav",\
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_Donders2022_19-04-2023.pickle",\
                     apply_post_scoring_N1_correction = True,\
                     fs = 256):
                
@@ -3073,7 +3112,7 @@ class OfflineDreamento():
             fig,AX = plt.subplots(nrows=4, figsize=(12, 6), gridspec_kw={'height_ratios': [3,3,1,1]})
             print('initiating the plot')
             # Increase font size while preserving original
-            plt.legend(loc = 'right', prop={'size': 6})
+            #plt.legend(loc = 'right', prop={'size': 6})
             old_fontsize = plt.rcParams["font.size"]
             plt.rcParams.update({"font.size": 9})
             ax0 = plt.subplot(4,1,1)
@@ -3108,7 +3147,7 @@ class OfflineDreamento():
                     x.append(i-1)   
             y.append(p)
             x.append(i)
-            ax2.step(x, y, where='post', color = 'black', linewidth = 1)
+            ax2.step(x, y, where='post', color = 'black', linewidth = 2)
             rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
             for i in np.arange(len(rem)) -1:
                 ax2.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
@@ -3124,7 +3163,7 @@ class OfflineDreamento():
             ax1.set_title(folder_autoscoring + 'EEG R')
             
             self.y_pred_proba.plot(ax = ax3, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
-            
+            #ax3.legend().remove()
             #plt.tight_layout()
             # Save results?
             if int(self.checkbox_save_bulk_autoscoring_txt_results_val.get()) == 1:
@@ -3167,6 +3206,7 @@ class OfflineDreamento():
             if int(self.checkbox_close_plots_val.get()) == 1:
                 plt.close()
         # Store all stats in a single excel file
+
         df = pd.DataFrame(data=self.all_stats)
         df = (df.T)
         path_to_save_all_stats = os.path.dirname(self.bulk_autoscoring_files_list[0]) + '\\Dreamento_all_sleep_stats.xlsx'
@@ -4201,6 +4241,7 @@ class OfflineDreamento():
 
             print('mouse cliked --> move plot')
             ax_tmp.set_xlim((np.floor(event.xdata)- int(7680/256/2), np.floor(event.xdata)+ int(7680/256/2)))
+
             plt.draw()
             print(f'clicked sample{ {event.xdata}}')
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')

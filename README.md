@@ -82,8 +82,9 @@ N.B. A complete **tutorial on how to run real-time Dreamento** can be found [HER
 ```
 cd directory/to/Dreamento
 conda activate offlinedreamento
-python OfflineDreamento.py
+spyder
 ```
+When spyder pops up, open ```offlinedreamento.py``` and proceed with the desired analysis. **If you are interested in autoscoring, we highly recommend this method. Otherwise, if you run offlinedreamento directly through command prompt you may get errors while autoscoring.
 You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband).
 
 1. Demo on post-processing (Dreamento + Hypnodyne HDRecorder + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
