@@ -30,9 +30,16 @@ Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for
 - **Bulk autoscoring**.
 - Automatic detection of microstructural features of sleep, i.e., **eye movements during REM + slow-oscillation and spindle detection during non-REM** epochs.
 - Compatability with BrainProducts. You can analyze, autoscore, and automatically detect events.
-- **automatic ERP representation** of the detected spindles, slow-oscillations, and eye movement events.
+- **Automatic ERP representation** of the detected spindles, slow-oscillations, and eye movement events.
 
 N.B. *the autoscoring of BrainProducts and event detections are done using validated YASA algorithms.*
+
+Automatic REM event detection:
+![spindles + SO](https://github.com/dreamento/dreamento/assets/48684369/4b315e1b-3d01-4975-9ebd-766d6b239ec4)
+
+Automatic SO & spindles detection: 
+![rem](https://github.com/dreamento/dreamento/assets/48684369/5432a355-66ff-4ad9-be20-c94490003250)
+
 
 ## Installation and Prerequisities: 
 Option 1: installation through Anaconda (recommended)
@@ -90,22 +97,19 @@ conda activate offlinedreamento
 spyder
 ```
 When spyder pops up, open ```offlinedreamento.py``` and proceed with the desired analysis. **If you are interested in autoscoring, we highly recommend this method. Otherwise, if you run offlinedreamento directly through command prompt you may get errors while autoscoring.
-You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband).
+You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband) (4) BrainProducts post-processing.
 
-1. Demo on post-processing (Dreamento + Hypnodyne HDRecorder + EMG data): [LINK](https://youtu.be/NzDdLlAd_F8)
-2. Demo on post-processing (Dreamento + Hypnodyne HDRecorder + **WITHOUT** EMG data): the same as [LINK](https://youtu.be/NzDdLlAd_F8) , but uncheck the **Plot EMG** checkbox!
-3. Demo on post-processing (** Hypnodyne HDRecorder only**): [LINK](https://youtu.be/uv6-D57b97I)
 
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package.
 DreamentoScorer is a machine-learning based alogorithm which exctracts several linear and non-linear features in time and time-frequency domain from each 30-second epoch of data. The classifier is based on the LightGBM and
  we plan to add other classifiers such that the user can make a consensus of different scoring algorithms. So, stay tuned for the upcoming updates!
 
-This model is currently trained on 42 data and should have a reasonbable generalizability.
+This model is currently trained on over 130 data and should have a reasonbable generalizability.
 
 With DreamentoScorer, you can export not only the sleep stage predictions, but also the sleep metrics such as sleep efficiency, sleep onset latency, etc as a txt file.
 
-DreamentoScorer not only provides the sleep stages, but also the level of certainty for each scoring (the probability of each sleep stage for each epoch).
+DreamentoScorer not only provides the sleep stages, but also hypnodensity as a measure of the autoscoring certainty level (the probability of each sleep stage for each epoch).
 
 *N.B 1: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.* 
 
@@ -113,7 +117,7 @@ DreamentoScorer not only provides the sleep stages, but also the level of certai
 
 ### Bulk data scoring:
 
-In the recent update, we added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
+We added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
 
 ### Synchronization
 You can collect ExG data using other device in parallel with ZMax and then use Dreamento to synchronize the outputs!
