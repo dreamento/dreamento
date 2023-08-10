@@ -27,7 +27,12 @@ Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for
 ## Post-processing features:
 
 - **OfflineDreamento.py:** Integration of all the collected data for post-processing, ZMax data, annotations, TFR, **autoscroing**, and integration with other measurement modalities!
-- Recently, you can also do **bulk autoscoring** with Dreamento!
+- **Bulk autoscoring**.
+- Automatic detection of microstructural features of sleep, i.e., **eye movements during REM + slow-oscillation and spindle detection during non-REM** epochs.
+- Compatability with BrainProducts. You can analyze, autoscore, and automatically detect events.
+- **automatic ERP representation** of the detected spindles, slow-oscillations, and eye movement events.
+
+N.B. *the autoscoring of BrainProducts and event detections are done using validated YASA algorithms.*
 
 ## Installation and Prerequisities: 
 Option 1: installation through Anaconda (recommended)
