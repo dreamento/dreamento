@@ -4257,12 +4257,27 @@ class OfflineDreamento():
         vmin, vmax = np.percentile(Sxx, [0 + trimperc, 100 - trimperc])
         norm = Normalize(vmin=vmin, vmax=vmax)
         
+# =============================================================================
+#         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
@@ -4280,19 +4295,19 @@ class OfflineDreamento():
                   
         if int(self.is_autoscoring.get()) == 0: 
             # plotting results
-            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,2]})
+            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,2,1,1,1,2]})
             
     
             ax3 = plt.subplot(6,1,1, )
-            ax_acc = plt.subplot(6,1,2,)
+            ax_acc = plt.subplot(6,1,5,)
             ax_ppg = plt.subplot(6,1,3, sharex = ax_acc)
             ax_noise = plt.subplot(6,1,4,  sharex = ax_acc)
-            ax_TFR_short = plt.subplot(6,1,5, sharex = ax_acc)
+            ax_TFR_short = plt.subplot(6,1,2, sharex = ax3)
             ax4 = plt.subplot(6,1,6, sharex = ax_acc)
             ax4.grid(True)
     
             ax3.get_xaxis().set_visible(False)
-    
+            ax_TFR_short.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(True)
             ax_acc.set_yticks([])
             ax_noise.set_yticks([])
@@ -5324,7 +5339,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5348,7 +5363,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -6055,7 +6070,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
