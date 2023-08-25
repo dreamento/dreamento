@@ -2138,18 +2138,29 @@ class OfflineDreamento():
         norm = Normalize(vmin=vmin, vmax=vmax)
         
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+# =============================================================================
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
         f2 = f2[good_freqs2]
-        #t *= 256  # Convert t to hours
-    
-        # Normalization
         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
     # =============================================================================
@@ -2161,39 +2172,39 @@ class OfflineDreamento():
             
             # If plotting EMG TFR is required
             if int(self.plot_EMG_quality_evaluation.get()) == 1:
-                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 3, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
                 ax1 = plt.subplot(16,1,1)
                 ax2 = plt.subplot(16,1,2, sharex = ax1)
                 ax3 = plt.subplot(16,1,3, sharex = ax1)
-                ax_TFR_EMG1 = plt.subplot(16,1,4)
-                ax_TFR_EMG2 = plt.subplot(16,1,5)
-                ax_TFR_EMG3 = plt.subplot(16,1,6)
-                ax_epoch_marker = plt.subplot(16,1,7, )
-                ax_epoch_light = plt.subplot(16,1,8, sharex = ax_epoch_marker)
-                ax_acc = plt.subplot(16,1,9, sharex = ax_epoch_marker)
-                ax_ppg = plt.subplot(16,1,10, sharex = ax_epoch_marker)
-                ax_noise = plt.subplot(16,1,11, sharex = ax_epoch_marker)  
-                ax_EMG = plt.subplot(16,1,12, sharex = ax_epoch_marker)
-                ax_EMG2 = plt.subplot(16,1,13, sharex = ax_epoch_marker)
-                ax_EMG3 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
-                ax_TFR_short = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                ax_TFR_EMG1 = plt.subplot(16,1,5)
+                ax_TFR_EMG2 = plt.subplot(16,1,6)
+                ax_TFR_EMG3 = plt.subplot(16,1,7)
+                ax_epoch_marker = plt.subplot(16,1,8, )
+                ax_epoch_light = plt.subplot(16,1,9, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(16,1,10, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(16,1,11, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(16,1,12, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(16,1,13, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(16,1,4, sharex = ax1)
                 ax4 = plt.subplot(16,1,16, sharex = ax_epoch_marker)
 
             # If plotting EMG TFR is NOT required
             else:
-                fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,1, 2, 2, 2, 4, 4, 4, 4, 10]})
                 ax1 = plt.subplot(13,1,1)
                 ax2 = plt.subplot(13,1,2, sharex = ax1)
                 ax3 = plt.subplot(13,1,3, sharex = ax1)
-                ax_epoch_marker = plt.subplot(13,1,4, )
-                ax_epoch_light = plt.subplot(13,1,5, sharex = ax_epoch_marker)
-                ax_acc = plt.subplot(13,1,6, sharex = ax_epoch_marker)
-                ax_ppg = plt.subplot(13,1,7, sharex = ax_epoch_marker)
-                ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)  
-                ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
-                ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
-                ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
-                ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+                ax_epoch_marker = plt.subplot(13,1,5, )
+                ax_epoch_light = plt.subplot(13,1,6, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(13,1,7, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(13,1,8, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(13,1,9, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(13,1,10, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(13,1,4, sharex = ax1)
                 ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
             
 
@@ -2205,6 +2216,8 @@ class OfflineDreamento():
             ax_epoch_marker.get_xaxis().set_visible(False)
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_EMG.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_acc.get_xaxis().set_visible(False)
             ax_acc.set_yticks([])
             ax_noise.set_yticks([])
@@ -2218,7 +2231,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -2232,7 +2245,6 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -2337,7 +2349,8 @@ class OfflineDreamento():
             ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
             
             #ax4.get_xaxis().set_visible(False)
-            
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+
             ###########
             # Apply automatic REM EVENTS detection
             if int(self.automatic_REM_event_deetction.get()) == 1:
@@ -2591,25 +2604,25 @@ class OfflineDreamento():
             
             
             
-           fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 4,1,1,2, 2, 2,4, 4, 4, 4, 10]})
+           fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 4,2,1,2, 2, 2,4, 4, 4, 4, 10]})
            
            ax1 = plt.subplot(15,1,1)
            ax2 = plt.subplot(15,1,2, sharex = ax1)
            ax3 = plt.subplot(15,1,3, sharex = ax1)
            
-           ax_autoscoring = plt.subplot(15,1,4, )
-           ax_proba = plt.subplot(15,1,5, )
-           ax_epoch_marker = plt.subplot(15,1,6, )
-           ax_epoch_light = plt.subplot(15,1,7, sharex = ax_epoch_marker)
+           ax_autoscoring = plt.subplot(15,1,5, )
+           ax_proba = plt.subplot(15,1,6, )
+           ax_epoch_marker = plt.subplot(15,1,7, )
+           ax_epoch_light = plt.subplot(15,1,8, sharex = ax_epoch_marker)
            
-           ax_acc = plt.subplot(15,1,8, sharex = ax_epoch_marker)
-           ax_ppg = plt.subplot(15,1,9, sharex = ax_epoch_marker)
-           ax_noise = plt.subplot(15,1,10, sharex = ax_epoch_marker)
+           ax_acc = plt.subplot(15,1,9, sharex = ax_epoch_marker)
+           ax_ppg = plt.subplot(15,1,10, sharex = ax_epoch_marker)
+           ax_noise = plt.subplot(15,1,11, sharex = ax_epoch_marker)
                       
-           ax_EMG = plt.subplot(15,1,11, sharex = ax_epoch_marker)
-           ax_EMG2 = plt.subplot(15,1,12, sharex = ax_epoch_marker)
-           ax_EMG3 = plt.subplot(15,1,13, sharex = ax_epoch_marker)
-           ax_TFR_short = plt.subplot(15,1,14, sharex = ax_epoch_marker)
+           ax_EMG = plt.subplot(15,1,12, sharex = ax_epoch_marker)
+           ax_EMG2 = plt.subplot(15,1,13, sharex = ax_epoch_marker)
+           ax_EMG3 = plt.subplot(15,1,14, sharex = ax_epoch_marker)
+           ax_TFR_short = plt.subplot(15,1,4, sharex = ax1)
            ax4 = plt.subplot(15,1,15, sharex = ax_epoch_marker)
            ax4.grid(True)
 
@@ -2619,6 +2632,8 @@ class OfflineDreamento():
            ax_epoch_marker.get_xaxis().set_visible(False)
            ax_epoch_light.get_xaxis().set_visible(False)
            ax_EMG.get_xaxis().set_visible(False)
+           ax_TFR_short.get_xaxis().set_visible(False)
+
            ax_acc.get_xaxis().set_visible(False)
            ax_acc.set_yticks([])
            ax_noise.set_yticks([])
@@ -2632,7 +2647,7 @@ class OfflineDreamento():
                               shading="auto")
            ax3.set_xlim([0, len(data)/256])
            ax3.set_ylim((fmin, 25))
-           ax3.set_ylabel('Frequency [Hz]')
+           ax3.set_ylabel('EEG L-Freq(Hz)')
            
            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                               shading="auto")
@@ -2646,7 +2661,7 @@ class OfflineDreamento():
            #ax4.set_xlim([0, len(data)])
            ax4.set_ylabel('EEG (uV)')
            ax4.set_ylim([-150, 150])
-           ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+           ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
 
                       
            # Opening JSON file
@@ -3061,11 +3076,25 @@ class OfflineDreamento():
         norm = Normalize(vmin=vmin, vmax=vmax)
         
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+# =============================================================================
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
@@ -3075,6 +3104,7 @@ class OfflineDreamento():
         # Normalization
         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
     # =============================================================================
     #     gs1 = gridspec.GridSpec(2, 1)
     #     gs1.update(wspace=0.005, hspace=0.0001)
@@ -3110,26 +3140,28 @@ class OfflineDreamento():
 # =============================================================================
                 
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,1, 2, 2, 2, 2, 10]})
             
             ax1 = plt.subplot(10,1,1)
             ax2 = plt.subplot(10,1,2, sharex = ax1)
             ax3 = plt.subplot(10,1,3, sharex = ax1)
             
-            ax_epoch_marker = plt.subplot(10,1,4, )
-            ax_epoch_light = plt.subplot(10,1,5, sharex = ax_epoch_marker)
+            ax_epoch_marker = plt.subplot(10,1,5, )
+            ax_epoch_light = plt.subplot(10,1,6, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(10,1,6, sharex = ax_epoch_marker)
-            ax_ppg = plt.subplot(10,1,7, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(10,1,8, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(10,1,7, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(10,1,8, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(10,1,9, sharex = ax_epoch_marker)
 
-            ax_TFR_short = plt.subplot(10,1,9, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(10,1,4, sharex = ax1)
             ax4 = plt.subplot(10,1,10, sharex = ax_epoch_marker)
             ax4.grid(True)
     
             ax1.get_xaxis().set_visible(False)
             ax2.get_xaxis().set_visible(False)
             ax3.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_epoch_marker.get_xaxis().set_visible(False)
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(False)
@@ -3145,7 +3177,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3172,7 +3204,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -3407,21 +3439,21 @@ class OfflineDreamento():
                     
         else:
             
-            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,4,4,1,1,2, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,4,1,1,2, 2, 2, 1, 10]})
             
             ax1 = plt.subplot(12,1,1)
             ax2 = plt.subplot(12,1,2, sharex = ax1)
             ax3 = plt.subplot(12,1,3, sharex = ax1)
             
-            ax_autoscoring = plt.subplot(12,1,4, )
-            ax_proba = plt.subplot(12,1,5, )
-            ax_epoch_marker = plt.subplot(12,1,6, )
-            ax_epoch_light = plt.subplot(12,1,7, sharex = ax_epoch_marker)
+            ax_autoscoring = plt.subplot(12,1,5, )
+            ax_proba = plt.subplot(12,1,6, )
+            ax_epoch_marker = plt.subplot(12,1,7, )
+            ax_epoch_light = plt.subplot(12,1,8, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(12,1,8, sharex = ax_epoch_marker)
-            ax_ppg = plt.subplot(12,1,9, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(12,1,10, sharex = ax_epoch_marker)
-            ax_TFR_short = plt.subplot(12,1,11, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(12,1,9, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(12,1,10, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(12,1,11, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(12,1,4, sharex = ax1)
             ax4 = plt.subplot(12,1,12, sharex = ax_epoch_marker)
             ax4.grid(True)
     
@@ -3429,6 +3461,8 @@ class OfflineDreamento():
             ax2.get_xaxis().set_visible(False)
             ax3.get_xaxis().set_visible(False)
             ax_epoch_marker.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(False)
             ax_acc.set_yticks([])
@@ -3443,7 +3477,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3457,7 +3491,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -5103,7 +5137,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5128,7 +5162,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5167,7 +5201,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -5191,7 +5225,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5216,7 +5250,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5255,7 +5289,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -5278,7 +5312,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5302,7 +5336,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5404,7 +5438,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
