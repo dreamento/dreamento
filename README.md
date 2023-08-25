@@ -34,10 +34,10 @@ Dreamento (DREAM ENgineering TOolbox) is a an **open-source** Python package for
 
 N.B. *the autoscoring of BrainProducts and event detections are done using validated YASA algorithms.*
 
-Automatic REM event detection:
+Automatic slow oscillation and spindle event detection:
 ![spindles + SO](https://github.com/dreamento/dreamento/assets/48684369/4b315e1b-3d01-4975-9ebd-766d6b239ec4)
 
-Automatic SO & spindles detection: 
+Automatic rapid eye movement events detection: 
 ![rem](https://github.com/dreamento/dreamento/assets/48684369/5432a355-66ff-4ad9-be20-c94490003250)
 
 

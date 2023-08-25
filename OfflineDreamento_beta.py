@@ -4321,7 +4321,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq (Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -4339,7 +4339,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq (Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
@@ -4509,15 +4509,15 @@ class OfflineDreamento():
         #### If autoscoring is activated ....
         elif int(self.is_autoscoring.get()) == 1:
             print('Plot results with autoscoring')
-            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,1,1,2]})
+            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [2,2,1,1,1,1,1,2]})
     
             ax3 = plt.subplot(8,1,1, )
-            ax_autoscoring = plt.subplot(8,1,2, )
-            ax_proba = plt.subplot(8,1,3, )
-            ax_acc = plt.subplot(8,1,4,)
-            ax_ppg = plt.subplot(8,1,5, sharex = ax_acc)
-            ax_noise = plt.subplot(8,1,6,  sharex = ax_acc)    
-            ax_TFR_short = plt.subplot(8,1,7, sharex = ax_acc)
+            ax_autoscoring = plt.subplot(8,1,3, )
+            ax_proba = plt.subplot(8,1,4, )
+            ax_acc = plt.subplot(8,1,5,)
+            ax_ppg = plt.subplot(8,1,6, sharex = ax_acc)
+            ax_noise = plt.subplot(8,1,7,  sharex = ax_acc)    
+            ax_TFR_short = plt.subplot(8,1,2, sharex = ax3)
             ax4 = plt.subplot(8,1,8, sharex = ax_acc)
             ax4.grid(True)
     
@@ -4535,7 +4535,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -4550,7 +4550,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
@@ -5339,7 +5339,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5363,7 +5363,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -6070,7 +6070,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
