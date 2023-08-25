@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-Copyright (c) 2021-2022 Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie
+Copyright (c) 2021-2023 Mahdad Jafarzadeh Esfahani
 
 OfflineDreamento: The post-processing Dreamento!
 
@@ -9,6 +9,16 @@ This file is beta version, thus including way more features than offlineDreament
 But, if you look for a stable version, we recommend you use offlineDreamento.py ...
 
 """
+import os
+import inspect
+
+# Get the path of the currently executing script
+script_file = inspect.getframeinfo(inspect.currentframe()).filename
+script_directory = os.path.dirname(os.path.abspath(script_file))
+
+print("Script Directory:", script_directory)
+
+
 import tkinter as tk
 from tkinter import LabelFrame, Label, Button, filedialog, messagebox,OptionMenu, StringVar, DoubleVar, PhotoImage, Entry
 from tkinter import *
