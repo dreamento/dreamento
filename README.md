@@ -68,6 +68,13 @@ conda env create --name dreamento --file dreamento.yml
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
+## Always stay up to date!
+Dreamento is continuously being updated with new features! 
+So we recommend ou that everytime you want to use it, first, update the software.
+How?
+Simply double click on ```AutomaticDreamentoUpdate.exe``. That's it!
+
+P.S. if you are using earlier Dreamento versions, where, the updater was not included, simp,y download this exe file from the GitHub and add it to the SAME DIRECTORY as your Dreamento files are located.
 
 ## How to start a recording?
 
