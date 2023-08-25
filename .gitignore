@@ -8,7 +8,6 @@ __pycache__/
 # ignore some files related to ML models
 models
 DataiBand
-out_QS
 train
 *.joblib
 *.npy
@@ -41,6 +40,7 @@ var/
 .installed.cfg
 *.egg
 .vs/
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
