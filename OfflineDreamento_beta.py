@@ -5,6 +5,9 @@ Copyright (c) 2021-2022 Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie
 
 OfflineDreamento: The post-processing Dreamento!
 
+This file is beta version, thus including way more features than offlineDreamento.py
+But, if you look for a stable version, we recommend you use offlineDreamento.py ...
+
 """
 import tkinter as tk
 from tkinter import LabelFrame, Label, Button, filedialog, messagebox,OptionMenu, StringVar, DoubleVar, PhotoImage, Entry
