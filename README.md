@@ -69,12 +69,15 @@ conda env create --name dreamento --file dreamento.yml
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
 ## Always stay up to date!
-Dreamento is continuously being updated with new features! 
-So we recommend ou that everytime you want to use it, first, update the software.
-How?
-Simply double click on ```AutomaticDreamentoUpdate.exe``. That's it!
+Note: automatic Dreamento updater uses **git**. So, if you don't have git installed on your pc, first install it ([Download])(https://git-scm.com/download/win)!
 
-P.S. if you are using earlier Dreamento versions, where, the updater was not included, simp,y download this exe file from the GitHub and add it to the SAME DIRECTORY as your Dreamento files are located.
+Dreamento is continuously being updated with new features! 
+So we recommend you that everytime you want to use it, first, update the software.
+
+How?
+Simply double click on ```AutomaticDreamentoUpdate.exe```. You may have to extract it from ```AutomaticDreamentoUpdate.zip```, in the same path as other Dreamento files are located. That's it!
+
+P.S. if you are using earlier Dreamento versions, where, the updater was not included, simply download this exe file from the GitHub and add it to the SAME DIRECTORY as your Dreamento files are located.
 
 ## How to start a recording?
 
@@ -163,9 +166,9 @@ Please note that this program is provided with no warranty of any kind.
 
 ## Citation
 
-*Esfahani, M. J., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
+*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
 https://doi.org/10.48550/arXiv.2207.03977*
 
 
-**CopyRight (2021 - 22): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
+**CopyRight (2021 - 23): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
 
