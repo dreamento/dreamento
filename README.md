@@ -69,8 +69,9 @@ conda env create --name dreamento --file dreamento.yml
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
 ## Always stay up to date!
-Note: automatic Dreamento updater uses **git**. So, if you don't have git installed on your pc, first install it ([Download])(https://git-scm.com/download/win)!
+Note: automatic Dreamento updater uses **git**. So, if you don't have git installed on your pc, first install it (https://git-scm.com/download/win)!
 
+Note: This option only works if you **CLONE** the repository from Github, and not when you download the zip, i.e., ```git clone https://github.com/dreamento/dreamento.git``` in your desired path.
 Dreamento is continuously being updated with new features! 
 So we recommend you that everytime you want to use it, first, update the software.
 
