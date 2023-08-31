@@ -129,6 +129,14 @@ DreamentoScorer not only provides the sleep stages, but also hypnodensity as a m
 
 We added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
 
+## Dreamento Converter
+
+Do you have several raw recordings from ZMax (.hyp) and now you want to convert them all at once? Then you need DreamentoConverter!
+
+If that option is not available in your OfflineDreamento GUI, you may need to update your software. See "Always stay up to date!" section!
+
+You need to create two .txt files, one with the path to all ```.hyp``` files that you need to convert, and the other .txt fileincluding all destination paths. 
+
 ### Synchronization
 You can collect ExG data using other device in parallel with ZMax and then use Dreamento to synchronize the outputs!
 An example, is EMG recording in parallel with Dreamento, based on which the user can sync the data.

@@ -209,11 +209,20 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
         self.checkbox_plot_psd.grid(row = 8, column = 4, sticky="w", pady = 10)
+        
+        #%% checkbox DreamentoConverter
+        self.DreamentoConverter_val = IntVar(value = 0)
+        self.checkbox_DreamentoConverter = Checkbutton(self.frame_import, text = "Dreamento Converter",
+                                  font = 'Calibri 11 ', variable = self.DreamentoConverter_val,\
+                                  command=self.DreamentoConverter)
+        
+        self.checkbox_DreamentoConverter.grid(row = 9, column = 4, sticky="w", pady = 10)
+            
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 9 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 10 , column = 4, sticky="w")
         
     #%% Checkbox for plotting Dreamento + HDRecorder + EMG
         self.analysis_signal_options = IntVar(value = 1)
@@ -221,7 +230,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 10, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 11, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne + Dreamento
@@ -230,14 +239,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 11, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 12, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 12, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 13, column = 4, sticky="w", pady = 10)
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.BrainVision_analysis = IntVar(value = 0)
@@ -245,7 +254,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 4,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_BrainVision_analysis.grid(row = 13, column = 4, sticky="w", pady = 10)
+        self.checkbox_BrainVision_analysis.grid(row = 14, column = 4, sticky="w", pady = 10)
     #%% EMG Y SCALE
         #Label to read data and extract features
         self.label_EMG_scale = Label(self.frame_import, text = "EMG amplitude (uV):",
@@ -5812,6 +5821,36 @@ class OfflineDreamento():
                 
         self.OK_button_popupWin_automatic_spd_event_detection.grid(row = 5, column = 4)
         
+    #%% Automatic REM event detection popup
+    def DreamentoConverter(self):
+        self.popupWin_DreamentoConverter = Toplevel(root)         
+        
+        self.path_to_Hypnodyne_folder_label = Label(self.popupWin_DreamentoConverter, text='Path to ZMax Hypnodyne Folder:')
+        self.path_to_Hypnodyne_folder_label.grid(row = 1 , column =1)
+        
+        self.entry_path_to_Hypnodyne_folder = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_Hypnodyne_folder.insert(0, "C:/Program Files (x86)/Hypnodyne/ZMax/")
+        self.entry_path_to_Hypnodyne_folder.grid(row = 2 , column = 1)
+        
+        self.path_to_txt_containing_hyps_to_convert_label = Label(self.popupWin_DreamentoConverter, text='a single .txt file including paths to all raw .hyp files')
+        self.path_to_txt_containing_hyps_to_convert_label.grid(row = 3 , column =1)
+        
+        self.entry_path_to_txt_containing_hyps_to_convert = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_txt_containing_hyps_to_convert.insert(0, "path/to/txt/including/all/hyps.txt")
+        self.entry_path_to_txt_containing_hyps_to_convert.grid(row = 4 , column = 1)
+        
+        self.path_to_txt_containing_destination_paths_label = Label(self.popupWin_DreamentoConverter, text='a single .txt file including paths to all raw .hyp files')
+        self.path_to_txt_containing_destination_paths_label.grid(row = 5 , column =1)
+
+        self.entry_path_to_txt_containing_destination_paths = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_txt_containing_destination_paths.insert(0, "path/to/txt/including/all/destinations.txt")
+        self.entry_path_to_txt_containing_destination_paths.grid(row = 6 , column = 1)
+        
+        self.convert_button = Button(self.popupWin_DreamentoConverter, text = "Convert!", 
+                                                                        command = self.apply_DreamentoConverter,
+                                                                        font = 'Calibri 13 ')
+        self.convert_button.grid(row = 7, column = 1)
+
     #%% Brain amp channel selector for plotting + autoscoring
     def BrainProducts_channel_selector(self):
         
@@ -6043,7 +6082,59 @@ class OfflineDreamento():
         print(type(self.max_amp_SO_positive_detection))
         print(type(self.min_amp_SO_p2p_detection))
         print(type(self.max_amp_SO_p2p_detection))
+    
+    #%% Apply DreamentoConverter
+    def apply_DreamentoConverter(self):
+        import shutil
+        import subprocess
+
+        # define path to HDRecorder.exe
+        path_to_HDRecorder = str(self.entry_path_to_Hypnodyne_folder.get())
+        os.chdir(path_to_HDRecorder)
+        print(f'Changing directory to {path_to_HDRecorder}')
         
+
+        # define files to be converted 
+        filenames_path = str(self.entry_path_to_txt_containing_hyps_to_convert.get())
+        
+        # Remove quotations if exist
+        filenames = np.loadtxt(filenames_path, dtype = 'str', delimiter = ',')
+        
+        print(f'raw hyp files received: {filenames}')
+
+        # define path to converted folders
+        destination_folders_path = str(self.entry_path_to_txt_containing_destination_paths.get())
+        destination_folders = np.loadtxt(destination_folders_path, dtype = 'str', delimiter = ',')
+
+        print(f'Locating the destination files: {destination_folders}')
+        
+        for conv in np.arange(len(filenames)):
+            
+            # Copy the .hyp file to HDRecoder folder for conversion
+            src_path = filenames[conv]
+            print(f'locating {src_path}')
+            current_file = filenames[conv].split('/')[-1]
+            dst_path = path_to_HDRecorder + current_file
+            shutil.copy(src_path, dst_path)
+                            
+            # Create a batch file to run conversion syntax
+            myBat = open(r'DreamentoConverter.bat','w+')
+            myBat.write('HDRecorder.exe -conv '+ current_file)
+            myBat.close()
+            
+            # run the created .bat --> conversion
+            print(f'Converting the file {conv+1}/{len(filenames)}...please be patient...\n')
+            subprocess.call(path_to_HDRecorder + 'DreamentoConverter.bat')
+            print(f'{conv+1}/{len(filenames)} files have been successfully converted\n')
+            print(f'file {src_path} converted to path {destination_folders[conv]}')
+            # Copy generated folder to the desired path
+            shutil.copytree(path_to_HDRecorder + 'SDConvert\\', destination_folders[conv])
+            
+            # Remove the .hyp and .bat files from HDRecorder folder
+            os.remove(path_to_HDRecorder + 'DreamentoConverter.bat')
+            os.remove(dst_path)
+            
+        print('All files have been successfully converted!')
     #%% select marker for sync command
     def select_marker(self):
         print(f'syncing based on the following event: {self.markers_sync_event.get()}')
