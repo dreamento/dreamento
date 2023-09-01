@@ -6115,6 +6115,7 @@ class OfflineDreamento():
             print(f'locating {src_path}')
             current_file = filenames[conv].split('/')[-1]
             dst_path = path_to_HDRecorder + current_file
+            print(dst_path)
             shutil.copy(src_path, dst_path)
                             
             # Create a batch file to run conversion syntax
