@@ -5,6 +5,7 @@
 Dreamento is a an **open-source** Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data, both in a **graphical user interface (GUI)**..  
 - The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 - **For any use, please cite our preprint article: see also citation section in the bottom of page
+
 A complete tutorial on how to install and use Dreamento can be found in the user manual folder of this repository.
 
 ## Online (real-time) vs Offline Dreamento
