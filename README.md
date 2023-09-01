@@ -1,4 +1,4 @@
-# Dreamento:an open-source DREAM ENgineering TOolbox
+# Dreamento: an open-source DREAM ENgineering TOolbox
 
 ## Overview
 
