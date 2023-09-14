@@ -24,6 +24,7 @@ Teressa_rec.txt
 
 # Distribution / packaging
 .Python
+LD_analysis/
 env/
 build/
 develop-eggs/

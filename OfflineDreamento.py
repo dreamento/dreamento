@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 
-Copyright (c) 2021-2022 Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie
+Copyright (c) 2021-2023 Mahdad Jafarzadeh Esfahani
 
 OfflineDreamento: The post-processing Dreamento!
+
+This file is beta version, thus including way more features than offlineDreamento.py
+But, if you look for a stable version, we recommend you use offlineDreamento.py ...
 
 """
 import tkinter as tk
@@ -184,47 +187,74 @@ class OfflineDreamento():
         self.checkbox_plot_EMG_quality_evaluation.grid(row = 5, column = 4, sticky="w")
         
     #%% Checkbox for automatic eye movement detector
-        self.automatic_REM_event_deetction = IntVar(value=1)
-        self.checkbox_automatic_REM_event_deetction = Checkbutton(self.frame_import, text = "Automatic REM event detection",
-                                  font = 'Calibri 11 ', variable = self.automatic_REM_event_deetction)
+        self.automatic_REM_event_deetction = IntVar(value=0)
+        self.checkbox_automatic_REM_event_deetction = Checkbutton(self.frame_import, text = "Automatic eye movement event detection",
+                                  font = 'Calibri 11 ', variable = self.automatic_REM_event_deetction,
+                                  command = self.automatic_REM_event_detection_popup)
+
         
         self.checkbox_automatic_REM_event_deetction.grid(row = 6, column = 4, sticky="w")
+        
+    #%% Checkbox for automatic spindle detection
+        self.automatic_spd_event_deetction = IntVar(value=0)
+        self.checkbox_automatic_spd_event_deetction = Checkbutton(self.frame_import, text = "Automatic SO + spindle detection",
+                                  font = 'Calibri 11 ', variable = self.automatic_spd_event_deetction,
+                                  command = self.automatic_spd_event_detection_popup)
+
+        
+        self.checkbox_automatic_spd_event_deetction.grid(row = 7, column = 4, sticky="w")
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 7, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 8, column = 4, sticky="w", pady = 10)
+        
+        #%% checkbox DreamentoConverter
+        self.DreamentoConverter_val = IntVar(value = 0)
+        self.checkbox_DreamentoConverter = Checkbutton(self.frame_import, text = "Dreamento Converter",
+                                  font = 'Calibri 11 ', variable = self.DreamentoConverter_val,\
+                                  command=self.DreamentoConverter)
+        
+        self.checkbox_DreamentoConverter.grid(row = 9, column = 4, sticky="w", pady = 10)
+            
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 8 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 10 , column = 4, sticky="w")
         
-    #%% Checkbox for plotting spectrograms with markers
+    #%% Checkbox for plotting Dreamento + HDRecorder + EMG
         self.analysis_signal_options = IntVar(value = 1)
         self.checkbox_plot_additional_EMG = Radiobutton(self.frame_import, text = "Dreamento + HDRecorder + EMG",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 9, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 11, column = 4, sticky="w", pady = 10)
         
         
-    #%% Checkbox for analyzing ZMax Hypndoyne only
+    #%% Checkbox for analyzing ZMax Hypndoyne + Dreamento
         self.ZMax_Hypno_Dreamento = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_Dreamento = Radiobutton(self.frame_import, text = "Dreamento + HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 10, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 12, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 11, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 13, column = 4, sticky="w", pady = 10)
         
+    #%% Checkbox for analyzing ZMax Hypndoyne only
+        self.BrainVision_analysis = IntVar(value = 0)
+        self.checkbox_BrainVision_analysis = Radiobutton(self.frame_import, text = "BrainAmpProducts",
+                                  font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 4,\
+                                  command=self.analysis_signal_options_button_activator)
+        
+        self.checkbox_BrainVision_analysis.grid(row = 14, column = 4, sticky="w", pady = 10)
     #%% EMG Y SCALE
         #Label to read data and extract features
         self.label_EMG_scale = Label(self.frame_import, text = "EMG amplitude (uV):",
@@ -237,6 +267,12 @@ class OfflineDreamento():
         self.EMG_scale_option_menu.config(fg = 'blue')
         self.EMG_scale_option_menu.grid(row = 3, column = 0)
     
+    #%% Initial values for REM and spd detection, default: 0 (no detection)
+# =============================================================================
+#         self.checkbox_save_REM_detection_results_val = IntVar(value = 0)
+#         self.checkbox_save_REM_detection_results_val = IntVar(value = 0)
+# =============================================================================
+
     #%% EMG sync option
         #Label to read data and extract features
         
@@ -278,6 +314,14 @@ class OfflineDreamento():
             
         # EMG Evaluation
             self.checkbox_plot_EMG_quality_evaluation['state'] = tk.NORMAL
+            
+            self.button_Hypnodyne_browse['state'] = tk.NORMAL
+
+            self.button_Dreamento_browse['state'] = tk.NORMAL
+            
+            self.button_marker_json_browse['state'] = tk.NORMAL
+
+
         elif int_val == 2:
             
             # EMG load button
@@ -295,6 +339,10 @@ class OfflineDreamento():
             # EMG Evaluation
             self.checkbox_plot_EMG_quality_evaluation['state'] = tk.DISABLED
             
+            self.button_Hypnodyne_browse['state'] = tk.NORMAL
+
+            self.button_Dreamento_browse['state'] = tk.NORMAL
+
         elif int_val == 3:
             
             # EMG load button
@@ -317,6 +365,38 @@ class OfflineDreamento():
             
             # EMG Evaluation
             self.checkbox_plot_EMG_quality_evaluation['state'] = tk.DISABLED
+            
+            self.button_Hypnodyne_browse['state'] = tk.NORMAL
+            
+        elif int_val == 4:
+                
+            # EMG load button
+            self.button_EMG_browse['state'] = tk.NORMAL
+                
+            # EMG option menu 
+            self.EMG_scale_option_menu['state'] = tk.DISABLED
+
+            # Sync button
+            self.button_sync_EMG['state'] = tk.NORMAL
+
+            # Sync button
+            self.button_apply['state'] = tk.DISABLED
+            
+            # Browse Dreamento button 
+            self.button_Dreamento_browse['state'] = tk.DISABLED
+            
+            # Browse Markers browse button 
+            self.button_marker_json_browse['state'] = tk.DISABLED
+            
+            # EMG Evaluation
+            self.checkbox_plot_EMG_quality_evaluation['state'] = tk.DISABLED
+
+            # Load EEG L button
+            self.button_Hypnodyne_browse['state'] = tk.DISABLED
+            
+            # update label for loading data
+            self.label_EMG.config(text = 'BrainProducts (.vhdr)')
+
         
     #%% Moving average filter    
     def MA(self,x, N):
@@ -347,457 +427,825 @@ class OfflineDreamento():
             progress_var.set(progress)
     
         return 0
+        
     #%% Activation/inactivation of EMG button depending on the checkbox
     def EMG_sync_method_activator(self):
+                
+        if int(self.analysis_signal_options.get()) == 1:
 
-        global sample_sync_EMG_Hypnodyne
-        # Sanitary checks
-        if 'hypnodyne_files_list' not in globals():
-            messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The EEG L.edf file is not selected!")
-
-        elif 'Dreamento_files_list' not in globals():
-            messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .txt file recorded by Dreamento is not selected!")
-            
-        elif 'marker_files_list' not in globals():
-            messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .json file of markers is not selected!")
-            
-        elif 'EMG_files_list' not in globals() and int(self.analysis_signal_options.get()) == 1:
-            messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
-            
-        elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.analysis_signal_options.get()) == 1:
-            messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
-            
-        else: 
-            Dreamento_files_list, hypnodyne_files_list, marker_files_list
-            
-            self.ZmaxDondersRecording = Dreamento_files_list[0]    
-            self.HDRecorderRecording  = hypnodyne_files_list[0]
-            self.path_to_json_markers = marker_files_list[0]
-            self.path_to_EMG          = EMG_files_list[0]
-            
-        # Opening JSON file
-        f = open(self.path_to_json_markers,)
-        
-        print('reading annotation file ...')
-        # returns JSON object as a dictionary
-        markers = json.load(f)
-        markers_details = list(markers.values())
-        marker_keys = list(markers.keys())
-
-        clench_event = []
-        counter_sync = []
-        time_sync_event = []
-        sync_event_is_selected = 0
-        self.all_markers = []
-        self.all_timestamp_markers = []
-        self.all_markers_with_timestamps = []
-        for counter, marker in enumerate(markers.values()):
-            self.all_markers.append(marker)
-            
-        for counter, marker in enumerate(markers.keys()):
-            self.all_timestamp_markers.append(marker)
-        
-        for i in np.arange(len(self.all_markers)):
-            self.all_markers_with_timestamps.append(self.all_markers[i]+ '__'+ self.all_timestamp_markers[i])
-        self.select_marker_for_sync()
-
-        self.selected_marker = self.markers_sync_event.get()
-
-        messagebox.showinfo('syncing in process', f'The syncing event has been selected. Please wait for sync window to pop up.')
-        print(f'lets split the marker into ... {self.selected_marker.split()}')
-        time_sync_event.append(int(self.selected_marker.split()[-1]))
-# =============================================================================
-#         for counter, marker in enumerate(markers.values()):
-#             try:
-#                 if marker.split()[0] == 'clench' or marker.split()[0] == 'Clench':
-#                     print(marker.split())
-#                     counter_sync.append(counter)
-#                     
-#             except:
-#                 print(f'an exception occured for marker = {marker}')
-#                 continue
-#         print(counter_sync)
-#         
-#         for counter, marker in enumerate(markers.keys()):
-#             if counter in counter_sync:
-#                 time_sync_event.append(int(marker.split()[-1]))
-# 
-# =============================================================================
-        print('Loading EEG file ... Please wait')                            
-        path_Txt = self.ZmaxDondersRecording
-
-        sigScript = np.loadtxt(path_Txt, delimiter=',')
-
-        sigScript_org = sigScript
-        sigScript_org_R = sigScript[:, 0]
-        sigScript_org = sigScript_org[:, 1]
-
-        # Read EMG
-        print('Loading EEG file ... Please wait')
-        if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
-            
-            EMG_data = mne.io.read_raw_brainvision(self.path_to_EMG , preload = True)
-
-        elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
-            EMG_data = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
-                            
-        
-        print('EEG and EMG imported successfully')
-        # Read annotations
-        
-        # Reading sampling frequencies
-        EMG_sf = int(EMG_data.info['sfreq'])
-        EEG_sf = 256   
-        print(f'samlping frequency of EMG and EEG are: {EMG_sf} , {EEG_sf} Hz, respectively ... ')
-       
-        if EEG_sf < EMG_sf:
-            print(f'resampling EMG to {EEG_sf} Hz ...')
-            EMG_data.resample(EEG_sf)
-        
-        EMG_data_get = EMG_data.get_data()
-        EMG_data_get1 = EMG_data_get[0,:] * 1e6
-        EMG_data_get2 = EMG_data_get[1,:] * 1e6
-        EMG_data_get3 = EMG_data_get1 - EMG_data_get2
-        
-        #Filtering 
-        sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=10, highcut=100, fs = 256, order = 2)
-        EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=10, highcut=100, fs = 256, order = 2)
-        EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=10, highcut=100, fs = 256, order = 2)
-        EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=10, highcut=100, fs = 256, order = 2)
-        t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*30)
-
-        # notch filtering
-        notch_freq = 50  # set the notch frequency to 50 Hz
-
-        # Create the notch filter
-        q = 30  # quality factor
-        b, a = signal.iirnotch(notch_freq, q, EEG_sf)
-        
-        # Apply the notch filter to the data
-        EMG_data_get1 = signal.filtfilt(b, a, EMG_data_get1, axis=0)
-        EMG_data_get2 = signal.filtfilt(b, a, EMG_data_get2, axis=0)
-        EMG_data_get3 = signal.filtfilt(b, a, EMG_data_get3, axis=0)
+            global sample_sync_EMG_Hypnodyne
+            # Sanitary checks
+            if 'hypnodyne_files_list' not in globals():
+                messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The EEG L.edf file is not selected!")
     
-
-        # Truncate sync period
-        try:
-            EEG_to_sync_period  = sigScript_org[t_sync]
-            EMG_to_sync_period1 = EMG_data_get1[t_sync]
-            EMG_to_sync_period2 = EMG_data_get2[t_sync]
-            EMG_to_sync_period3 = EMG_data_get3[t_sync]
-
-        except IndexError:
-            messagebox.showerror("Dreamento", "IndexError: t_sync not long enough for sync ... Either select another event or adjust t_sync ")
-        
-        # Rectified signal
-        EEG = EEG_to_sync_period        
-        EMG1 = EMG_to_sync_period1
-        EMG2 = EMG_to_sync_period2
-        EMG3 = EMG_to_sync_period3
-
-        
-        # Normalizing signals:
-        scaler = MinMaxScaler()
-        normalized_EEG = scaler.fit_transform([[i] for i in EEG])
-        
-        scaler = MinMaxScaler()
-        normalized_EMG1 = scaler.fit_transform([[i] for i in EMG1])
-        
-        scaler = MinMaxScaler()
-        normalized_EMG2 = scaler.fit_transform([[i] for i in EMG2])
-        
-        scaler = MinMaxScaler()
-        normalized_EMG3 = scaler.fit_transform([[i] for i in EMG3])
-        
-        EEG  = normalized_EEG        
-        EMG1 = normalized_EMG1
-        EMG2 = normalized_EMG2
-        EMG3 = normalized_EMG3
-
-        EEG_Abs  = abs(normalized_EEG)
-        EMG_Abs1 = abs(normalized_EMG1)
-        EMG_Abs2 = abs(normalized_EMG2)
-        EMG_Abs3 = abs(normalized_EMG3)
-        
-        MA_EEG  = self.MA(EEG_Abs, 512)
-        
-        MA_EMG1 = self.MA(EMG_Abs1, 512)
-        MA_EMG2 = self.MA(EMG_Abs2, 512)
-        MA_EMG3 = self.MA(EMG_Abs3, 512)
-
+            elif 'Dreamento_files_list' not in globals():
+                messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .txt file recorded by Dreamento is not selected!")
+                
+            elif 'marker_files_list' not in globals():
+                messagebox.showerror("Dreamento", "Sorry, but a file is missing ...\n The .json file of markers is not selected!")
+                
+            elif 'EMG_files_list' not in globals() and int(self.analysis_signal_options.get()) == 1:
+                messagebox.showerror("Dreamento", "Sorry, but no EMG files is loaded, though the plot EMG check box is activated! Change either of these and try again.")
+                
+            elif str(self.EMG_scale_options_val.get()) == 'Set desired EMG amplitude ...' and int(self.analysis_signal_options.get()) == 1:
+                messagebox.showerror("Dreamento", "Sorry, but a parameter is missing ...\nThe EMG amplitude is not set!")
+                
+            else: 
+                Dreamento_files_list, hypnodyne_files_list, marker_files_list
+                
+                self.ZmaxDondersRecording = Dreamento_files_list[0]    
+                self.HDRecorderRecording  = hypnodyne_files_list[0]
+                self.path_to_json_markers = marker_files_list[0]
+                self.path_to_EMG          = EMG_files_list[0]
+                
+            # Opening JSON file
+            f = open(self.path_to_json_markers,)
             
-        fig, axs = plt.subplots(5, figsize = (10,10))
-        axs[0].set_title('EEG during sync event')
-        axs[0].plot(normalized_EEG, color = 'powderblue')
-        
-        axs[1].set_title('EMG 1 during sync event')
-        axs[1].plot(normalized_EMG1, color = 'plum')
-        
-        axs[2].set_title('EMG 2 during sync event')
-        axs[2].plot(normalized_EMG2, color = 'orchid')
-        
-        axs[3].set_title('EMG 1 - EMG 2 during sync event')
-        axs[3].plot(normalized_EMG3, color = 'thistle')
-        
-        axs[4].set_title('EMG vs EEG (normalized signals)')
-        axs[4].plot(normalized_EEG, color = 'powderblue')
-        axs[4].plot(normalized_EMG1, color = 'plum')
-        axs[4].plot(normalized_EMG2, color = 'orchid')
-        axs[4].plot(normalized_EMG3, color = 'thistle')
-        
-        plt.tight_layout()
-        MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization (recommended to sync further)?',icon = 'warning')
-        plt.show()
-        if MsgBox == 'no':
-            messagebox.showinfo("Information",f"OK! Now we proceed with the main analysis ... Please click on OK and wait ...")
-            self.flag_sync_EEG_EMG = False
-        if MsgBox == 'yes':
-            self.flag_sync_EEG_EMG = True
-            print('Proceeding to synchronization process ...')
-            while True:
-                MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
-                if MsgBox == 'yes':
-                    
-                    # close previous plot 
-                    plt.close()
-                    
-                    fig, axs = plt.subplots(6, figsize = (15,10))
-                    axs[0].plot(EEG_Abs, color = 'powderblue')
-                    axs[0].plot(MA_EEG, color = 'olive', linewidth=3)
-                    axs[0].set_title('EEG', fontsize = 10)
-                    
-                    axs[1].plot(EMG_Abs1, color = 'plum')
-                    axs[1].plot(MA_EMG1, color = 'purple', linewidth=3)
-                    axs[1].set_title('EMG1' , fontsize = 10)
-                    
-                    axs[2].plot(EMG_Abs2, color = 'orchid')
-                    axs[2].plot(MA_EMG2, color = 'slateblue', linewidth=3)
-                    axs[2].set_title('EMG2', fontsize = 10)
-                    
-                    axs[3].plot(EMG_Abs3, color = 'thistle')
-                    axs[3].plot(MA_EMG3, color = 'blueviolet', linewidth=3)
-                    axs[3].set_title('EMG1 - EMG2', fontsize = 10)
-                    
+            print('reading annotation file ...')
+            # returns JSON object as a dictionary
+            markers = json.load(f)
+            markers_details = list(markers.values())
+            marker_keys = list(markers.keys())
+    
+            clench_event = []
+            counter_sync = []
+            time_sync_event = []
+            sync_event_is_selected = 0
+            self.all_markers = []
+            self.all_timestamp_markers = []
+            self.all_markers_with_timestamps = []
+            for counter, marker in enumerate(markers.values()):
+                self.all_markers.append(marker)
+                
+            for counter, marker in enumerate(markers.keys()):
+                self.all_timestamp_markers.append(marker)
+            
+            for i in np.arange(len(self.all_markers)):
+                self.all_markers_with_timestamps.append(self.all_markers[i]+ '__'+ self.all_timestamp_markers[i])
+            self.select_marker_for_sync()
+    
+            self.selected_marker = self.markers_sync_event.get()
+    
+            messagebox.showinfo('syncing in process', f'The syncing event has been selected. Please wait for sync window to pop up.')
+            print(f'lets split the marker into ... {self.selected_marker.split()}')
+            time_sync_event.append(int(self.selected_marker.split()[-1]))
     # =============================================================================
-    #                 x = EEG_Abs
-    #                 y = EMG_Abs
+    #         for counter, marker in enumerate(markers.values()):
+    #             try:
+    #                 if marker.split()[0] == 'clench' or marker.split()[0] == 'Clench':
+    #                     print(marker.split())
+    #                     counter_sync.append(counter)
+    #                     
+    #             except:
+    #                 print(f'an exception occured for marker = {marker}')
+    #                 continue
+    #         print(counter_sync)
+    #         
+    #         for counter, marker in enumerate(markers.keys()):
+    #             if counter in counter_sync:
+    #                 time_sync_event.append(int(marker.split()[-1]))
+    # 
     # =============================================================================
-                    x = MA_EEG
-                    y = MA_EMG3                
+            print('Loading EEG file ... Please wait')                            
+            path_Txt = self.ZmaxDondersRecording
     
-                    N = max(len(x), len(y))
-                    n = min(len(x), len(y))
+            sigScript = np.loadtxt(path_Txt, delimiter=',')
     
-                    if N == len(y):
-                        lags = np.arange(-N + 1, n)
+            sigScript_org = sigScript
+            sigScript_org_R = sigScript[:, 0]
+            sigScript_org = sigScript_org[:, 1]
     
-                    else:
-                        lags = np.arange(-n + 1, N)
+            # Read EMG
+            print('Loading EEG file ... Please wait')
+            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+                
+                EMG_data = mne.io.read_raw_brainvision(self.path_to_EMG , preload = True)
     
-                    c = signal.correlate(x / np.std(x), y / np.std(y), 'full')
+            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+                EMG_data = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
+                                
+            
+            print('EEG and EMG imported successfully')
+            # Read annotations
+            
+            # Reading sampling frequencies
+            EMG_sf = int(EMG_data.info['sfreq'])
+            EEG_sf = 256   
+            print(f'samlping frequency of EMG and EEG are: {EMG_sf} , {EEG_sf} Hz, respectively ... ')
+           
+            if EEG_sf < EMG_sf:
+                print(f'resampling EMG to {EEG_sf} Hz ...')
+                EMG_data.resample(EEG_sf)
+            
+            EMG_data_get = EMG_data.get_data()
+            EMG_data_get1 = EMG_data_get[0,:] * 1e6
+            EMG_data_get2 = EMG_data_get[1,:] * 1e6
+            EMG_data_get3 = EMG_data_get1 - EMG_data_get2
+            
+            #Filtering 
+            sigScript_org   = self.butter_bandpass_filter(data = sigScript_org, lowcut=10, highcut=100, fs = 256, order = 2)
+            EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=10, highcut=100, fs = 256, order = 2)
+            EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=10, highcut=100, fs = 256, order = 2)
+            EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=10, highcut=100, fs = 256, order = 2)
+            t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*30)
     
+            # notch filtering
+            notch_freq = 50  # set the notch frequency to 50 Hz
     
-                    axs[4].plot(lags, c / n, color='k', label="Cross-correlation")
+            # Create the notch filter
+            q = 30  # quality factor
+            b, a = signal.iirnotch(notch_freq, q, EEG_sf)
+            
+            # Apply the notch filter to the data
+            EMG_data_get1 = signal.filtfilt(b, a, EMG_data_get1, axis=0)
+            EMG_data_get2 = signal.filtfilt(b, a, EMG_data_get2, axis=0)
+            EMG_data_get3 = signal.filtfilt(b, a, EMG_data_get3, axis=0)
+        
     
-                    axs[4].set_title('Cross-correlation')
+            # Truncate sync period
+            try:
+                EEG_to_sync_period  = sigScript_org[t_sync]
+                EMG_to_sync_period1 = EMG_data_get1[t_sync]
+                EMG_to_sync_period2 = EMG_data_get2[t_sync]
+                EMG_to_sync_period3 = EMG_data_get3[t_sync]
     
+            except IndexError:
+                messagebox.showerror("Dreamento", "IndexError: t_sync not long enough for sync ... Either select another event or adjust t_sync ")
+            
+            # Rectified signal
+            EEG = EEG_to_sync_period        
+            EMG1 = EMG_to_sync_period1
+            EMG2 = EMG_to_sync_period2
+            EMG3 = EMG_to_sync_period3
     
-                    corr2 = np.correlate(x, y, "full")
-                    lag2 = np.argmax(corr2)
+            
+            # Normalizing signals:
+            scaler = MinMaxScaler()
+            normalized_EEG = scaler.fit_transform([[i] for i in EEG])
+            
+            scaler = MinMaxScaler()
+            normalized_EMG1 = scaler.fit_transform([[i] for i in EMG1])
+            
+            scaler = MinMaxScaler()
+            normalized_EMG2 = scaler.fit_transform([[i] for i in EMG2])
+            
+            scaler = MinMaxScaler()
+            normalized_EMG3 = scaler.fit_transform([[i] for i in EMG3])
+            
+            EEG  = normalized_EEG        
+            EMG1 = normalized_EMG1
+            EMG2 = normalized_EMG2
+            EMG3 = normalized_EMG3
     
-                    samples_before_begin = lag2 + 1 - len(y)
-                    samples_after_end = len(x) - samples_before_begin - len(y)
-                    index_start_script = samples_before_begin
-                    index_end_script = len(x) - samples_after_end
-                    print(f"samples_before_begin {samples_before_begin}")
-                    print(f"samples_after_end {samples_after_end}")
-                    print(f"index_start_script {index_start_script}")
-                    print(f"index_end_script {index_end_script}")
-                    
-                    
-                    
-                    if samples_before_begin < 0:
-                        axs[5].plot(EEG, color ='powderblue')
-                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
-                        
-                        axs[5].plot(EMG1[-samples_before_begin:], color = 'plum')
-                        axs[5].plot(MA_EMG1[-samples_before_begin:], color = 'purple', linewidth=3)
-                        
-                        axs[5].plot(EMG2[-samples_before_begin:], color = 'orchid')
-                        axs[5].plot(MA_EMG2[-samples_before_begin:], color = 'slateblue', linewidth=3)
-                        
-                        axs[5].plot(EMG3[-samples_before_begin:], color = 'thistle')
-                        axs[5].plot(MA_EMG3[-samples_before_begin:], color = 'blueviolet', linewidth=3)
-                        
-                        axs[5].set_title('EEG and EMG after sync', fontsize = 10)
-                        
-                        self.samples_before_begin_EMG_Dreamento = -samples_before_begin
-                        self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
-                    else:
-                        
-                        tmp = np.zeros(samples_before_begin)
-                        
-                        synced_EMG1 = np.append(tmp, EMG1)
-                        synced_EMG_MA1 = np.append(tmp, MA_EMG1)
-                        
-                        synced_EMG2 = np.append(tmp, EMG2)
-                        synced_EMG_MA2 = np.append(tmp, MA_EMG2)
-                        
-                        synced_EMG3 = np.append(tmp, EMG3)
-                        synced_EMG_MA3 = np.append(tmp, MA_EMG3)
-                        
-                        axs[5].plot(synced_EMG1, color = 'plum')
-                        axs[5].plot(synced_EMG_MA1, color = 'purple', linewidth=3)
-                        
-                        axs[5].plot(synced_EMG2, color = 'orchid')
-                        axs[5].plot(synced_EMG_MA2, color = 'slateblue', linewidth=3)
-                        
-                        axs[5].plot(synced_EMG3, color = 'thistle')
-                        axs[5].plot(synced_EMG_MA3, color = 'blueviolet', linewidth=3)
-                        
-                        axs[5].plot(EEG, color ='powderblue')
-                        axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
-                        
-                        axs[5].set_title('EEG and EMG after sync', fontsize = 10)
-                        self.samples_before_begin_EMG_Dreamento = tmp
-                        self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_earlier'
-                        
-                    plt.tight_layout()
-                    MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
-                    if MsgBox == 'yes':
-                        messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Click on OK and wait ...")
-                        plt.show()
-                        break
-                        
-                else: 
-                    MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
+            EEG_Abs  = abs(normalized_EEG)
+            EMG_Abs1 = abs(normalized_EMG1)
+            EMG_Abs2 = abs(normalized_EMG2)
+            EMG_Abs3 = abs(normalized_EMG3)
+            
+            MA_EEG  = self.MA(EEG_Abs, 512)
+            
+            MA_EMG1 = self.MA(EMG_Abs1, 512)
+            MA_EMG2 = self.MA(EMG_Abs2, 512)
+            MA_EMG3 = self.MA(EMG_Abs3, 512)
+    
+                
+            fig, axs = plt.subplots(5, figsize = (10,10))
+            axs[0].set_title('EEG during sync event')
+            axs[0].plot(normalized_EEG, color = 'powderblue')
+            
+            axs[1].set_title('EMG 1 during sync event')
+            axs[1].plot(normalized_EMG1, color = 'plum')
+            
+            axs[2].set_title('EMG 2 during sync event')
+            axs[2].plot(normalized_EMG2, color = 'orchid')
+            
+            axs[3].set_title('EMG 1 - EMG 2 during sync event')
+            axs[3].plot(normalized_EMG3, color = 'thistle')
+            
+            axs[4].set_title('EMG vs EEG (normalized signals)')
+            axs[4].plot(normalized_EEG, color = 'powderblue')
+            axs[4].plot(normalized_EMG1, color = 'plum')
+            axs[4].plot(normalized_EMG2, color = 'orchid')
+            axs[4].plot(normalized_EMG3, color = 'thistle')
+            
+            plt.tight_layout()
+            MsgBox = tk.messagebox.askquestion ('EEG vs EMG synchronization','Look at the data during sync period. Does the data require further synchronization (recommended to sync further)?',icon = 'warning')
+            plt.show()
+            if MsgBox == 'no':
+                messagebox.showinfo("Information",f"OK! Now we proceed with the main analysis ... Please click on OK and wait ...")
+                self.flag_sync_EEG_EMG = False
+            if MsgBox == 'yes':
+                self.flag_sync_EEG_EMG = True
+                print('Proceeding to synchronization process ...')
+                while True:
+                    MsgBox = tk.messagebox.askquestion ('Synchronization?','Proceed to automatic synchronization? For manual sync, press No.',icon = 'warning')
                     if MsgBox == 'yes':
                         
                         # close previous plot 
                         plt.close()
                         
-                        # Truncate sync period
-                        self.EEG = EEG
-                        self.EMG1 = EMG1
-                        self.EMG2 = EMG2
-                        self.EMG3 = EMG3
+                        fig, axs = plt.subplots(6, figsize = (15,10))
+                        axs[0].plot(EEG_Abs, color = 'powderblue')
+                        axs[0].plot(MA_EEG, color = 'olive', linewidth=3)
+                        axs[0].set_title('EEG', fontsize = 10)
                         
-                        # Rectified signal
-                        self.EEG_Abs  = EEG_Abs
-                        self.EMG_Abs1 = EMG_Abs1
-                        self.EMG_Abs2 = EMG_Abs2                        
-                        self.EMG_Abs3 = EMG_Abs3
+                        axs[1].plot(EMG_Abs1, color = 'plum')
+                        axs[1].plot(MA_EMG1, color = 'purple', linewidth=3)
+                        axs[1].set_title('EMG1' , fontsize = 10)
                         
-                        # defining points to be selected by cursor for sync
-                        self.points = []
-                        self.n = 2
-        
-                        self.fig, self.axs = plt.subplots(5 ,figsize=(15, 10))
-                        line = self.axs[0].plot(self.EEG, picker=2, color = 'powderblue')
-                        self.axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
+                        axs[2].plot(EMG_Abs2, color = 'orchid')
+                        axs[2].plot(MA_EMG2, color = 'slateblue', linewidth=3)
+                        axs[2].set_title('EMG2', fontsize = 10)
                         
-                        self.MA_EEG  = MA_EEG
-                        self.MA_EMG1 = MA_EMG1
-                        self.MA_EMG2 = MA_EMG2
-                        self.MA_EMG3 = MA_EMG3
+                        axs[3].plot(EMG_Abs3, color = 'thistle')
+                        axs[3].plot(MA_EMG3, color = 'blueviolet', linewidth=3)
+                        axs[3].set_title('EMG1 - EMG2', fontsize = 10)
+                        
+        # =============================================================================
+        #                 x = EEG_Abs
+        #                 y = EMG_Abs
+        # =============================================================================
+                        x = MA_EEG
+                        y = MA_EMG3                
         
-                        self.axs[0].set_xlim([0,len(self.EMG1)])
-                        self.axs[1].set_xlim([0,len(self.EMG1)])
-                        self.axs[2].set_xlim([0,len(self.EMG1)])
-                        self.axs[3].set_xlim([0,len(self.EMG1)])
-                        self.axs[4].set_xlim([0,len(self.EMG1)])
+                        N = max(len(x), len(y))
+                        n = min(len(x), len(y))
         
-                        self.axs[0].set_ylabel('Lag (samples)')
+                        if N == len(y):
+                            lags = np.arange(-N + 1, n)
         
-                        line = self.axs[1].plot(self.EMG_Abs1, picker=2, color = 'plum')
-                        line = self.axs[2].plot(self.EMG_Abs2, picker=2, color = 'orchid')
-                        line = self.axs[3].plot(self.EMG_Abs3, picker=2, color = 'thistle')
+                        else:
+                            lags = np.arange(-n + 1, N)
+        
+                        c = signal.correlate(x / np.std(x), y / np.std(y), 'full')
+        
+        
+                        axs[4].plot(lags, c / n, color='k', label="Cross-correlation")
+        
+                        axs[4].set_title('Cross-correlation')
+        
+        
+                        corr2 = np.correlate(x, y, "full")
+                        lag2 = np.argmax(corr2)
+        
+                        samples_before_begin = lag2 + 1 - len(y)
+                        samples_after_end = len(x) - samples_before_begin - len(y)
+                        index_start_script = samples_before_begin
+                        index_end_script = len(x) - samples_after_end
+                        print(f"samples_before_begin {samples_before_begin}")
+                        print(f"samples_after_end {samples_after_end}")
+                        print(f"index_start_script {index_start_script}")
+                        print(f"index_end_script {index_end_script}")
+                        
+                        
+                        
+                        if samples_before_begin < 0:
+                            axs[5].plot(EEG, color ='powderblue')
+                            axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
+                            
+                            axs[5].plot(EMG1[-samples_before_begin:], color = 'plum')
+                            axs[5].plot(MA_EMG1[-samples_before_begin:], color = 'purple', linewidth=3)
+                            
+                            axs[5].plot(EMG2[-samples_before_begin:], color = 'orchid')
+                            axs[5].plot(MA_EMG2[-samples_before_begin:], color = 'slateblue', linewidth=3)
+                            
+                            axs[5].plot(EMG3[-samples_before_begin:], color = 'thistle')
+                            axs[5].plot(MA_EMG3[-samples_before_begin:], color = 'blueviolet', linewidth=3)
+                            
+                            axs[5].set_title('EEG and EMG after sync', fontsize = 10)
+                            
+                            self.samples_before_begin_EMG_Dreamento = -samples_before_begin
+                            self.flag_sign_samples_before_begin_EMG_Dreamento = 'eeg_event_earlier'
+                        else:
+                            
+                            tmp = np.zeros(samples_before_begin)
+                            
+                            synced_EMG1 = np.append(tmp, EMG1)
+                            synced_EMG_MA1 = np.append(tmp, MA_EMG1)
+                            
+                            synced_EMG2 = np.append(tmp, EMG2)
+                            synced_EMG_MA2 = np.append(tmp, MA_EMG2)
+                            
+                            synced_EMG3 = np.append(tmp, EMG3)
+                            synced_EMG_MA3 = np.append(tmp, MA_EMG3)
+                            
+                            axs[5].plot(synced_EMG1, color = 'plum')
+                            axs[5].plot(synced_EMG_MA1, color = 'purple', linewidth=3)
+                            
+                            axs[5].plot(synced_EMG2, color = 'orchid')
+                            axs[5].plot(synced_EMG_MA2, color = 'slateblue', linewidth=3)
+                            
+                            axs[5].plot(synced_EMG3, color = 'thistle')
+                            axs[5].plot(synced_EMG_MA3, color = 'blueviolet', linewidth=3)
+                            
+                            axs[5].plot(EEG, color ='powderblue')
+                            axs[5].plot(MA_EEG, color = 'olive', linewidth=3)
+                            
+                            axs[5].set_title('EEG and EMG after sync', fontsize = 10)
+                            self.samples_before_begin_EMG_Dreamento = tmp
+                            self.flag_sign_samples_before_begin_EMG_Dreamento = 'emg_earlier'
+                            
                         plt.tight_layout()
-                        plt.show()
-                        self.fig.canvas.mpl_connect('pick_event', self.onpick)
                         MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
                         if MsgBox == 'yes':
-                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please click on OK and wait ...")
+                            messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Click on OK and wait ...")
                             plt.show()
                             break
+                            
+                    else: 
+                        MsgBox = tk.messagebox.askquestion ('Synchronization?','Do you want to manually synchronize data?',icon = 'warning')
+                        if MsgBox == 'yes':
+                            
+                            # close previous plot 
+                            plt.close()
+                            
+                            # Truncate sync period
+                            self.EEG = EEG
+                            self.EMG1 = EMG1
+                            self.EMG2 = EMG2
+                            self.EMG3 = EMG3
+                            
+                            # Rectified signal
+                            self.EEG_Abs  = EEG_Abs
+                            self.EMG_Abs1 = EMG_Abs1
+                            self.EMG_Abs2 = EMG_Abs2                        
+                            self.EMG_Abs3 = EMG_Abs3
+                            
+                            # defining points to be selected by cursor for sync
+                            self.points = []
+                            self.n = 2
+            
+                            self.fig, self.axs = plt.subplots(5 ,figsize=(15, 10))
+                            line = self.axs[0].plot(self.EEG, picker=2, color = 'powderblue')
+                            self.axs[0].set_title('Manual drift estimation ... \nPlease click on two points to create the estimate line ...')
+                            
+                            self.MA_EEG  = MA_EEG
+                            self.MA_EMG1 = MA_EMG1
+                            self.MA_EMG2 = MA_EMG2
+                            self.MA_EMG3 = MA_EMG3
+            
+                            self.axs[0].set_xlim([0,len(self.EMG1)])
+                            self.axs[1].set_xlim([0,len(self.EMG1)])
+                            self.axs[2].set_xlim([0,len(self.EMG1)])
+                            self.axs[3].set_xlim([0,len(self.EMG1)])
+                            self.axs[4].set_xlim([0,len(self.EMG1)])
+            
+                            self.axs[0].set_ylabel('Lag (samples)')
+            
+                            line = self.axs[1].plot(self.EMG_Abs1, picker=2, color = 'plum')
+                            line = self.axs[2].plot(self.EMG_Abs2, picker=2, color = 'orchid')
+                            line = self.axs[3].plot(self.EMG_Abs3, picker=2, color = 'thistle')
+                            plt.tight_layout()
+                            plt.show()
+                            self.fig.canvas.mpl_connect('pick_event', self.onpick)
+                            MsgBox = tk.messagebox.askquestion ('Satisfying results?','Are the results satisfying? If not click on No to try again with the other method.',icon = 'warning')
+                            if MsgBox == 'yes':
+                                messagebox.showinfo("Information",f"Perfect! Now we proceed with the main analysis ... Please click on OK and wait ...")
+                                plt.show()
+                                break
+                            
+             
+            self.ppg_path = hypnodyne_files_list[0].split('EEG')[0] + 'OXY_IR_AC.edf'
+            self.ppg_obj = mne.io.read_raw_edf(self.ppg_path)
+            self.ppg_data = self.ppg_obj.get_data()[0]
+            self.ppg_data = self.butter_bandpass_filter(data = self.ppg_data, lowcut=.3, highcut=100, fs = 256, order = 2)
+                
+            # Loading all available data            
+            self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
+            self.noise_obj = mne.io.read_raw_edf(self.noise_path)
+            self.noise_data = self.noise_obj.get_data()[0]
+            
+            # Acc
+            self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
+            self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
+            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+            
+            self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
+            self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
+            self.acc_z_obj = mne.io.read_raw_edf(self.acc_z_path)
+            
+            self.acc_x = self.acc_x_obj.get_data()[0]
+            self.acc_y = self.acc_y_obj.get_data()[0]
+            self.acc_z = self.acc_z_obj.get_data()[0]
+            
+            data = mne.io.read_raw_edf(self.HDRecorderRecording)
+            raw_data = data.get_data()
+            self.sigHDRecorder = np.ravel(raw_data)
+            
+            data_r = mne.io.read_raw_edf(self.HDRecorderRecording.split('EEG L.edf')[0] + 'EEG R.edf')
+            raw_data_r = data_r.get_data()
+            self.sigHDRecorder_r = np.ravel(raw_data_r)
+                    
+            print('Acceleration and noise data imported successfully ...')
+            
+            self.samples_before_begin, self.sigHDRecorder_org_synced, self.sigScript_org, self.sigScript_org_R = self.calculate_lag(
+                                   plot=(int(self.plot_sync_output.get()) ==1) , path_EDF=self.HDRecorderRecording,\
+                                   path_Txt=self.ZmaxDondersRecording,\
+                                   T = 30,\
+                                   t_start_sync = 100,\
+                                   t_end_sync   = 200)
+            print('The lag between Dreamento and Hypndoyne EEG computed ...')
+            # Filter?
+            if int(self.is_filtering.get()) == 1: 
+                print('Bandpass filtering (.3-30 Hz) started')
+                self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
+                self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
+                self.sigHDRecorder   = self.butter_bandpass_filter(data = self.sigHDRecorder, lowcut=.3, highcut=30, fs = 256, order = 2)
+                self.sigHDRecorder_r = self.butter_bandpass_filter(data = self.sigHDRecorder_r, lowcut=.3, highcut=30, fs = 256, order = 2)
+                print('Band-pass filter applied to data ...')
+            else:
+                print('No filtering applied ...')
+    
+            # Plot psd?
+            if int(self.plot_psd.get()) == 1:
+                print('plotting peridogram ...')
+                self.plot_welch_periodogram(data = self.sigScript_org, sf = 256, win_size = 5)
+                print('PSD plotted ...')
+                
+            # Plot EMG as well?
+            print('Loading the main window of Dreamento ... Please wait')
+            if int(self.analysis_signal_options.get()) == 1:
+                fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
+                                                 path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
+                                                 markers_to_show = ['light', 'manual', 'sound'],\
+                                                 win_sec=30, fmin=0.5, fmax=25,\
+                                                 trimperc=5, cmap='RdBu_r', add_colorbar = False)
+                    
+            else:
+                    fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR_noEMG(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
+                                                 path_to_json_markers=self.path_to_json_markers,\
+                                                 markers_to_show = ['light', 'manual', 'sound'],\
+                                                 win_sec=30, fmin=0.5, fmax=25,\
+                                                 trimperc=5, cmap='RdBu_r', add_colorbar = False)
+            # Activate save section
+            if int(self.is_autoscoring.get()) == 1: 
+                self.create_save_options_autoscoring()
+                
+            # Create export option
+            self.create_save_options()
+            
+        #### IF brainproducts analysis:
+        elif int(self.analysis_signal_options.get()) == 4:
                         
-         
-        self.ppg_path = hypnodyne_files_list[0].split('EEG')[0] + 'OXY_IR_AC.edf'
-        self.ppg_obj = mne.io.read_raw_edf(self.ppg_path)
-        self.ppg_data = self.ppg_obj.get_data()[0]
-        self.ppg_data = self.butter_bandpass_filter(data = self.ppg_data, lowcut=.3, highcut=100, fs = 256, order = 2)
-            
-        # Loading all available data            
-        self.noise_path = hypnodyne_files_list[0].split('EEG')[0] + 'NOISE.edf'
-        self.noise_obj = mne.io.read_raw_edf(self.noise_path)
-        self.noise_data = self.noise_obj.get_data()[0]
-        
-        # Acc
-        self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
-        self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
-        self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
-        
-        self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
-        self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
-        self.acc_z_obj = mne.io.read_raw_edf(self.acc_z_path)
-        
-        self.acc_x = self.acc_x_obj.get_data()[0]
-        self.acc_y = self.acc_y_obj.get_data()[0]
-        self.acc_z = self.acc_z_obj.get_data()[0]
-        
-        data = mne.io.read_raw_edf(self.HDRecorderRecording)
-        raw_data = data.get_data()
-        self.sigHDRecorder = np.ravel(raw_data)
-        
-        data_r = mne.io.read_raw_edf(self.HDRecorderRecording.split('EEG L.edf')[0] + 'EEG R.edf')
-        raw_data_r = data_r.get_data()
-        self.sigHDRecorder_r = np.ravel(raw_data_r)
+            print(f'selected option is {self.analysis_signal_options.get()}')
+            # Sanitary checks
+            if 'EMG_files_list' not in globals():
+                messagebox.showerror("Dreamento", "Sorry, but the .vhdr file has not been loaded!")
                 
-        print('Acceleration and noise data imported successfully ...')
-        
-        self.samples_before_begin, self.sigHDRecorder_org_synced, self.sigScript_org, self.sigScript_org_R = self.calculate_lag(
-                               plot=(int(self.plot_sync_output.get()) ==1) , path_EDF=self.HDRecorderRecording,\
-                               path_Txt=self.ZmaxDondersRecording,\
-                               T = 30,\
-                               t_start_sync = 100,\
-                               t_end_sync   = 200)
-        print('The lag between Dreamento and Hypndoyne EEG computed ...')
-        # Filter?
-        if int(self.is_filtering.get()) == 1: 
-            print('Bandpass filtering (.3-30 Hz) started')
-            self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
-            self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
-            print('Band-pass filter applied to data ...')
-        else:
-            print('No filtering applied ...')
+            else:
+                EMG_files_list
+                
+                print(f'Analyzing BrainProducts data from {EMG_files_list}')
+                
+            self.path_to_EMG          = EMG_files_list[0]
+                
+            self.raw_BrainProducts = mne.io.read_raw_brainvision(self.path_to_EMG, preload = True)
+            
+            self.fs_BrainProducts       = self.raw_BrainProducts.info['sfreq'] 
+            print(f'Sampling frequency is {self.fs_BrainProducts} Hz')
+            self.ch_names_BrainProducts = self.raw_BrainProducts.info['ch_names'] 
+            
+            self.BrainProducts_channel_selector()
+            
+            ################ AUTOSCORING
+            # Concatenate the new channel with the original raw data
+            desired_EEG_channels_autoscoring  = [str(self.autoscoring_BrainProducts_EEG_main_val.get()), str(self.autoscoring_BrainProducts_EEG_ref_val.get())]
+            desired_EOG_channels_autoscoring  = [str(self.autoscoring_BrainProducts_EOG_main_val.get()), str(self.autoscoring_BrainProducts_EOG_ref_val.get())]
+            desired_EMG_channels_autoscoring  = [str(self.autoscoring_BrainProducts_EMG_main_val.get()), str(self.autoscoring_BrainProducts_EMG_ref_val.get())]
+            desired_channels_autoscoring = desired_EEG_channels_autoscoring + desired_EOG_channels_autoscoring + desired_EMG_channels_autoscoring
+            
+            ch_indices_autoscoring = [self.raw_BrainProducts.ch_names.index(ch) for ch in desired_channels_autoscoring]
 
-        # Plot psd?
-        if int(self.plot_psd.get()) == 1:
-            print('plotting peridogram ...')
-            self.plot_welch_periodogram(data = self.sigScript_org, sf = 256, win_size = 5)
-            print('PSD plotted ...')
+            # Compute the derivation data
+            derivation_data_eeg_autoscoring = self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[0]) - self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[1])
+            derivation_data_eog_autoscoring = self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[2]) - self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[3])
+            derivation_data_emg_autoscoring = self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[4]) - self.raw_BrainProducts.get_data(picks=ch_indices_autoscoring[5])
             
-        # Plot EMG as well?
-        print('Loading the main window of Dreamento ... Please wait')
-        if int(self.analysis_signal_options.get()) == 1:
-            fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
-                                             path_to_json_markers=self.path_to_json_markers,EMG_path=self.path_to_EMG,\
-                                             markers_to_show = ['light', 'manual', 'sound'],\
-                                             win_sec=30, fmin=0.5, fmax=25,\
-                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
+            # Create an info object for the derivation channel
+            derivation_info_EEG_autoscoring = mne.create_info(['EEG ' + desired_channels_autoscoring[0] + '-' + desired_channels_autoscoring[1]], self.raw_BrainProducts.info['sfreq'], ch_types='eeg')
+            derivation_info_EOG_autoscoring = mne.create_info(['EOG ' + desired_channels_autoscoring[2] + '-' + desired_channels_autoscoring[3]], self.raw_BrainProducts.info['sfreq'], ch_types='eog')
+            derivation_info_EMG_autoscoring = mne.create_info(['EMG ' + desired_channels_autoscoring[4] + '-' + desired_channels_autoscoring[5]], self.raw_BrainProducts.info['sfreq'], ch_types='emg')
+            
+            # Create an Evoked object for the derivation data
+            derivation_evoked_EEG_autoscoring = mne.io.RawArray(data=derivation_data_eeg_autoscoring, info=derivation_info_EEG_autoscoring)
+            derivation_evoked_EOG_autoscoring = mne.io.RawArray(data=derivation_data_eog_autoscoring, info=derivation_info_EOG_autoscoring)
+            derivation_evoked_EMG_autoscoring = mne.io.RawArray(data=derivation_data_emg_autoscoring, info=derivation_info_EMG_autoscoring)
+            
+            # Adding new derivations
+            self.raw_BrainProducts.add_channels([derivation_evoked_EEG_autoscoring], force_update_info=True)
+            self.raw_BrainProducts.add_channels([derivation_evoked_EOG_autoscoring], force_update_info=True)
+            self.raw_BrainProducts.add_channels([derivation_evoked_EMG_autoscoring], force_update_info=True)
+            
+            ################ PLOTTING
+            desired_EEG_channels_plotting  = [str(self.plotting_BrainProducts_EEG_main_val.get()), str(self.plotting_BrainProducts_EEG_ref_val.get())]
+            desired_EOG_channels_plotting  = [str(self.plotting_BrainProducts_EOG_main_val.get()), str(self.plotting_BrainProducts_EOG_ref_val.get())]
+            desired_EMG_channels_plotting  = [str(self.plotting_BrainProducts_EMG_main_val.get()), str(self.plotting_BrainProducts_EMG_ref_val.get())]
+            desired_channels_plotting      = desired_EEG_channels_plotting + desired_EOG_channels_plotting + desired_EMG_channels_plotting
+            
+            ch_indices_plotting = [self.raw_BrainProducts.ch_names.index(ch) for ch in desired_channels_plotting]
+            
+            # Compute the derivation data
+            derivation_data_eeg_plotting = self.raw_BrainProducts.get_data(picks=ch_indices_plotting[0]) - self.raw_BrainProducts.get_data(picks=ch_indices_plotting[1])
+            derivation_data_eog_plotting = self.raw_BrainProducts.get_data(picks=ch_indices_plotting[2]) - self.raw_BrainProducts.get_data(picks=ch_indices_plotting[3])
+            derivation_data_emg_plotting = self.raw_BrainProducts.get_data(picks=ch_indices_plotting[4]) - self.raw_BrainProducts.get_data(picks=ch_indices_plotting[5])
+            
+            # Create an info object for the derivation channel
+            derivation_info_EEG_plotting = mne.create_info(['EEG ' + desired_channels_plotting[0] + '-' + desired_channels_plotting[1]], self.raw_BrainProducts.info['sfreq'], ch_types='eeg')
+            derivation_info_EOG_plotting = mne.create_info(['EOG ' + desired_channels_plotting[2] + '-' + desired_channels_plotting[3]], self.raw_BrainProducts.info['sfreq'], ch_types='eog')
+            derivation_info_EMG_plotting = mne.create_info(['EMG ' + desired_channels_plotting[4] + '-' + desired_channels_plotting[5]], self.raw_BrainProducts.info['sfreq'], ch_types='emg')
+            
+            # Create an Evoked object for the derivation data
+            derivation_evoked_EEG_plotting = mne.io.RawArray(data=derivation_data_eeg_plotting, info=derivation_info_EEG_plotting)
+            derivation_evoked_EOG_plotting = mne.io.RawArray(data=derivation_data_eog_plotting, info=derivation_info_EOG_plotting)
+            derivation_evoked_EMG_plotting = mne.io.RawArray(data=derivation_data_emg_plotting, info=derivation_info_EMG_plotting)
+            
+            # Adding new derivations
+            self.raw_BrainProducts.add_channels([derivation_evoked_EEG_plotting], force_update_info=True)
+            self.raw_BrainProducts.add_channels([derivation_evoked_EOG_plotting], force_update_info=True)
+            self.raw_BrainProducts.add_channels([derivation_evoked_EMG_plotting], force_update_info=True)
+            
+            print('channels have been added')
+            print('Initiating YASA sleep staging ...')
+
+            sls = yasa.SleepStaging(self.raw_BrainProducts, eeg_name=derivation_info_EEG_autoscoring.ch_names[0],\
+                                    eog_name = derivation_info_EOG_autoscoring.ch_names[0],\
+                                    emg_name = derivation_info_EMG_autoscoring.ch_names[0])
                 
-        else:
-                fig, markers_details = self.AssignMarkersToRecordedData_EEG_TFR_noEMG(data = self.sigScript_org, data_R = self.sigScript_org_R, sf = 256,\
-                                             path_to_json_markers=self.path_to_json_markers,\
-                                             markers_to_show = ['light', 'manual', 'sound'],\
-                                             win_sec=30, fmin=0.5, fmax=25,\
-                                             trimperc=5, cmap='RdBu_r', add_colorbar = False)
-        # Activate save section
-        if int(self.is_autoscoring.get()) == 1: 
-            self.create_save_options_autoscoring()
+            self.hypno_pred = sls.predict()  # Predict the sleep stages
+            self.hypno_pred = yasa.hypno_str_to_int(self.hypno_pred)  # Convert "W" to 0, "N1" to 1, etc
+            print(f'prediction hypnogram of size {np.shape(self.hypno_pred)} has been made!')
             
-        # Create export option
-        self.create_save_options()
+
+            # Plotting
+            print('preparing the TFR ...')
+            old_fontsize = plt.rcParams['font.size']
+            plt.rcParams.update({'font.size': 12})
+            #plt.rcParams["figure.autolayout"] = True
+
+            # Initialize lists to store channel indices for EMG and non-EMG channels
+            emg_channels = []
+            ecg_channels = []
+            exg_channels = []
+            other_channels = []
+            
+            # Separate EMG and non-EMG channels based on the channel name
+            for idx, channel_name in enumerate(self.ch_names_BrainProducts):
+                if channel_name.startswith('EMG'):
+                    emg_channels.append(idx)
+                    print(f'Channel {idx} detected as EMG --> filtering 10 - 100 Hz')
+                
+                elif channel_name.startswith('ECG'):
+                    ecg_channels.append(idx)
+                    print(f'Channel {idx} detected as ECG --> no filtering applied')
+                    
+                elif channel_name.startswith('x'):
+                    exg_channels.append(idx)
+                    print(f'Channel {idx} detected as ExG --> no filtering applied')
+                    
+                else:
+                    other_channels.append(idx)
+                    print(f'Channel {idx} detected as non-EMG --> filtering .1 - 40 Hz')
+            
+            # Apply frequency filters directly to the Raw object
+            self.raw_BrainProducts.filter(l_freq=10, h_freq=100, picks=emg_channels)
+            self.raw_BrainProducts.filter(l_freq=0.3, h_freq=40, picks=other_channels)
+            
+            data_TFR   = self.raw_BrainProducts.get_data()[ch_indices_plotting[0], :] - self.raw_BrainProducts.get_data()[ch_indices_plotting[1], :]
+            data_plot1 = data_TFR
+            data_plot2 = self.raw_BrainProducts.get_data()[ch_indices_plotting[2], :] - self.raw_BrainProducts.get_data()[ch_indices_plotting[3], :]
+            data_plot3 = self.raw_BrainProducts.get_data()[ch_indices_plotting[4], :] - self.raw_BrainProducts.get_data()[ch_indices_plotting[5], :]
+            
+            data_autoscoring1 = self.raw_BrainProducts.get_data()[ch_indices_autoscoring[0], :] - self.raw_BrainProducts.get_data()[ch_indices_autoscoring[1], :]
+            data_autoscoring2 = self.raw_BrainProducts.get_data()[ch_indices_autoscoring[2], :] - self.raw_BrainProducts.get_data()[ch_indices_autoscoring[3], :]
+            data_autoscoring3 = self.raw_BrainProducts.get_data()[ch_indices_autoscoring[4], :] - self.raw_BrainProducts.get_data()[ch_indices_autoscoring[5], :]
+            
+            win_sec=30
+            fmin=0.3
+            fmax=40
+            trimperc=5
+            cmap='RdBu_r'
+            add_colorbar = False
+            sf = int(self.fs_BrainProducts)
+            print(f'sf = {sf}')
+    
+            assert isinstance(data_TFR, np.ndarray), 'data_TFR must be a 1D NumPy array.'
+            assert isinstance(sf, (int, float)), 'sf must be int or float.'
+            assert data_TFR.ndim == 1, 'data_TFR must be a 1D (single-channel) NumPy array.'
+            assert isinstance(win_sec, (int, float)), 'win_sec must be int or float.'
+            assert isinstance(fmin, (int, float)), 'fmin must be int or float.'
+            assert isinstance(fmax, (int, float)), 'fmax must be int or float.'
+            assert fmin < fmax, 'fmin must be strictly inferior to fmax.'
+            assert fmax < sf / 2, 'fmax must be less than Nyquist (sf / 2).'
+            
+            # Calculate multi-taper spectrogram
+            nperseg = int(10 * sf) #int(win_sec * sf / 8)
+            assert data_TFR.size > 2 * nperseg, 'data_TFR length must be at least 2 * win_sec.'
+            f, t, Sxx = spectrogram_lspopt(data_TFR, sf, nperseg=nperseg, noverlap=0)
+            Sxx = 10 * np.log10(Sxx)  # Convert uV^2 / Hz --> dB / Hz
+            
+            # Select only relevant frequencies (up to 30 Hz)
+            good_freqs = np.logical_and(f >= fmin, f <= fmax)
+            Sxx = Sxx[good_freqs, :]
+            f = f[good_freqs]
+            #t *= 256  # Convert t to hours
+            
+            # Normalization
+            vmin, vmax = np.percentile(Sxx, [0 + trimperc, 100 - trimperc])
+            norm = Normalize(vmin=vmin, vmax=vmax)
+            
+            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [3,2,2,2,2,2,2,2]})
+            
+            ax1 = plt.subplot(8,1,1,)
+            ax_autoscoring = plt.subplot(8,1,2, )
+            ax2 = plt.subplot(8,1,3, )
+            ax3 = plt.subplot(8,1,4, sharex = ax2)
+            ax4 = plt.subplot(8,1,5,  sharex = ax2)
+            ax5 = plt.subplot(8,1,6, sharex = ax2)
+            ax6 = plt.subplot(8,1,7, sharex = ax2)
+            ax7 = plt.subplot(8,1,8, sharex = ax2)
+
+            ax1.set_title('Dreamento: BrainProducts Post-processing ')
+            im = ax1.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            self.plot_hypnogram(hypno = self.hypno_pred, axis= ax_autoscoring, sf_hypno=1/30, lw=2)
+
+            ax1.set_xlim([0, len(data_TFR)/sf])
+            ax1.set_ylim((fmin, 35))
+            ax1.set_ylabel('Frequency [Hz]')
+            
+# =============================================================================
+#             ax2.plot(np.arange(len(data_plot1))/sf, data_plot1, color = 'plum')
+# =============================================================================
+            ax2.set_ylabel(str(desired_channels_plotting[0]) + '-' + str(desired_channels_plotting[1]))
+            ax3.plot(np.arange(len(data_plot2))/sf, data_plot2, color = 'blue')
+            ax3.set_ylabel(str(desired_channels_plotting[2]) + '-' + str(desired_channels_plotting[3]))
+            ax4.plot(np.arange(len(data_plot3))/sf, data_plot3, color = 'red')
+            ax4.set_ylabel(str(desired_channels_plotting[4]) + '-' + str(desired_channels_plotting[5]))
+
+# =============================================================================
+#             ax5.plot(np.arange(len(data_autoscoring1))/sf, data_autoscoring1, color = 'green')
+# =============================================================================
+            ax5.set_ylabel(str(desired_channels_autoscoring[0]) + '-' + str(desired_channels_autoscoring[1]))
+            ax6.plot(np.arange(len(data_autoscoring2))/sf, data_autoscoring2, color = 'black')
+            ax6.set_ylabel(str(desired_channels_autoscoring[2]) + '-' + str(desired_channels_autoscoring[3]))
+            ax7.plot(np.arange(len(data_autoscoring3))/sf, data_autoscoring3, color = 'purple')
+            ax7.set_ylabel(str(desired_channels_autoscoring[4]) + '-' + str(desired_channels_autoscoring[5]))
+
+            
+            ax2.set_xlim((0, 30))
+# =============================================================================
+#             ax2.set_ylim((-1e-4, 1e-4))
+#             ax3.set_ylim((-1e-4, 1e-4))
+#             ax4.set_ylim((-1e-4, 1e-4))
+#             ax5.set_ylim((-1e-4, 1e-4))
+#             ax6.set_ylim((-1e-4, 1e-4))
+# =============================================================================            
+            ax1.get_xaxis().set_visible(False)
+            ax3.get_xaxis().set_visible(False)
+            
+            ax2.set_ylim((-75e-6, 75e-6))
+            ax3.set_ylim((-75e-6, 75e-6))
+            ax4.set_ylim((-75e-6, 75e-6))
+            ax5.set_ylim((-75e-6, 75e-6))
+            ax6.set_ylim((-75e-6, 75e-6))
+            ax7.set_ylim((-75e-6, 75e-6))
+            
+            fig.canvas.mpl_connect('button_press_event', self.onclick_BrainProdcuts)
+            fig.canvas.mpl_connect('key_press_event', self.pan_nav_BrainProducts)
+            
+            self.up_sampled_predicted_hypno = yasa.hypno_upsample_to_data(hypno= self.hypno_pred, sf_hypno = 1/30, data=data_TFR, sf_data=self.fs_BrainProducts, verbose=True)
+
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                 
+                loc = self.raw_BrainProducts.get_data()[ch_indices_autoscoring[2], :] * 1e6
+                roc = self.raw_BrainProducts.get_data()[ch_indices_autoscoring[3], :] * 1e6
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=self.fs_BrainProducts, hypno=self.up_sampled_predicted_hypno, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.path_to_EMG.split('.vhdr')[0] + '_REM_results.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic SO & spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+                spindle_events_L = yasa.spindles_detect(data_TFR * 1e6, sf=self.fs_BrainProducts, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=remove_outliers_SO_spd, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_autoscoring1 * 1e6, sf=self.fs_BrainProducts, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=remove_outliers_SO_spd, verbose=False)
+
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data_TFR * 1e6 * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_autoscoring1 * 1e6* mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+
+                # SO detection
+                SO_events_L = yasa.sw_detect(data_TFR * 1e6, sf=self.fs_BrainProducts, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                               dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                   coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                       remove_outliers=remove_outliers_SO_spd, verbose=False)
+                    
+                SO_events_R = yasa.sw_detect(data_autoscoring1 * 1e6 , sf=self.fs_BrainProducts, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                               dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                   coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                       remove_outliers=remove_outliers_SO_spd, verbose=False)
+                        
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data_TFR * 1e6 * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_autoscoring1 * 1e6 * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    path_save_spd_results = self.path_to_EMG.split('.vhdr')[0] + '_spd_' + str(desired_channels_plotting[0]) + '-' + str(desired_channels_plotting[1])+ '.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                    
+                    path_save_spd_results = self.path_to_EMG.split('.vhdr')[0] + '_spd_' + str(desired_channels_autoscoring[0]) + '-' + str(desired_channels_autoscoring[1])+ '.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                    
+                    path_save_SO_results = self.path_to_EMG.split('.vhdr')[0] + '_SO' + str(desired_channels_autoscoring[0]) + '-' + str(desired_channels_autoscoring[1])+ '.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                    
+                    path_save_SO_results = self.path_to_EMG.split('.vhdr')[0] + '_SO_' + str(desired_channels_autoscoring[0]) + '-' + str(desired_channels_autoscoring[1])+ '.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+        
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax2.plot(np.arange(len(data_TFR))/self.fs_BrainProducts, data_TFR, color = 'slategrey', linewidth = 1)
+                ax5.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, data_autoscoring1, color = 'black', linewidth = 1)
+            
+            else:
+                ax2.plot(np.arange(len(data_TFR))/self.fs_BrainProducts, data_TFR, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax5.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, data_autoscoring1, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+
+                ax6.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, loc_highlight* 1e-6, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax2.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, SO_L_highlight* 1e-6, 'cyan')
+                ax5.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, SO_R_highlight* 1e-6, 'cyan')
+                
+                ax2.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, spindles_L_highlight* 1e-6, 'green')
+                ax5.plot(np.arange(len(data_autoscoring1))/self.fs_BrainProducts, spindles_R_highlight* 1e-6, 'green')
+                
+            if int(self.checkbox_save_YASA_autoscoring_val.get()) == 1:
+                np.savetxt(self.path_to_EMG.split('.vhdr')[0] + 'Y_ASA_autoscoring_Dreamento_API.txt', self.hypno_pred, fmt='%d')
+
+            print(f'request {int(self.automatic_spd_event_deetction.get())}')
+
 
     #%% Manual sync function        
     def onpick(self,event):
@@ -1099,12 +1547,12 @@ class OfflineDreamento():
         # check if the user chose somthing
         if not EMG_files_list:
             
-            self.label_labels  = Label(self.frame_import, text = "No EMG (.vhdr) file has been selected!",
+            self.label_labels  = Label(self.frame_import, text = "No (.vhdr) file has been selected!",
                                   fg = 'red', font = 'Helvetica 9 bold').grid(row = 2, column = 3)
             
         else:
             
-            self.label_labels  = Label(self.frame_import, text = "The EMG (.vhdr) file has been loaded!",
+            self.label_labels  = Label(self.frame_import, text = "The (.vhdr) file has been loaded!",
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 3)
     #%% load txt files including paths to the folders for bulk autoscoring
     def browse_txt_for_bulk_autoscoring(self):
@@ -1255,7 +1703,9 @@ class OfflineDreamento():
                 print('Bandpass filtering (.3-30 Hz) started')
                 self.sigScript_org   = self.butter_bandpass_filter(data = self.sigScript_org, lowcut=.3, highcut=30, fs = 256, order = 2)
                 self.sigScript_org_R = self.butter_bandpass_filter(data = self.sigScript_org_R, lowcut=.3, highcut=30, fs = 256, order = 2)
-
+                self.sigHDRecorder   = self.butter_bandpass_filter(data = self.sigHDRecorder, lowcut=.3, highcut=30, fs = 256, order = 2)
+                self.sigHDRecorder_r = self.butter_bandpass_filter(data = self.sigHDRecorder_r, lowcut=.3, highcut=30, fs = 256, order = 2)
+                
             # Plot psd?
             if int(self.plot_psd.get()) == 1:
                 print('plotting peridogram ...')
@@ -1333,15 +1783,8 @@ class OfflineDreamento():
                     
                 self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
                                         win_sec=30, fmin=0.3, fmax=25,\
-                                        trimperc=5, cmap='RdBu_r', add_colorbar = False)
-
-                        
-        # Activate save section
-        if int(self.is_autoscoring.get()) == 1:     
-            self.create_save_options_autoscoring()
-            
-        # Create export option
-        self.create_save_options()
+                                        trimperc=5, cmap='RdBu_r', add_colorbar = False)      
+           
     #%% band-pass filtering
     
     def butter_bandpass_filter(self, data, lowcut, highcut, fs, order = 2):
@@ -1705,61 +2148,74 @@ class OfflineDreamento():
         norm = Normalize(vmin=vmin, vmax=vmax)
         
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+# =============================================================================
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
         f2 = f2[good_freqs2]
-        #t *= 256  # Convert t to hours
-    
-        # Normalization
         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
     # =============================================================================
     #     gs1 = gridspec.GridSpec(2, 1)
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
+                
         if int(self.is_autoscoring.get()) == 0:
+            
             
             # If plotting EMG TFR is required
             if int(self.plot_EMG_quality_evaluation.get()) == 1:
-                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 3, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
                 ax1 = plt.subplot(16,1,1)
                 ax2 = plt.subplot(16,1,2, sharex = ax1)
                 ax3 = plt.subplot(16,1,3, sharex = ax1)
-                ax_TFR_EMG1 = plt.subplot(16,1,4)
-                ax_TFR_EMG2 = plt.subplot(16,1,5)
-                ax_TFR_EMG3 = plt.subplot(16,1,6)
-                ax_epoch_marker = plt.subplot(16,1,7, )
-                ax_epoch_light = plt.subplot(16,1,8, sharex = ax_epoch_marker)
-                ax_acc = plt.subplot(16,1,9, sharex = ax_epoch_marker)
-                ax_ppg = plt.subplot(16,1,10, sharex = ax_epoch_marker)
-                ax_noise = plt.subplot(16,1,11, sharex = ax_epoch_marker)  
-                ax_EMG = plt.subplot(16,1,12, sharex = ax_epoch_marker)
-                ax_EMG2 = plt.subplot(16,1,13, sharex = ax_epoch_marker)
-                ax_EMG3 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
-                ax_TFR_short = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                ax_TFR_EMG1 = plt.subplot(16,1,5)
+                ax_TFR_EMG2 = plt.subplot(16,1,6)
+                ax_TFR_EMG3 = plt.subplot(16,1,7)
+                ax_epoch_marker = plt.subplot(16,1,8, )
+                ax_epoch_light = plt.subplot(16,1,9, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(16,1,10, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(16,1,11, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(16,1,12, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(16,1,13, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(16,1,4, sharex = ax1)
                 ax4 = plt.subplot(16,1,16, sharex = ax_epoch_marker)
 
             # If plotting EMG TFR is NOT required
             else:
-                fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
+                fig,AX = plt.subplots(nrows=13, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,1, 2, 2, 2, 4, 4, 4, 4, 10]})
                 ax1 = plt.subplot(13,1,1)
                 ax2 = plt.subplot(13,1,2, sharex = ax1)
                 ax3 = plt.subplot(13,1,3, sharex = ax1)
-                ax_epoch_marker = plt.subplot(13,1,4, )
-                ax_epoch_light = plt.subplot(13,1,5, sharex = ax_epoch_marker)
-                ax_acc = plt.subplot(13,1,6, sharex = ax_epoch_marker)
-                ax_ppg = plt.subplot(13,1,7, sharex = ax_epoch_marker)
-                ax_noise = plt.subplot(13,1,8, sharex = ax_epoch_marker)  
-                ax_EMG = plt.subplot(13,1,9, sharex = ax_epoch_marker)
-                ax_EMG2 = plt.subplot(13,1,10, sharex = ax_epoch_marker)
-                ax_EMG3 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
-                ax_TFR_short = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+                ax_epoch_marker = plt.subplot(13,1,5, )
+                ax_epoch_light = plt.subplot(13,1,6, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(13,1,7, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(13,1,8, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(13,1,9, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(13,1,10, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(13,1,11, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(13,1,12, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(13,1,4, sharex = ax1)
                 ax4 = plt.subplot(13,1,13, sharex = ax_epoch_marker)
             
 
@@ -1771,6 +2227,8 @@ class OfflineDreamento():
             ax_epoch_marker.get_xaxis().set_visible(False)
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_EMG.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_acc.get_xaxis().set_visible(False)
             ax_acc.set_yticks([])
             ax_noise.set_yticks([])
@@ -1784,7 +2242,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -1794,14 +2252,10 @@ class OfflineDreamento():
                 cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
                 cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
                 
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
             #axes[1].set_ylim([-200, 200])
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -1906,7 +2360,138 @@ class OfflineDreamento():
             ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
             
             #ax4.get_xaxis().set_visible(False)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+
+            ###########
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data
+                roc = data_R
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=None, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+
+                spindle_events_L = yasa.spindles_detect(data, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+                
+                 # SO detection
+                SO_events_L = yasa.sw_detect(data, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                     
+                SO_events_R = yasa.sw_detect(data_R, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                         
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                      
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data , color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = 'black', linewidth = 1)
             
+            else:
+                ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                ##########
             fig.canvas.mpl_connect('key_press_event', self.pan_nav)
             fig.canvas.mpl_connect('button_press_event', self.onclick)
             #ax1.set_xlim([0, 7680])#len(data)])
@@ -2028,285 +2613,475 @@ class OfflineDreamento():
                 ax_TFR_EMG3.set_yticks([])
         else:
             
-            
-            
-           fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 4, 4,1,1,2, 2, 2,4, 4, 4, 4, 10]})
-           
-           ax1 = plt.subplot(15,1,1)
-           ax2 = plt.subplot(15,1,2, sharex = ax1)
-           ax3 = plt.subplot(15,1,3, sharex = ax1)
-           
-           ax_autoscoring = plt.subplot(15,1,4, )
-           ax_proba = plt.subplot(15,1,5, )
-           ax_epoch_marker = plt.subplot(15,1,6, )
-           ax_epoch_light = plt.subplot(15,1,7, sharex = ax_epoch_marker)
-           
-           ax_acc = plt.subplot(15,1,8, sharex = ax_epoch_marker)
-           ax_ppg = plt.subplot(15,1,9, sharex = ax_epoch_marker)
-           ax_noise = plt.subplot(15,1,10, sharex = ax_epoch_marker)
-                      
-           ax_EMG = plt.subplot(15,1,11, sharex = ax_epoch_marker)
-           ax_EMG2 = plt.subplot(15,1,12, sharex = ax_epoch_marker)
-           ax_EMG3 = plt.subplot(15,1,13, sharex = ax_epoch_marker)
-           ax_TFR_short = plt.subplot(15,1,14, sharex = ax_epoch_marker)
-           ax4 = plt.subplot(15,1,15, sharex = ax_epoch_marker)
-           ax4.grid(True)
+            # If plotting EMG TFR is required
+            if int(self.plot_EMG_quality_evaluation.get()) == 1:
+                fig,AX = plt.subplots(nrows=18, figsize=(16, 9), gridspec_kw={'height_ratios': [2, 2, 8, 8, 3, 3,3 ,3, 2, 2, 2, 2, 2, 2, 4, 4, 4, 10]})
+                ax1 = plt.subplot(18,1,1)
+                ax2 = plt.subplot(18,1,2, sharex = ax1)
+                ax3 = plt.subplot(18,1,3, sharex = ax1)
+                ax_TFR_EMG1 = plt.subplot(18,1,5)
+                ax_TFR_EMG2 = plt.subplot(18,1,6)
+                ax_TFR_EMG3 = plt.subplot(18,1,7)
+                ax_autoscoring = plt.subplot(18,1,8, )
+                ax_proba = plt.subplot(18,1,9 )
+                ax_epoch_marker = plt.subplot(18,1,10, )
+                ax_epoch_light = plt.subplot(18,1,11, sharex = ax_epoch_marker)
+                ax_acc = plt.subplot(18,1,12, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(18,1,13, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(18,1,14, sharex = ax_epoch_marker)  
+                ax_EMG = plt.subplot(18,1,15, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(18,1,16, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(18,1,17, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(18,1,4, sharex = ax1)
+                ax4 = plt.subplot(18,1,18, sharex = ax_epoch_marker)
 
-           ax1.get_xaxis().set_visible(False)
-           ax2.get_xaxis().set_visible(False)
-           ax3.get_xaxis().set_visible(False)
-           ax_epoch_marker.get_xaxis().set_visible(False)
-           ax_epoch_light.get_xaxis().set_visible(False)
-           ax_EMG.get_xaxis().set_visible(False)
-           ax_acc.get_xaxis().set_visible(False)
-           ax_acc.set_yticks([])
-           ax_noise.set_yticks([])
-           ax_noise.get_xaxis().set_visible(False)
-           
-           ax_acc.set_ylim([-1.4, 1.4])
-           
-           plt.subplots_adjust(hspace = 0)
-           ax1.set_title('Dreamento: post-processing ')
-           im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
-                              shading="auto")
-           ax3.set_xlim([0, len(data)/256])
-           ax3.set_ylim((fmin, 25))
-           ax3.set_ylabel('Frequency [Hz]')
-           
-           im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
-                              shading="auto")
-           
-           # Add colorbar
-           if add_colorbar == True:
-               cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
-               cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
+            # If plotting EMG TFR is NOT required
+            else:
+                
+                fig,AX = plt.subplots(nrows=15, figsize=(16, 9), gridspec_kw={'height_ratios': [2, 2, 8, 8, 3,2,2,2, 2, 2,4, 4, 4, 4, 10]})
+                ax1 = plt.subplot(15,1,1)
+                ax2 = plt.subplot(15,1,2, sharex = ax1)
+                ax3 = plt.subplot(15,1,3, sharex = ax1)
                
-           # PLOT EEG
-           ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
-           ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
-           #axes[1].set_ylim([-200, 200])
-           #ax4.set_xlim([0, len(data)])
-           ax4.set_ylabel('EEG (uV)')
-           ax4.set_ylim([-150, 150])
-           ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
-
-                      
-           # Opening JSON file
-           f = open(path_to_json_markers,)
+                ax_autoscoring = plt.subplot(15,1,5, )
+                ax_proba = plt.subplot(15,1,6, )
+                ax_epoch_marker = plt.subplot(15,1,7, )
+                ax_epoch_light = plt.subplot(15,1,8, sharex = ax_epoch_marker)
+                
+                ax_acc = plt.subplot(15,1,9, sharex = ax_epoch_marker)
+                ax_ppg = plt.subplot(15,1,10, sharex = ax_epoch_marker)
+                ax_noise = plt.subplot(15,1,11, sharex = ax_epoch_marker)
+                           
+                ax_EMG = plt.subplot(15,1,12, sharex = ax_epoch_marker)
+                ax_EMG2 = plt.subplot(15,1,13, sharex = ax_epoch_marker)
+                ax_EMG3 = plt.subplot(15,1,14, sharex = ax_epoch_marker)
+                ax_TFR_short = plt.subplot(15,1,4, sharex = ax1)
+                ax4 = plt.subplot(15,1,15, sharex = ax_epoch_marker)
             
-           # returns JSON object as a dictionary
-           markers = json.load(f)
-           markers_details = list(markers.values())
-           
-           self.markers_details = markers_details
-           self.marker_keys = list(markers.keys())
-
-           self.counter_markers = 0
-           self.palette = itertools.cycle(sns.color_palette())
-
-           for counter, marker in enumerate(markers.keys()):
-                   
-               if marker.split()[0] == 'MARKER':
-                   if 'manual' in markers_to_show:
-                       self.counter_markers = self.counter_markers + 1
-                       self.color_markers = next(self.palette)
-                       marker_loc = int(marker.split()[-1])
-                       ax1.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  str(self.counter_markers)+'. '+markers_details[counter], linewidth = 3, color = self.color_markers)
-                       ax1.set_ylim([fmin, fmax])
-                       ax_epoch_marker.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  markers_details[counter], linewidth = 3, color = self.color_markers)
+            ax4.grid(True)
+            
+            ax1.get_xaxis().set_visible(False)
+            ax2.get_xaxis().set_visible(False)
+            ax3.get_xaxis().set_visible(False)
+            ax_epoch_marker.get_xaxis().set_visible(False)
+            ax_epoch_light.get_xaxis().set_visible(False)
+            ax_EMG.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+            
+            ax_acc.get_xaxis().set_visible(False)
+            ax_acc.set_yticks([])
+            ax_noise.set_yticks([])
+            ax_noise.get_xaxis().set_visible(False)
+            
+            ax_acc.set_ylim([-1.4, 1.4])
+            
+            plt.subplots_adjust(hspace = 0)
+            ax1.set_title('Dreamento: post-processing ')
+            im = ax3.pcolormesh(t, f, Sxx, norm=norm, cmap=cmap, antialiased=True,
+                               shading="auto")
+            ax3.set_xlim([0, len(data)/256])
+            ax3.set_ylim((fmin, 25))
+            ax3.set_ylabel('EEG L-Freq(Hz)')
+            
+            im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
+                               shading="auto")
+            
+            # Add colorbar
+            if add_colorbar == True:
+                cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
+                cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
+                
+            #axes[1].set_ylim([-200, 200])
+            #ax4.set_xlim([0, len(data)])
+            ax4.set_ylabel('EEG (uV)')
+            ax4.set_ylim([-150, 150])
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            
                        
-                       ax_epoch_marker.text(marker_loc/256+.1, int((fmin+fmax)/2), str(self.counter_markers ), verticalalignment='center', color = self.color_markers)
-
-               if marker.split()[0] == 'SOUND':
-                   if 'sound' in markers_to_show:
-                       marker_loc = int(marker.split()[-1])
-                       ax2.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  'Audio: '+markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
-                       ax2.set_ylim([fmin, fmax])
-                       ax_epoch_light.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label = 'Audio: '+ markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
-                       ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Audio', verticalalignment='center', color = 'blue')
-
-               elif marker.split()[0] == 'LIGHT':
-                   if 'light' in markers_to_show:
-                       marker_loc = int(marker.split()[-1])
-                       if 'Vib: False' in markers_details[counter]:
-                           ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
-                           ax2.set_ylim([fmin, fmax])
-                           ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
-                           ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Light', verticalalignment='center', color = 'red')
-
-                       elif 'Vib: True' in markers_details[counter]:
-                           ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
-                           ax2.set_ylim([fmin, fmax])
-                           ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
-                           ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Vibration', verticalalignment='center', color = 'green')
-                       
-           ax1.set_yticks([])
-           ax2.set_yticks([])
-           ax_epoch_marker.set_yticks([])
-           ax_epoch_light.set_yticks([])
-           #ax_epoch_marker.set_xticks([])
-           #ax_epoch_light.set_xticks([])
-       
-           ax2.set_ylabel('Stimulation(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
-           ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
-           ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
-           ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-           ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
-           ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
-           ax_EMG.set_ylabel('EMG1 (uV)',rotation = 0, labelpad=30, fontsize=8)
-           ax_EMG2.set_ylabel('EMG2 (uV)',rotation = 0, labelpad=30, fontsize=8)
-           ax_EMG3.set_ylabel(' EMG1 - EMG2 (uV) ',rotation = 0, labelpad=30, fontsize=8)
-           
-           ax2.spines["right"].set_visible(False)
-           ax2.spines["left"].set_visible(False)
-           ax2.spines["left"].set_visible(False)
-           ax1.spines["right"].set_visible(False)
-           ax1.spines["left"].set_visible(False)
-   # =============================================================================
-   #         ax_epoch_light.spines[["left", 'right']].set_visible(False)
-   #         ax_epoch_marker.spines[["left", 'right']].set_visible(False)
-   #         ax_acc.spines[["top", "bottom"]].set_visible(False)
-   #         ax_noise.spines[["top", "bottom"]].set_visible(False)
-   # =============================================================================
-           
-           time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
-       
-           ax4.set_xlabel('time (s)')
-           #ax4.set_xticks(np.arange(len(data)), time_axis)
-           ax4.set_xlim([0, 30])#len(data)])
-           leg = ax1.legend(fontsize=9, bbox_to_anchor=(1, 0), loc = 'upper left')
-           leg.set_draggable(state=True)
-           
-           # plot acc
-           ax_acc.plot(np.arange(len(self.acc_x[self.samples_before_begin:]))/256, self.acc_x[self.samples_before_begin:], linewidth = 2 , color = 'blue')
-           ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
-           ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
-           
-           # Plot ppg
-           ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
-           ax_ppg.set_ylim([-100, 100])
-           ax_ppg.set_ylabel('PPG')
-           ax_ppg.set_yticks([])
-           
-           
-           # plot noise
-           ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
-           
-           #ax4.get_xaxis().set_visible(False)
-           
-           fig.canvas.mpl_connect('key_press_event', self.pan_nav_EMG_autoscoring)
-           fig.canvas.mpl_connect('button_press_event', self.onclick_EMG_autoscoring)
-           #ax1.set_xlim([0, 7680])#len(data)])
-           #ax2.set_xlim([0, 7680])#len(data)])
-           #ax3.set_xlim([0, len(data)])
-           #ax4.set_xlim([0, 7680])#len(data)])
-           self.sync_with_dreamento = True
-           
-           self.autoscoring()
-
-           stages = self.y_pred
-           #stages = np.row_stack((stages, stages[-1]))
-           x      = np.arange(len(stages))
-           self.stage_autoscoring = stages
-            # Change the order of classes: REM and wake on top
-           x = []
-           y = []
-           for i in np.arange(len(stages)):
-               
-               s = stages[i]
-               if s== 0 :  p = -0
-               if s== 4 :  p = -1
-               if s== 1 :  p = -2
-               if s== 2 :  p = -3
-               if s== 3 :  p = -4
-               if i!=0:
-                   
-                   y.append(p)
-                   x.append(i-1)   
-           y.append(p)
-           x.append(i)
-           ax_autoscoring.step(x, y, where='post', color = 'black')
-           rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
-           for i in np.arange(len(rem)) -1:
-               ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
-
-           #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
-           ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
-                                     fontsize = 8)
-           ax_autoscoring.set_xlim([np.min(x), np.max(x)])
-           
-           ax_proba.set_xlim([np.min(x), np.max(x)])
-           self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
-           ax_proba.legend(loc = 'right', prop={'size': 6})
-           
-           ax_proba.set_yticks([])
-           ax_proba.set_xticks([])
-
-           # read EMG
-           if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
-               
-               self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
-               self.EMG_raw = self.EMG_raw.resample(int(256))
-
-           elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
-               self.EMG_raw = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
-                          
-           self.EMG_filtered = self.EMG_raw.filter(l_freq=10, h_freq=100)
-           self.EMG_filtered_data1 = self.EMG_filtered.get_data()[0] 
-           self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
-           self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
-           
-           self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
-           if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
-
-               self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-           elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
-
-               self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
-
-           # Check whether the user already synced EMG vs. EEG or not
-           print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
-
-           if self.flag_sync_EEG_EMG == True:
-               
-               print(f'sync samples: {str(self.samples_before_begin_EMG_Dreamento)} with shape {str(np.shape(self.samples_before_begin_EMG_Dreamento))}')
-               print(f'sync criterion: {self.flag_sign_samples_before_begin_EMG_Dreamento}')
-               
-               if self.flag_sign_samples_before_begin_EMG_Dreamento == 'eeg_event_earlier':
-                   print('Detected that the event occured earlier in EEG than the EMG signal')
-                   self.EMG_filtered_data1 = self.EMG_filtered_data1[self.samples_before_begin_EMG_Dreamento:]
-                   self.EMG_filtered_data2 = self.EMG_filtered_data2[self.samples_before_begin_EMG_Dreamento:]
-                   self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1_minus_2[self.samples_before_begin_EMG_Dreamento:]
-                   
-               elif self.flag_sign_samples_before_begin_EMG_Dreamento == 'emg_event_earlier':
-                   print('Detected that the event occured earlier in EMG than the EEG signal')
-                   print(f'EMG shape before alignment is : {np.shape(self.EMG_filtered_data1)}')
-                   self.EMG_filtered_data1 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1)
-                   self.EMG_filtered_data2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data2)
-                   self.EMG_filtered_data1_minus_2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1_minus_2)
-                   print(f'EMG shape after alignment is : {np.shape(self.EMG_filtered_data1)}')
-           
-           ax_EMG.plot(np.arange(len(self.EMG_filtered_data1))/256, self.EMG_filtered_data1, color = (84/255,164/255,75/255))
-           ax_EMG2.plot(np.arange(len(self.EMG_filtered_data2))/256, self.EMG_filtered_data2, color = (24/255,100/255,160/255))
-           ax_EMG3.plot(np.arange(len(self.EMG_filtered_data1_minus_2))/256, self.EMG_filtered_data1_minus_2, color = (160/255,10/255,22/255))
-           ax_EMG.set_ylim(self.desired_EMG_scale)
-           ax_EMG2.set_ylim(self.desired_EMG_scale)
-           ax_EMG3.set_ylim(self.desired_EMG_scale)
-           ax_EMG.grid(True)
-           ax_EMG2.grid(True)
-           ax_EMG3.grid(True)
-           ax_EMG.set_yticks([])
-           ax_EMG3.set_yticks([])
-           ax_EMG2.set_yticks((self.desired_EMG_scale[0], 0, self.desired_EMG_scale[1]))
-           #plt.subplots_adjust(left=0.1, right=0.1, top=0.9, bottom=0.1)
-           plt.tight_layout()
-           plt.show()
-           
-           if int(self.plot_EMG_quality_evaluation.get()) == 1:
-               
-               self.assess_EMG_data_quality()
-               
-
+            # Opening JSON file
+            f = open(path_to_json_markers,)
+             
+            # returns JSON object as a dictionary
+            markers = json.load(f)
+            markers_details = list(markers.values())
+            
+            self.markers_details = markers_details
+            self.marker_keys = list(markers.keys())
+            
+            self.counter_markers = 0
+            self.palette = itertools.cycle(sns.color_palette())
+            
+            for counter, marker in enumerate(markers.keys()):
+                    
+                if marker.split()[0] == 'MARKER':
+                    if 'manual' in markers_to_show:
+                        self.counter_markers = self.counter_markers + 1
+                        self.color_markers = next(self.palette)
+                        marker_loc = int(marker.split()[-1])
+                        ax1.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  str(self.counter_markers)+'. '+markers_details[counter], linewidth = 3, color = self.color_markers)
+                        ax1.set_ylim([fmin, fmax])
+                        ax_epoch_marker.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  markers_details[counter], linewidth = 3, color = self.color_markers)
+                        
+                        ax_epoch_marker.text(marker_loc/256+.1, int((fmin+fmax)/2), str(self.counter_markers ), verticalalignment='center', color = self.color_markers)
+            
+                if marker.split()[0] == 'SOUND':
+                    if 'sound' in markers_to_show:
+                        marker_loc = int(marker.split()[-1])
+                        ax2.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label =  'Audio: '+markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
+                        ax2.set_ylim([fmin, fmax])
+                        ax_epoch_light.plot([marker_loc/256, marker_loc/256], [fmin, fmax] ,  label = 'Audio: '+ markers_details[counter].split('/')[-1], linewidth = 3, color = 'blue')
+                        ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Audio', verticalalignment='center', color = 'blue')
+            
+                elif marker.split()[0] == 'LIGHT':
+                    if 'light' in markers_to_show:
+                        marker_loc = int(marker.split()[-1])
+                        if 'Vib: False' in markers_details[counter]:
+                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
+                            ax2.set_ylim([fmin, fmax])
+                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'red', linewidth = 3)
+                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Light', verticalalignment='center', color = 'red')
+            
+                        elif 'Vib: True' in markers_details[counter]:
+                            ax2.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
+                            ax2.set_ylim([fmin, fmax])
+                            ax_epoch_light.plot([marker_loc/256, marker_loc/256],  [fmin, fmax] , label =  markers_details[counter].split(',')[0],color = 'green', linewidth = 3)
+                            ax_epoch_light.text(marker_loc/256+.1, int((fmin+fmax)/2),'Vibration', verticalalignment='center', color = 'green')
+                        
+            ax1.set_yticks([])
+            ax2.set_yticks([])
+            ax_epoch_marker.set_yticks([])
+            ax_epoch_light.set_yticks([])
+            #ax_epoch_marker.set_xticks([])
+            #ax_epoch_light.set_xticks([])
+            
+            ax2.set_ylabel('Stimulation(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
+            ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
+            ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
+            ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
+            ax_EMG.set_ylabel('EMG1 (uV)',rotation = 0, labelpad=30, fontsize=8)
+            ax_EMG2.set_ylabel('EMG2 (uV)',rotation = 0, labelpad=30, fontsize=8)
+            ax_EMG3.set_ylabel(' EMG1 - EMG2 (uV) ',rotation = 0, labelpad=30, fontsize=8)
+            
+            ax2.spines["right"].set_visible(False)
+            ax2.spines["left"].set_visible(False)
+            ax2.spines["left"].set_visible(False)
+            ax1.spines["right"].set_visible(False)
+            ax1.spines["left"].set_visible(False)
+            # =============================================================================
+            #         ax_epoch_light.spines[["left", 'right']].set_visible(False)
+            #         ax_epoch_marker.spines[["left", 'right']].set_visible(False)
+            #         ax_acc.spines[["top", "bottom"]].set_visible(False)
+            #         ax_noise.spines[["top", "bottom"]].set_visible(False)
+            # =============================================================================
+            
+            time_axis = np.round(np.arange(0, len(data)) / 256 , 2)
+            
+            ax4.set_xlabel('time (s)')
+            #ax4.set_xticks(np.arange(len(data)), time_axis)
+            ax4.set_xlim([0, 30])#len(data)])
+            leg = ax1.legend(fontsize=9, bbox_to_anchor=(1, 0), loc = 'upper left')
+            leg.set_draggable(state=True)
+            
+            # plot acc
+            ax_acc.plot(np.arange(len(self.acc_x[self.samples_before_begin:]))/256, self.acc_x[self.samples_before_begin:], linewidth = 2 , color = 'blue')
+            ax_acc.plot(np.arange(len(self.acc_y[self.samples_before_begin:]))/256, self.acc_y[self.samples_before_begin:], linewidth = 2, color = 'red')
+            ax_acc.plot(np.arange(len(self.acc_z[self.samples_before_begin:]))/256, self.acc_z[self.samples_before_begin:], linewidth = 2, color = 'green')
+            
+            # Plot ppg
+            ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
+            ax_ppg.set_ylim([-100, 100])
+            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_yticks([])
+            
+            
+            # plot noise
+            ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
+            
+            #ax4.get_xaxis().set_visible(False)
+            
+            fig.canvas.mpl_connect('key_press_event', self.pan_nav_EMG_autoscoring)
+            fig.canvas.mpl_connect('button_press_event', self.onclick_EMG_autoscoring)
+            #ax1.set_xlim([0, 7680])#len(data)])
+            #ax2.set_xlim([0, 7680])#len(data)])
+            #ax3.set_xlim([0, len(data)])
+            #ax4.set_xlim([0, 7680])#len(data)])
+            self.sync_with_dreamento = True
+            
+            self.autoscoring()
+            
+            stages = self.y_pred
+            #stages = np.row_stack((stages, stages[-1]))
+            x      = np.arange(len(stages))
+            self.stage_autoscoring = stages
+             # Change the order of classes: REM and wake on top
+            x = []
+            y = []
+            for i in np.arange(len(stages)):
+                
+                s = stages[i]
+                if s== 0 :  p = -0
+                if s== 4 :  p = -1
+                if s== 1 :  p = -2
+                if s== 2 :  p = -3
+                if s== 3 :  p = -4
+                if i!=0:
+                    
+                    y.append(p)
+                    x.append(i-1)   
+            y.append(p)
+            x.append(i)
+            ax_autoscoring.step(x, y, where='post', color = 'black')
+            rem = [i for i,j in enumerate(self.y_pred) if (self.y_pred[i]==4)]
+            for i in np.arange(len(rem)) -1:
+                ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+            
+            #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
+            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
+                                      fontsize = 8)
+            ax_autoscoring.set_xlim([np.min(x), np.max(x)])
+            
+            ax_proba.set_xlim([np.min(x), np.max(x)])
+            self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
+            ax_proba.legend(loc = 'right', prop={'size': 6})
+            
+            ax_proba.set_yticks([])
+            ax_proba.set_xticks([])
+            
+            print(f'autoscoring shape {np.shape(self.stage_autoscoring)}')
+            self.up_sampled_predicted_hypno = yasa.hypno_upsample_to_data(hypno=self.stage_autoscoring, sf_hypno = 1/30, data=data, sf_data=256, verbose=True)
+            print(f'autoscoring shape after up-sampling: {np.shape(self.up_sampled_predicted_hypno)}')
+            
+            # read EMG
+            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+                
+                self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
+                self.EMG_raw = self.EMG_raw.resample(int(256))
+            
+            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+                self.EMG_raw = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
+                           
+            self.EMG_filtered = self.EMG_raw.filter(l_freq=10, h_freq=100)
+            self.EMG_filtered_data1 = self.EMG_filtered.get_data()[0] 
+            self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
+            self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
+            
+            self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
+            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+            
+                self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+            
+                self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
+            
+            # Check whether the user already synced EMG vs. EEG or not
+            print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
+            
+            if self.flag_sync_EEG_EMG == True:
+                
+                print(f'sync samples: {str(self.samples_before_begin_EMG_Dreamento)} with shape {str(np.shape(self.samples_before_begin_EMG_Dreamento))}')
+                print(f'sync criterion: {self.flag_sign_samples_before_begin_EMG_Dreamento}')
+                
+                if self.flag_sign_samples_before_begin_EMG_Dreamento == 'eeg_event_earlier':
+                    print('Detected that the event occured earlier in EEG than the EMG signal')
+                    self.EMG_filtered_data1 = self.EMG_filtered_data1[self.samples_before_begin_EMG_Dreamento:]
+                    self.EMG_filtered_data2 = self.EMG_filtered_data2[self.samples_before_begin_EMG_Dreamento:]
+                    self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1_minus_2[self.samples_before_begin_EMG_Dreamento:]
+                    
+                elif self.flag_sign_samples_before_begin_EMG_Dreamento == 'emg_event_earlier':
+                    print('Detected that the event occured earlier in EMG than the EEG signal')
+                    print(f'EMG shape before alignment is : {np.shape(self.EMG_filtered_data1)}')
+                    self.EMG_filtered_data1 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1)
+                    self.EMG_filtered_data2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data2)
+                    self.EMG_filtered_data1_minus_2 = np.append(self.samples_before_begin_EMG_Dreamento, self.EMG_filtered_data1_minus_2)
+                    print(f'EMG shape after alignment is : {np.shape(self.EMG_filtered_data1)}')
+            
+            ax_EMG.plot(np.arange(len(self.EMG_filtered_data1))/256, self.EMG_filtered_data1, color = (84/255,164/255,75/255))
+            ax_EMG2.plot(np.arange(len(self.EMG_filtered_data2))/256, self.EMG_filtered_data2, color = (24/255,100/255,160/255))
+            ax_EMG3.plot(np.arange(len(self.EMG_filtered_data1_minus_2))/256, self.EMG_filtered_data1_minus_2, color = (160/255,10/255,22/255))
+            ax_EMG.set_ylim(self.desired_EMG_scale)
+            ax_EMG2.set_ylim(self.desired_EMG_scale)
+            ax_EMG3.set_ylim(self.desired_EMG_scale)
+            ax_EMG.grid(True)
+            ax_EMG2.grid(True)
+            ax_EMG3.grid(True)
+            ax_EMG.set_yticks([])
+            ax_EMG3.set_yticks([])
+            ax_EMG2.set_yticks((self.desired_EMG_scale[0], 0, self.desired_EMG_scale[1]))
+            #plt.subplots_adjust(left=0.1, right=0.1, top=0.9, bottom=0.1)
+            plt.tight_layout()
+            plt.show()
+            
+            if int(self.plot_EMG_quality_evaluation.get()) == 1:
+                
+                self.assess_EMG_data_quality()
+                
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data
+                roc = data_R
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=self.up_sampled_predicted_hypno, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+            
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+            
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+            
+                spindle_events_L = yasa.spindles_detect(data, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+            
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+                
+                # SO detection
+                SO_events_L = yasa.sw_detect(data, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                     
+                SO_events_R = yasa.sw_detect(data_R, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                         
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                      
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data , color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = 'black', linewidth = 1)
+            
+            else:
+                ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+            
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                
+            
+# =============================================================================
+#             global sig_emg_1, sig_emg_2, sig_emg_3
+#              
+#             sig_emg_1 = self.EMG_filtered_data1
+#             sig_emg_2 = self.EMG_filtered_data2
+#             sig_emg_3 = self.EMG_filtered_data1_minus_2
+#             
+# =============================================================================
+            print('Computing EMG TFR ...')
+            if int(self.plot_EMG_quality_evaluation.get()) == 1:
+                
+                self.assess_EMG_data_quality()
+                
+                print('preparing EMG TFR ...')
+                
+                # TFR EMG 1 
+                ax_TFR_EMG1.pcolormesh(self.t1_EMG, self.f1_EMG, self.Sxx1_EMG, norm=self.norm1_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG1.set_xlim(0, self.t1_EMG.max())
+                ax_TFR_EMG1.set_xticks([])
+                ax_TFR_EMG1.set_yticks([])
+                
+                # TFR EMG 2
+                ax_TFR_EMG2.pcolormesh(self.t2_EMG, self.f2_EMG, self.Sxx2_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG2.set_xlim(0, self.t2_EMG.max())
+                ax_TFR_EMG2.set_xticks([])
+                ax_TFR_EMG2.set_yticks([])
+                ax_TFR_short.set_ylabel('EMG TFR', rotation = 90)
+                # TFR EMG 3
+                ax_TFR_EMG3.pcolormesh(self.t3_EMG, self.f3_EMG, self.Sxx3_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
+                                   shading="auto") # Normalized with respect to the same freq range as sig1
+                ax_TFR_EMG3.set_xlim(0, self.t3_EMG.max())
+                ax_TFR_EMG3.set_xticks([])
+                ax_TFR_EMG3.set_yticks([])
 # =============================================================================
 #         ax_EMG.set_xticks([])
 #         ax_EMG2.set_xticks([])
@@ -2372,11 +3147,25 @@ class OfflineDreamento():
         norm = Normalize(vmin=vmin, vmax=vmax)
         
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+# =============================================================================
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
@@ -2386,31 +3175,64 @@ class OfflineDreamento():
         # Normalization
         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
     # =============================================================================
     #     gs1 = gridspec.GridSpec(2, 1)
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
+        
+# =============================================================================
+#         if int(self.automatic_REM_event_deetction.get()) == 1:
+#             
+#             print(f'Initiating automatic REM event detection ...')
+#             loc = data
+#             roc = data_R
+#             amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+#             duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+#             freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+#             remove_outliers = int(self.checkbox_remove_outliers_val.get())
+#             print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+#             self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=None, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+#             print('REM events have been successfully identified!')
+#             
+#             mask = self.REM_events.get_mask()
+#     
+#             loc_highlight = loc * mask[0, :]
+#             roc_highlight = roc * mask[1, :]
+#     
+#             loc_highlight[loc_highlight == 0] = np.nan
+#             roc_highlight[roc_highlight == 0] = np.nan
+#             
+#             if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+#                 
+#                 path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+#                 print(f'saivng REM detection results in {path_save_REM_results}')
+#                 self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+# =============================================================================
+                
         if int(self.is_autoscoring.get()) == 0:
-            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,1,1, 2, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=10, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,1, 2, 2, 2, 2, 10]})
             
             ax1 = plt.subplot(10,1,1)
             ax2 = plt.subplot(10,1,2, sharex = ax1)
             ax3 = plt.subplot(10,1,3, sharex = ax1)
             
-            ax_epoch_marker = plt.subplot(10,1,4, )
-            ax_epoch_light = plt.subplot(10,1,5, sharex = ax_epoch_marker)
+            ax_epoch_marker = plt.subplot(10,1,5, )
+            ax_epoch_light = plt.subplot(10,1,6, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(10,1,6, sharex = ax_epoch_marker)
-            ax_ppg = plt.subplot(10,1,7, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(10,1,8, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(10,1,7, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(10,1,8, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(10,1,9, sharex = ax_epoch_marker)
 
-            ax_TFR_short = plt.subplot(10,1,9, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(10,1,4, sharex = ax1)
             ax4 = plt.subplot(10,1,10, sharex = ax_epoch_marker)
             ax4.grid(True)
     
             ax1.get_xaxis().set_visible(False)
             ax2.get_xaxis().set_visible(False)
             ax3.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_epoch_marker.get_xaxis().set_visible(False)
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(False)
@@ -2426,7 +3248,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -2436,14 +3258,24 @@ class OfflineDreamento():
                 cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
                 cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
                 
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+# =============================================================================
+#             # PLOT EEG
+#             if int(self.automatic_REM_event_deetction.get()) == 1:
+#                
+#                 ax4.plot(np.arange(len(data))/256, data , color = 'slategrey', linewidth = 1)
+#                 ax4.plot(np.arange(len(data_R))/256, data_R, color = 'black', linewidth = 1)
+#                 ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+#                 ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+#             else:
+#                
+#                 ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+#                 ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+# =============================================================================
             #axes[1].set_ylim([-200, 200])
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -2546,23 +3378,153 @@ class OfflineDreamento():
             
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
             fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
+            
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data
+                roc = data_R
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=None, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+
+                spindle_events_L = yasa.spindles_detect(data, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+                
+                 # SO detection
+                SO_events_L = yasa.sw_detect(data, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                     
+                SO_events_R = yasa.sw_detect(data_R, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                         
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                      
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data , color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = 'black', linewidth = 1)
+            
+            else:
+                ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                    
         else:
             
-            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,4,4,1,1,2, 2, 2, 4, 10]})
+            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,4,1,1,2, 2, 2, 1, 10]})
             
             ax1 = plt.subplot(12,1,1)
             ax2 = plt.subplot(12,1,2, sharex = ax1)
             ax3 = plt.subplot(12,1,3, sharex = ax1)
             
-            ax_autoscoring = plt.subplot(12,1,4, )
-            ax_proba = plt.subplot(12,1,5, )
-            ax_epoch_marker = plt.subplot(12,1,6, )
-            ax_epoch_light = plt.subplot(12,1,7, sharex = ax_epoch_marker)
+            ax_autoscoring = plt.subplot(12,1,5, )
+            ax_proba = plt.subplot(12,1,6, )
+            ax_epoch_marker = plt.subplot(12,1,7, )
+            ax_epoch_light = plt.subplot(12,1,8, sharex = ax_epoch_marker)
             
-            ax_acc = plt.subplot(12,1,8, sharex = ax_epoch_marker)
-            ax_ppg = plt.subplot(12,1,9, sharex = ax_epoch_marker)
-            ax_noise = plt.subplot(12,1,10, sharex = ax_epoch_marker)
-            ax_TFR_short = plt.subplot(12,1,11, sharex = ax_epoch_marker)
+            ax_acc = plt.subplot(12,1,9, sharex = ax_epoch_marker)
+            ax_ppg = plt.subplot(12,1,10, sharex = ax_epoch_marker)
+            ax_noise = plt.subplot(12,1,11, sharex = ax_epoch_marker)
+            ax_TFR_short = plt.subplot(12,1,4, sharex = ax1)
             ax4 = plt.subplot(12,1,12, sharex = ax_epoch_marker)
             ax4.grid(True)
     
@@ -2570,6 +3532,8 @@ class OfflineDreamento():
             ax2.get_xaxis().set_visible(False)
             ax3.get_xaxis().set_visible(False)
             ax_epoch_marker.get_xaxis().set_visible(False)
+            ax_TFR_short.get_xaxis().set_visible(False)
+
             ax_epoch_light.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(False)
             ax_acc.set_yticks([])
@@ -2584,7 +3548,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -2594,14 +3558,11 @@ class OfflineDreamento():
                 cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
                 cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
                 
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
             #axes[1].set_ylim([-200, 200])
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -2707,6 +3668,11 @@ class OfflineDreamento():
             #stages = np.row_stack((stages, stages[-1]))
             x      = np.arange(len(stages))
             self.stage_autoscoring = stages
+            
+            print(f'autoscoring shape {np.shape(self.stage_autoscoring)}')
+            self.up_sampled_predicted_hypno = yasa.hypno_upsample_to_data(hypno=self.stage_autoscoring, sf_hypno = 1/30, data=data, sf_data=256, verbose=True)
+            print(f'autoscoring shape after up-sampling: {np.shape(self.up_sampled_predicted_hypno)}')
+            
             # Change the order of classes: REM and wake on top
             x = []
             y = []
@@ -2741,7 +3707,135 @@ class OfflineDreamento():
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
             fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
 
-
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data
+                roc = data_R
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=self.up_sampled_predicted_hypno, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+    
+                spindle_events_L = yasa.spindles_detect(data, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+    
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+                
+                 # SO detection
+                SO_events_L = yasa.sw_detect(data, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                     
+                SO_events_R = yasa.sw_detect(data_R, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                         
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                      
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data , color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = 'black', linewidth = 1)
+            
+            else:
+                ax4.plot(np.arange(len(data))/256, data, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+    
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                                
         
         return fig, markers_details
     
@@ -2754,9 +3848,9 @@ class OfflineDreamento():
 
     #%% Autoscoring    
     def autoscoring(self, DreamentoScorer_path = '.\\DreamentoScorer\\',\
-                    model_path = "DreamentoScorer_model_beta_January2023.sav",
-                    standard_scaler_path = "StandardScaler_td=3_bidirectional_Trainedon_500_estimator_3013097-06_1st_iter_121222.sav",
-                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_500_estimator_3013097-06_121222.pickle",
+                    model_path = "PooledData_Full_20percent_valid.sav",\
+                    standard_scaler_path = "StandardScaler_PooledDataset_Full_20percent_valid.sav",\
+                    feat_selection_path = "Selected_Features_BoturaAfterTD=3_Bidirectional_Donders2022_19-04-2023.pickle",\
                     apply_post_scoring_N1_correction = True,
                     fs = 256):
         
@@ -2785,6 +3879,7 @@ class OfflineDreamento():
         tic   = time.time()
         
         if self.sync_with_dreamento == True:
+            
             if int(self.is_filtering.get()) == 1: 
                 # If it was initially set to filter data, there is no need to re-filter here     
                 print('already filtered ... proceed with scoring ...')
@@ -2814,15 +3909,13 @@ class OfflineDreamento():
                                                                  lowcut=.3, highcut=30, fs = 256, order = 2)
                 EEG_R_filtered     = self.butter_bandpass_filter(data = self.sigHDRecorder_r,\
                                                                  lowcut=.3, highcut=30, fs = 256, order = 2)
-            
-
-
         T = 30 #secs
         len_epoch   = fs * T
         start_epoch = 0
         n_channels  = 1
         print(f'Data shape : {np.shape(EEG_R_filtered)}')
         print('Truncating the last epoch tails ...')
+
         EEG_L_filtered = EEG_L_filtered[0:EEG_L_filtered.shape[0] - EEG_L_filtered.shape[0]%len_epoch]
         EEG_R_filtered = EEG_R_filtered[0:EEG_R_filtered.shape[0] - EEG_R_filtered.shape[0]%len_epoch]
 
@@ -3272,12 +4365,27 @@ class OfflineDreamento():
         vmin, vmax = np.percentile(Sxx, [0 + trimperc, 100 - trimperc])
         norm = Normalize(vmin=vmin, vmax=vmax)
         
+# =============================================================================
+#         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
+#         nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
+#         assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
+#         f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+#         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
+#         print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
+#         # Select only relevant frequencies (up to 30 Hz)
+#         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
+#         Sxx2 = Sxx2[good_freqs2, :]
+#         f2 = f2[good_freqs2]
+#         #t *= 256  # Convert t to hours
+#     
+#         # Normalization
+#         vmin2, vmax2 = np.percentile(Sxx2, [0 + trimperc, 100 - trimperc])
+#         norm2 = Normalize(vmin=vmin2, vmax=vmax2)
+# =============================================================================
         #!!!!!!!!!! SHORT SPECTROGRAM!! Calculate multi-taper spectrogram
-        nperseg2 = int(.2 * sf) #int(win_sec * sf / 8)
-        assert data.size > 2 * nperseg2, 'Data length must be at least 2 * win_sec.'
-        f2, t2, Sxx2 = spectrogram_lspopt(data, sf, nperseg=nperseg2, noverlap=0)
+        assert data.size > 2 * nperseg, 'Data length must be at least 2 * win_sec.'
+        f2, t2, Sxx2 = spectrogram_lspopt(data_R, sf, nperseg = nperseg, noverlap = 0)
         Sxx2 = 10 * np.log10(Sxx2)  # Convert uV^2 / Hz --> dB / Hz
-        print(f'f: {np.shape(f)}, f2: {np.shape(f2)}, t: {np.shape(t)}, t2: {np.shape(t2)}, Sxx: {np.shape(Sxx)}, Sxx2: {np.shape(Sxx2)}')
         # Select only relevant frequencies (up to 30 Hz)
         good_freqs2 = np.logical_and(f2 >= fmin, f2 <= fmax)
         Sxx2 = Sxx2[good_freqs2, :]
@@ -3291,21 +4399,23 @@ class OfflineDreamento():
     #     gs1 = gridspec.GridSpec(2, 1)
     #     gs1.update(wspace=0.005, hspace=0.0001)
     # =============================================================================
-    
+        
+                  
         if int(self.is_autoscoring.get()) == 0: 
-            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,2]})
+            # plotting results
+            fig,AX = plt.subplots(nrows=6, figsize=(16, 9), gridspec_kw={'height_ratios': [2,2,1,1,1,2]})
             
     
             ax3 = plt.subplot(6,1,1, )
-            ax_acc = plt.subplot(6,1,2,)
+            ax_acc = plt.subplot(6,1,5,)
             ax_ppg = plt.subplot(6,1,3, sharex = ax_acc)
             ax_noise = plt.subplot(6,1,4,  sharex = ax_acc)
-            ax_TFR_short = plt.subplot(6,1,5, sharex = ax_acc)
+            ax_TFR_short = plt.subplot(6,1,2, sharex = ax3)
             ax4 = plt.subplot(6,1,6, sharex = ax_acc)
             ax4.grid(True)
     
             ax3.get_xaxis().set_visible(False)
-    
+            ax_TFR_short.get_xaxis().set_visible(False)
             ax_acc.get_xaxis().set_visible(True)
             ax_acc.set_yticks([])
             ax_noise.set_yticks([])
@@ -3319,7 +4429,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq (Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3328,15 +4438,16 @@ class OfflineDreamento():
             if add_colorbar == True:
                 cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
                 cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
-                
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
+# =============================================================================
+#                 ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+# =============================================================================
+
+            
             #axes[1].set_ylim([-200, 200])
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq (Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
@@ -3365,8 +4476,6 @@ class OfflineDreamento():
             # plot noise
             ax_noise.plot(np.arange(len(self.noise_data))/256, self.noise_data, linewidth = 2, color = 'navy')
             
-            #
-            
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
             fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
             #ax1.set_xlim([0, 7680])#len(data)])
@@ -3374,17 +4483,149 @@ class OfflineDreamento():
             #ax3.set_xlim([0, len(data)])
             #ax4.set_xlim([0, 7680])#len(data)])
             plt.subplots_adjust(hspace = 0)
+            
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data  * 1e6
+                roc = data_R  * 1e6
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=None, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+
+                spindle_events_L = yasa.spindles_detect(data  * 1e6, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R  * 1e6, sf=256, ch_names=None, hypno=None, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=False, verbose=False)
+
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * 1e6 * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * 1e6 * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+                
+                 # SO detection
+                SO_events_L = yasa.sw_detect(data  * 1e6, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                     
+                SO_events_R = yasa.sw_detect(data_R  * 1e6, sf=256, ch_names=None, hypno=None, include=(2, 3), freq_sw=freq_SO, \
+                                dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                    coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                        remove_outliers=remove_outliers_SO_spd, verbose=False)
+                         
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * 1e6 * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * 1e6 * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                     
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                      
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data  * 1e6, color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = 'black', linewidth = 1)
+            
+            else:
+                ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                    
+                
+        #### If autoscoring is activated ....
         elif int(self.is_autoscoring.get()) == 1:
             print('Plot results with autoscoring')
-            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [2,1,1,1,1,1,1,2]})
+            fig,AX = plt.subplots(nrows=8, figsize=(16, 9), gridspec_kw={'height_ratios': [2,2,1,1,1,1,1,2]})
     
             ax3 = plt.subplot(8,1,1, )
-            ax_autoscoring = plt.subplot(8,1,2, )
-            ax_proba = plt.subplot(8,1,3, )
-            ax_acc = plt.subplot(8,1,4,)
-            ax_ppg = plt.subplot(8,1,5, sharex = ax_acc)
-            ax_noise = plt.subplot(8,1,6,  sharex = ax_acc)    
-            ax_TFR_short = plt.subplot(8,1,7, sharex = ax_acc)
+            ax_autoscoring = plt.subplot(8,1,3, )
+            ax_proba = plt.subplot(8,1,4, )
+            ax_acc = plt.subplot(8,1,5,)
+            ax_ppg = plt.subplot(8,1,6, sharex = ax_acc)
+            ax_noise = plt.subplot(8,1,7,  sharex = ax_acc)    
+            ax_TFR_short = plt.subplot(8,1,2, sharex = ax3)
             ax4 = plt.subplot(8,1,8, sharex = ax_acc)
             ax4.grid(True)
     
@@ -3402,7 +4643,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('Frequency [Hz]')
+            ax3.set_ylabel('EEG L-Freq(Hz)')
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3411,15 +4652,13 @@ class OfflineDreamento():
             if add_colorbar == True:
                 cbar = fig.colorbar(im, ax=ax3, shrink=0.95, fraction=0.1, aspect=25, pad=0.01)
                 cbar.ax3.set_ylabel('Log Power (dB / Hz)', rotation=270, labelpad=5)
+
                 
-            # PLOT EEG
-            ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
-            ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
             #axes[1].set_ylim([-200, 200])
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('TFR', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
@@ -3444,6 +4683,10 @@ class OfflineDreamento():
             self.epoch_autoscoring = x
             self.stage_autoscoring = stages
             
+            print(f'autoscoring shape {np.shape(self.stage_autoscoring)}')
+            self.up_sampled_predicted_hypno = yasa.hypno_upsample_to_data(hypno=self.stage_autoscoring, sf_hypno = 1/30, data=data, sf_data=256, verbose=True)
+            print(f'autoscoring shape after up-sampling: {np.shape(self.up_sampled_predicted_hypno)}')
+
             # Change the order of classes: REM and wake on top
             x = []
             y = []
@@ -3494,6 +4737,134 @@ class OfflineDreamento():
             
             ax4.get_xaxis().set_visible(True)
             plt.subplots_adjust(hspace = 0)
+            
+            # Apply automatic REM EVENTS detection
+            if int(self.automatic_REM_event_deetction.get()) == 1:
+                print(f'Initiating automatic REM event detection ...')
+                loc = data  * 1e6
+                roc = data_R  * 1e6
+                amplitude = (self.min_amp_REM_detection  ,  self.max_amp_REM_detection)
+                duration  = (self.min_dur_REM_detection  ,  self.max_dur_REM_detection)
+                freq_rem  = (self.min_freq_REM_detection ,  self.max_freq_REM_detection)
+                remove_outliers = int(self.checkbox_remove_outliers_val.get())
+                print(f'{amplitude}, {type(amplitude)}, {duration}, {type(duration)}, {freq_rem}, {type(freq_rem)}, {remove_outliers}, {type(remove_outliers)},')
+                self.REM_events = yasa.rem_detect(loc = loc, roc = roc, sf=256, hypno=self.up_sampled_predicted_hypno, include=4, amplitude = amplitude, duration = duration, freq_rem = freq_rem, remove_outliers = remove_outliers, verbose=False)
+                print('REM events have been successfully identified!')
+                
+                mask = self.REM_events.get_mask()
+        
+                loc_highlight = loc * mask[0, :]
+                roc_highlight = roc * mask[1, :]
+        
+                loc_highlight[loc_highlight == 0] = np.nan
+                roc_highlight[roc_highlight == 0] = np.nan
+                
+                self.REM_events.plot_average()
+                
+                if int(self.checkbox_save_REM_detection_results_val.get()) == 1:
+                    path_save_REM_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'REM_events_summary.csv'
+                    print(f'saivng REM detection results in {path_save_REM_results}')
+                    self.REM_events.summary().to_csv(path_save_REM_results, index=True)
+                    
+            # Apply automatic spindle EVENTS detection
+            if int(self.automatic_spd_event_deetction.get()) == 1:
+                
+                print(f'Initiating automatic SO & spindles event detection ...')
+                freq_sp = (self.min_freq_spd_detection, self.max_freq_spd_detection)
+                freq_broad = (self.min_freq_broad_threshold, self.max_freq_broad_threshold)
+                duration = (self.min_dur_spd_detection, self.max_dur_spd_detection)
+                min_distance = self.min_distance_spd_detection
+                remove_outliers_SO_spd = int(self.checkbox_spd_remove_outliers_val.get())    
+                spindle_events_L = yasa.spindles_detect(data  * 1e6, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=remove_outliers_SO_spd, verbose=False)
+                    
+                spindle_events_R = yasa.spindles_detect(data_R  * 1e6, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(1, 2, 3),\
+                                     freq_sp = freq_sp, freq_broad = freq_broad, duration = duration,\
+                                     min_distance=min_distance, thresh={'corr': 0.65, 'rel_pow': 0.2, 'rms': 1.5},\
+                                     multi_only=False, remove_outliers=remove_outliers_SO_spd, verbose=False)
+
+                mask = spindle_events_L.get_mask()
+                spindles_L_highlight = data * 1e6 * mask
+                spindles_L_highlight[spindles_L_highlight == 0] = np.nan
+                
+                mask = spindle_events_R.get_mask()
+                spindles_R_highlight = data_R * 1e6 * mask
+                spindles_R_highlight[spindles_R_highlight == 0] = np.nan
+                
+                                
+                spindle_events_L.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                spindle_events_R.plot_average(center='Peak', time_before=1, time_after=1, legend = 'full')
+                
+                # SO
+                freq_SO         = (self.min_freq_SO_detection, self.max_freq_SO_detection)
+                duration_SO_neg = (self.min_dur_SO_negative_detection, self.max_dur_SO_negative_detection)
+                duration_SO_pos = (self.min_dur_SO_positive_detection, self.max_dur_SO_positive_detection)
+                amp_SO_neg      = (self.min_amp_SO_negative_detection, self.max_amp_SO_negative_detection)
+                amp_SO_pos      = (self.min_amp_SO_positive_detection, self.max_amp_SO_positive_detection)
+                amp_SO_p2p      = (self.min_amp_SO_p2p_detection, self.max_amp_SO_p2p_detection)
+
+                # SO detection
+                SO_events_L = yasa.sw_detect(data  * 1e6, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                               dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                   coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                       remove_outliers=remove_outliers_SO_spd, verbose=False)
+                    
+                SO_events_R = yasa.sw_detect(data_R  * 1e6, sf=256, ch_names=None, hypno=self.up_sampled_predicted_hypno, include=(2, 3), freq_sw=freq_SO, \
+                               dur_neg=duration_SO_neg, dur_pos=duration_SO_pos, amp_neg=amp_SO_neg, amp_pos=amp_SO_pos, amp_ptp=amp_SO_p2p, \
+                                   coupling=True, coupling_params={'freq_sp': (10, 16), 'p': 0.05, 'time': 1}, \
+                                       remove_outliers=remove_outliers_SO_spd, verbose=False)
+                        
+                SO_events_L.plot_average()
+                mask = SO_events_L.get_mask()
+                SO_L_highlight = data * 1e6 * mask
+                SO_L_highlight[SO_L_highlight == 0] = np.nan
+                
+                SO_events_R.plot_average()
+                mask = SO_events_R.get_mask()
+                SO_R_highlight = data_R * 1e6 * mask
+                SO_R_highlight[SO_R_highlight == 0] = np.nan
+                
+                if int(self.checkbox_save_spd_detection_results_val.get()) == 1:
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_L_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_L.summary().to_csv(path_save_spd_results, index=True)
+                    
+                    path_save_spd_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'spd_EEG_R_events_summary.csv'
+                    print(f'saivng spd detection results in {path_save_spd_results}')
+                    spindle_events_R.summary().to_csv(path_save_spd_results, index=True)
+                    
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_L_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+                    
+                    path_save_SO_results = self.HDRecorderRecording.split('EEG L.edf')[0] + 'SO_EEG_R_events_summary.csv'
+                    print(f'saivng SO detection results in {path_save_SO_results}')
+                    SO_events_L.summary().to_csv(path_save_SO_results, index=True)
+        
+            # PLOT EEG
+            if int(self.automatic_REM_event_deetction.get()) == 1 or int(self.automatic_spd_event_deetction.get()) == 1:
+                ax4.plot(np.arange(len(data))/256, data  * 1e6, color = 'slategrey', linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = 'black', linewidth = 1)
+            
+            else:
+                ax4.plot(np.arange(len(data))/256, data  * 1e6, color = (160/255, 70/255, 160/255), linewidth = 1)
+                ax4.plot(np.arange(len(data_R))/256, data_R * 1e6, color = (0/255, 128/255, 190/255), linewidth = 1)
+            
+            if int(self.automatic_REM_event_deetction.get()) == 1 :
+
+                ax4.plot(np.arange(len(data_R))/256, loc_highlight, 'indianred')
+                ax4.plot(np.arange(len(data_R))/256, roc_highlight, 'indianred')
+                
+            if int(self.automatic_spd_event_deetction.get()) == 1:# TEMP
+                ax4.plot(np.arange(len(data_R))/256, SO_L_highlight, 'blue')
+                ax4.plot(np.arange(len(data_R))/256, SO_R_highlight, 'blue')
+                
+                ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
+                ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
+                
+                
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
             fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
             messagebox.showinfo(title = "AASM sleep metrics", message = self.stats)
@@ -3837,7 +5208,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3862,7 +5233,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3901,7 +5272,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.712;0.775x0.14)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -3925,7 +5296,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3950,7 +5321,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -3989,7 +5360,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.142593)':
+            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -4012,7 +5383,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -4036,7 +5407,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -4076,7 +5447,7 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -4100,7 +5471,7 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -4138,11 +5509,94 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.66;0.775x0.183333)' or str(curr_ax) =='AxesSubplot(0.125,0.608235;0.775x0.226471)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
                 curr_ax.set_ylim((0.1,25))
+                
+    #%% onclick_BrainProdcuts
+    def onclick_BrainProdcuts(self, event):
+        
+        """
+        Clicking on the TFR to go to the desired epoch.
+        
+        :param self: access the attributes and methods of the class
+        :param event: mouse click
+        """
+        ax_tmp = plt.gca()
+        if event.button == 1: 
+
+            print('mouse cliked --> move plot')
+            ax_tmp.set_xlim((np.floor(event.xdata)- 15, np.floor(event.xdata)+ 15))
+            plt.draw()
+            print(f'clicked sample{ {event.xdata}}')
+            print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
+            print(f'{event.inaxes}')
+            curr_ax = event.inaxes
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.764355;0.775x0.115645)'):
+                if len(curr_ax.lines) > 0 :
+                    curr_ax.lines[-1].remove()
+                curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
+                curr_ax.set_ylim((0.1,25))
+                
+    #%% key pressed event BrainAmp Prodcuts
+    def pan_nav_BrainProducts(self, event):
+        """
+        The keyboard controller of the software
+            
+        :param self: accessing  the attributes and methods of the class
+        :param up arrow keyboard button: increase the EEG amplitude scale
+        :param down arrow keyboard button: lower the EEG amplitude scale
+        :param left arrow keyboard button: navigate to the previous epoch
+        :param right arrow keyboard button: navigate to the next epoch
+        """
+    
+        fig = plt.gcf()  # Get the current figure
+        axs = fig.get_axes()[2:]  # Get a list of all axes in the figure
+    
+        if event.key in ['left', 'right']:
+            ax_tmp = plt.gca()
+            lims = ax_tmp.get_xlim()
+            adjust = (lims[1] - lims[0]) 
+    
+            if event.key == 'left':
+                ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
+            elif event.key == 'right':
+                ax_tmp.set_xlim((lims[0] + adjust, lims[1] + adjust))
+    
+            curr_ax = event.inaxes
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.764355;0.775x0.115645)'):
+                if len(curr_ax.lines) > 0:
+                    curr_ax.lines[-1].remove()
+                if event.key == 'left':
+                    curr_ax.plot([int(np.mean((lims[0] - adjust, lims[1] - adjust))), int(np.mean((lims[0] - adjust, lims[1] - adjust)))], [-150, 150], color='black')
+                elif event.key == 'right':
+                    curr_ax.plot([int(np.mean((lims[0] + adjust, lims[1] + adjust))), int(np.mean((lims[0] + adjust, lims[1] + adjust)))], [-150, 150], color='black')
+            plt.draw()
+    
+        elif event.key == 'up':
+            for ax in axs:
+                lims = ax.get_ylim()
+                adjust_up = lims[1] - lims[1] / 5
+                adjust_down = lims[0] + lims[1] / 5
+                ax.set_ylim((adjust_down, adjust_up))
+# =============================================================================
+#                 print(f'for axis {ax}, ylim is {adjust_down} - {adjust_up} ')
+# =============================================================================
+            plt.draw()
+    
+        elif event.key == 'down':
+            for ax in axs:
+                lims = ax.get_ylim()
+                adjust_up = lims[1] + lims[1] / 5
+                adjust_down = lims[0] - lims[1] / 5
+                ax.set_ylim((adjust_down, adjust_up))
+# =============================================================================
+#                 print(f'for axis {ax}, ylim is {adjust_down} - {adjust_up} ')
+# =============================================================================
+
+            plt.draw()
     #%% pop-up markers selection
     def select_marker_for_sync(self):
         self.popupWin = Toplevel(root)
@@ -4224,10 +5678,570 @@ class OfflineDreamento():
 #         self.button_popupwin.pack()
 # =============================================================================
         root.wait_window(self.popupWin_bulk_autoscoring)
+    #%% Automatic REM event detection popup
+    def automatic_REM_event_detection_popup(self):
+        self.popupWin_automatic_REM_event_detection = Toplevel(root)
+        
+      
+        self.REM_amplitude_threshold_label = Label(self.popupWin_automatic_REM_event_detection, text='Amp thresh REM detection: (uV)')
+        self.REM_amplitude_threshold_label.grid(row = 1 , column =1)
+        
+        self.REM_duration_threshold_label = Label(self.popupWin_automatic_REM_event_detection, text='duration threshold REM detection: (s)')
+        self.REM_duration_threshold_label.grid(row = 1 , column =2)
+        
+        self.REM_freq_threshold_label = Label(self.popupWin_automatic_REM_event_detection, text='freq. threshold REM detection: (Hz)')
+        self.REM_freq_threshold_label.grid(row = 1 , column = 3)
+        
+        self.checkbox_remove_outliers_val = IntVar(value = 1)
+        self.checkbox_remove_outliers = Checkbutton(self.popupWin_automatic_REM_event_detection, text = "Remove outliers? (recommended)",
+                                  font = 'Calibri 11 ', variable = self.checkbox_remove_outliers_val)
+        self.checkbox_remove_outliers.grid(row = 1, column = 4)
+        
+        self.checkbox_save_REM_detection_results_val = IntVar(value = 1)
+        self.checkbox_save_REM_detection_results = Checkbutton(self.popupWin_automatic_REM_event_detection, text = "Save identified events",
+                                  font = 'Calibri 11 ', variable = self.checkbox_save_REM_detection_results_val)
+        self.checkbox_save_REM_detection_results.grid(row = 1, column = 5)
+        
+        # user entries
+        self.entry_REM_amplitude_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_REM_amplitude_threshold.insert(0, "30, 325")
+        self.entry_REM_amplitude_threshold.grid(row = 2, column = 1)#, padx = 15, pady = 10)
+        
+        self.entry_REM_duration_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_REM_duration_threshold.insert(0, ".3, 1.2")
+        self.entry_REM_duration_threshold.grid(row = 2, column = 2)#, padx = 15, pady = 10)
+        
+        self.entry_REM_freq_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_REM_freq_threshold.insert(0, ".5, 5")
+        self.entry_REM_freq_threshold.grid(row = 2, column = 3)#, padx = 15, pady = 10)
+        
+        self.OK_button_popupWin_automatic_REM_event_detection = Button(self.popupWin_automatic_REM_event_detection, text = "OK!", 
+                                                                       command = self.receive_values_from_automatic_REM_event_detection_popup,
+                                                                       font = 'Calibri 13 ')
+        self.OK_button_popupWin_automatic_REM_event_detection.grid(row = 3, column = 3)
+        
+    #%% Automatic spindle event detection popup
+    def automatic_spd_event_detection_popup(self):
+        self.popupWin_automatic_spd_event_detection = Toplevel(root)
+         
+       
+        self.freq_broad_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='Broad frequency of detection: (Hz)')
+        self.freq_broad_threshold_label.grid(row = 1 , column =1)
+         
+        self.spd_duration_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='duration threshold spd detection: (s)')
+        self.spd_duration_threshold_label.grid(row = 1 , column =2)
+         
+        self.spd_freq_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='freq. threshold spd detection: (Hz)')
+        self.spd_freq_threshold_label.grid(row = 1 , column = 3)
+        
+        self.min_distance_spd_detection_threshold = Label(self.popupWin_automatic_spd_event_detection, text='Min. distance:')
+        self.min_distance_spd_detection_threshold.grid(row = 1 , column = 4)
+         
+        self.checkbox_spd_remove_outliers_val = IntVar(value = 0)
+        self.checkbox_spd_remove_outliers = Checkbutton(self.popupWin_automatic_spd_event_detection, text = "remove outliers? (recommended)",
+                                   font = 'Calibri 11 ', variable = self.checkbox_spd_remove_outliers_val)
+        self.checkbox_spd_remove_outliers.grid(row = 1, column = 5)
+        
+        
+        self.checkbox_save_spd_detection_results_val = IntVar(value = 1)
+        self.checkbox_save_spd_detection_results = Checkbutton(self.popupWin_automatic_spd_event_detection, text = "Save identified events",
+                                   font = 'Calibri 11 ', variable = self.checkbox_save_spd_detection_results_val)
+        self.checkbox_save_spd_detection_results.grid(row = 1, column = 6)
+         
+        # user entries
+        self.entry_freq_broad_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_freq_broad_threshold.insert(0, "1, 30")
+        self.entry_freq_broad_threshold.grid(row = 2, column = 1)#, padx = 15, pady = 10)
+         
+        self.entry_spd_duration_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_spd_duration_threshold.insert(0, ".5, 2")
+        self.entry_spd_duration_threshold.grid(row = 2, column = 2)#, padx = 15, pady = 10)
+         
+        self.entry_spd_freq_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_spd_freq_threshold.insert(0, "11, 15")
+        self.entry_spd_freq_threshold.grid(row = 2, column = 3)#, padx = 15, pady = 10)
+        
+        self.entry_min_distance_spd_detection_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_min_distance_spd_detection_threshold.insert(0, "500")
+        self.entry_min_distance_spd_detection_threshold.grid(row = 2, column = 4)#, padx = 15, pady = 10)
+        
+        self.OK_button_popupWin_automatic_spd_event_detection = Button(self.popupWin_automatic_spd_event_detection, text = "OK!", 
+                                                                        command = self.receive_values_from_automatic_spd_event_detection_popup,
+                                                                        font = 'Calibri 13 ')
+# =============================================================================
+#         self.checkbox_spd_remove_outliers_val = IntVar(value = 0)
+#         self.checkbox_spd_remove_outliers = Checkbutton(self.popupWin_automatic_spd_event_detection, text = "remove outliers? (recommended)",
+#                                    font = 'Calibri 11 ', variable = self.checkbox_spd_remove_outliers_val)
+#         self.checkbox_spd_remove_outliers.grid(row = 1, column = 5)
+# =============================================================================
+        
+        # SO
+        self.freq_broad_threshold_SO_label = Label(self.popupWin_automatic_spd_event_detection, text='SO frequency range: (Hz)')
+        self.freq_broad_threshold_SO_label.grid(row = 3 , column =1)
+         
+        self.SO_duration_neg_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='SO negative duration: (s)')
+        self.SO_duration_neg_threshold_label.grid(row = 3 , column =2)
+        
+        self.SO_duration_pos_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='SO positive duration: (s')
+        self.SO_duration_pos_threshold_label.grid(row = 3 , column =3)
+         
+        self.SO_neg_amp_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='SO negative amp range: (uV)')
+        self.SO_neg_amp_threshold_label.grid(row = 3 , column = 4)
+        
+        self.SO_pos_amp_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='SO positive amp range: (uV)')
+        self.SO_pos_amp_threshold_label.grid(row = 3 , column = 5)
+        
+        self.SO_p2p_amp_threshold_label = Label(self.popupWin_automatic_spd_event_detection, text='SO p2p amp range: (uV)')
+        self.SO_p2p_amp_threshold_label.grid(row = 3 , column = 6)
+        
+        # user entries
+        self.entry_freq_SO_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_freq_SO_threshold.insert(0, ".3, 1.5")
+        self.entry_freq_SO_threshold.grid(row = 4 , column =1)
+        
+        self.entry_SO_duration_neg_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_SO_duration_neg_threshold.insert(0, ".1, 1.5")
+        self.entry_SO_duration_neg_threshold.grid(row = 4 , column =2)
+         
+        self.entry_SO_duration_pos_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_SO_duration_pos_threshold.insert(0, ".1, 1")
+        self.entry_SO_duration_pos_threshold.grid(row = 4 , column =3)
+        
+        self.entry_SO_amp_neg_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_SO_amp_neg_threshold.insert(0, "10, 200")
+        self.entry_SO_amp_neg_threshold.grid(row = 4 , column =4)
+        
+        self.entry_SO_amp_pos_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_SO_amp_pos_threshold.insert(0, "10, 200")
+        self.entry_SO_amp_pos_threshold.grid(row = 4 , column =5)
+        
+        self.entry_SO_amp_p2p_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
+        self.entry_SO_amp_p2p_threshold.insert(0, "20, 400")
+        self.entry_SO_amp_p2p_threshold.grid(row = 4 , column =6)
+        
+                
+        self.OK_button_popupWin_automatic_spd_event_detection.grid(row = 5, column = 4)
+        
+    #%% Automatic REM event detection popup
+    def DreamentoConverter(self):
+        self.popupWin_DreamentoConverter = Toplevel(root)         
+        
+        self.path_to_Hypnodyne_folder_label = Label(self.popupWin_DreamentoConverter, text='Path to ZMax Hypnodyne Folder:')
+        self.path_to_Hypnodyne_folder_label.grid(row = 1 , column =1)
+        
+        self.entry_path_to_Hypnodyne_folder = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_Hypnodyne_folder.insert(0, "C:/Program Files (x86)/Hypnodyne/ZMax/")
+        self.entry_path_to_Hypnodyne_folder.grid(row = 2 , column = 1)
+        
+        self.path_to_txt_containing_hyps_to_convert_label = Label(self.popupWin_DreamentoConverter, text='a single .txt file including paths to all raw .hyp files')
+        self.path_to_txt_containing_hyps_to_convert_label.grid(row = 3 , column =1)
+        
+        self.entry_path_to_txt_containing_hyps_to_convert = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_txt_containing_hyps_to_convert.insert(0, "path/to/txt/including/all/hyps.txt")
+        self.entry_path_to_txt_containing_hyps_to_convert.grid(row = 4 , column = 1)
+        
+        self.path_to_txt_containing_destination_paths_label = Label(self.popupWin_DreamentoConverter, text='a single .txt file including paths to all raw .hyp files')
+        self.path_to_txt_containing_destination_paths_label.grid(row = 5 , column =1)
+
+        self.entry_path_to_txt_containing_destination_paths = Entry(self.popupWin_DreamentoConverter)#, borderwidth = 2, width = 10)
+        self.entry_path_to_txt_containing_destination_paths.insert(0, "path/to/txt/including/all/destinations.txt")
+        self.entry_path_to_txt_containing_destination_paths.grid(row = 6 , column = 1)
+        
+        self.convert_button = Button(self.popupWin_DreamentoConverter, text = "Convert!", 
+                                                                        command = self.apply_DreamentoConverter,
+                                                                        font = 'Calibri 13 ')
+        self.convert_button.grid(row = 7, column = 1)
+
+    #%% Brain amp channel selector for plotting + autoscoring
+    def BrainProducts_channel_selector(self):
+        
+        from tkinter import font
+
+        self.popupWin_BrainProducts_channel_selector = Toplevel(root)
+         
+       
+        self.info_channel_selection_BrainProducts_autoscoring = Label(self.popupWin_BrainProducts_channel_selector, text='Select AUTOSCORING channels:')
+        self.info_channel_selection_BrainProducts_autoscoring.grid(row = 1 , column =1)
+        
+        # Select autoscoring channels
+        self.autoscoring_BrainProducts_EEG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='EEG (main):')
+        self.autoscoring_BrainProducts_EEG_main_label.grid(row = 2 , column =2)
+        
+        self.autoscoring_BrainProducts_EEG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='EEG (ref):')
+        self.autoscoring_BrainProducts_EEG_ref_label.grid(row = 2 , column =3)
+        
+        self.autoscoring_BrainProducts_EOG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='EOG (main):')
+        self.autoscoring_BrainProducts_EOG_main_label.grid(row = 2 , column =4)
+        
+        self.autoscoring_BrainProducts_EMG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='EOG (ref):')
+        self.autoscoring_BrainProducts_EMG_ref_label.grid(row = 2 , column =5)
+        
+        self.autoscoring_BrainProducts_EEG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='EMG (main):')
+        self.autoscoring_BrainProducts_EEG_main_label.grid(row = 2 , column =6)
+        
+        self.autoscoring_BrainProducts_EEG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='EMG (ref):')
+        self.autoscoring_BrainProducts_EEG_ref_label.grid(row = 2 , column =7)
+        
+        # Select Plotting channels
+        self.info_channel_selection_BrainProducts_plot = Label(self.popupWin_BrainProducts_channel_selector, text='Select PLOTTING channels:')
+        self.info_channel_selection_BrainProducts_plot.grid(row = 4 , column =1)
+        
+        # Select autoscoring channels
+        self.plotting_BrainProducts_EEG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='channel 1:')
+        self.plotting_BrainProducts_EEG_main_label.grid(row = 5 , column =2)
+        
+        self.plotting_BrainProducts_EEG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='ref 1:')
+        self.plotting_BrainProducts_EEG_ref_label.grid(row = 5 , column =3)
+        
+        self.plotting_BrainProducts_EOG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='channel 2:')
+        self.plotting_BrainProducts_EOG_main_label.grid(row = 5 , column =4)
+        
+        self.plotting_BrainProducts_EMG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='EOG (ref):')
+        self.plotting_BrainProducts_EMG_ref_label.grid(row = 5 , column =5)
+        
+        self.plotting_BrainProducts_EEG_main_label = Label(self.popupWin_BrainProducts_channel_selector, text='channel 3:')
+        self.plotting_BrainProducts_EEG_main_label.grid(row = 5 , column =6)
+        
+        self.plotting_BrainProducts_EEG_ref_label = Label(self.popupWin_BrainProducts_channel_selector, text='ref 3:')
+        self.plotting_BrainProducts_EEG_ref_label.grid(row = 5, column =7)
+        
+        # option menus: AUTOSCORING
+        self.autoscoring_BrainProducts_EEG_main_val = StringVar()        
+        self.autoscoring_BrainProducts_EEG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EEG_main_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EEG_main_option_menu.grid(row = 3, column =2)
+        
+        self.autoscoring_BrainProducts_EEG_ref_val = StringVar()        
+        self.autoscoring_BrainProducts_EEG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EEG_ref_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EEG_ref_option_menu.grid(row = 3, column =3)
+
+        self.autoscoring_BrainProducts_EOG_main_val = StringVar()        
+        self.autoscoring_BrainProducts_EOG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EOG_main_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EOG_main_option_menu.grid(row = 3, column =4)
+        
+        self.autoscoring_BrainProducts_EOG_ref_val = StringVar()        
+        self.autoscoring_BrainProducts_EOG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EOG_ref_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EOG_ref_option_menu.grid(row = 3, column =5)
+
+        self.autoscoring_BrainProducts_EMG_main_val = StringVar()        
+        self.autoscoring_BrainProducts_EMG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EMG_main_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EMG_main_option_menu.grid(row = 3, column =6)
+        
+        self.autoscoring_BrainProducts_EMG_ref_val = StringVar()        
+        self.autoscoring_BrainProducts_EMG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.autoscoring_BrainProducts_EMG_ref_val, *self.ch_names_BrainProducts)
+        self.autoscoring_BrainProducts_EMG_ref_option_menu.grid(row = 3, column =7)
+        
+        # option menus: plotting
+        self.plotting_BrainProducts_EEG_main_val = StringVar()        
+        self.plotting_BrainProducts_EEG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EEG_main_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EEG_main_option_menu.grid(row = 6, column =2)
+        
+        self.plotting_BrainProducts_EEG_ref_val = StringVar()        
+        self.plotting_BrainProducts_EEG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EEG_ref_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EEG_ref_option_menu.grid(row = 6, column =3)
+
+        self.plotting_BrainProducts_EOG_main_val = StringVar()        
+        self.plotting_BrainProducts_EOG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EOG_main_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EOG_main_option_menu.grid(row = 6, column =4)
+        
+        self.plotting_BrainProducts_EOG_ref_val = StringVar()        
+        self.plotting_BrainProducts_EOG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EOG_ref_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EOG_ref_option_menu.grid(row = 6, column =5)
+
+        self.plotting_BrainProducts_EMG_main_val = StringVar()        
+        self.plotting_BrainProducts_EMG_main_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EMG_main_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EMG_main_option_menu.grid(row = 6, column =6)
+        
+        self.plotting_BrainProducts_EMG_ref_val = StringVar()        
+        self.plotting_BrainProducts_EMG_ref_option_menu = OptionMenu(self.popupWin_BrainProducts_channel_selector, self.plotting_BrainProducts_EMG_ref_val, *self.ch_names_BrainProducts)
+        self.plotting_BrainProducts_EMG_ref_option_menu.grid(row = 6, column =7)
+        
+        self.OK_button_popupWin_BrainProdcuts = Button(self.popupWin_BrainProducts_channel_selector, text = "OK!", 
+                                                                        command = self.receive_values_from_BrainProducts_channel_selector,
+                                                                        font = 'Calibri 13 ')
+        self.OK_button_popupWin_BrainProdcuts.grid(row = 7, column = 4)
+        
+        self.checkbox_save_YASA_autoscoring_val = IntVar(value = 1)
+        self.checkbox_save_YASA_autoscoring = Checkbutton(self.popupWin_BrainProducts_channel_selector, text = "Save autoscoring results",
+                                   font = 'Calibri 11 ', variable = self.checkbox_save_YASA_autoscoring_val)
+        self.checkbox_save_YASA_autoscoring.grid(row = 3, column = 8)
+
+        root.wait_window(self.popupWin_BrainProducts_channel_selector)
+
+
+    #%% Receive values from automatic_REM_event_detection_popup
+    def receive_values_from_automatic_REM_event_detection_popup(self):
+        print(f'Dreamento received REM amplitude thresholds of {self.entry_REM_amplitude_threshold.get()} Hz of tpye{type(self.entry_REM_amplitude_threshold.get())}')
+        print(f'Dreamento received REM duration thresholds of {self.entry_REM_duration_threshold.get()} Hz of tpye{type(self.entry_REM_duration_threshold.get())}')
+        print(f'Dreamento received REM freq threshold of {self.entry_REM_freq_threshold.get()} Hz of tpye{type(self.entry_REM_freq_threshold.get())}')
+        
+        self.min_amp_REM_detection = int(self.entry_REM_amplitude_threshold.get().split(',')[0])
+        self.max_amp_REM_detection = int(self.entry_REM_amplitude_threshold.get().split(',')[1])
+
+        self.min_dur_REM_detection = float(self.entry_REM_duration_threshold.get().split(',')[0])
+        self.max_dur_REM_detection = float(self.entry_REM_duration_threshold.get().split(',')[1])
+        
+        self.min_freq_REM_detection = float(self.entry_REM_freq_threshold.get().split(',')[0])
+        self.max_freq_REM_detection = float(self.entry_REM_freq_threshold.get().split(',')[1])
+        
+        self.popupWin_automatic_REM_event_detection.destroy()
+        
+# =============================================================================
+#         print(type(self.min_amp_REM_detection))
+#         print(type(self.max_amp_REM_detection))
+#         print(type(self.min_dur_REM_detection))
+#         print(type(self.max_dur_REM_detection))
+#         print(type(self.min_freq_REM_detection))
+#         print(type(self.max_freq_REM_detection))
+#         print(type(self.checkbox_remove_outliers_val))
+# =============================================================================
+    #%% receive_values_from_BrainProducts_channel_selector
+    def receive_values_from_BrainProducts_channel_selector(self):
+        print(f'Autoscoring EEG main selected as {str(self.autoscoring_BrainProducts_EEG_main_val.get())}')
+        print(f'Autoscoring EEG ref selected as {str(self.autoscoring_BrainProducts_EEG_ref_val.get())}')
+        
+        print(f'Autoscoring EOG main selected as {str(self.autoscoring_BrainProducts_EOG_main_val.get())}')
+        print(f'Autoscoring EOG ref selected as {str(self.autoscoring_BrainProducts_EOG_ref_val.get())}')
+        
+        print(f'Autoscoring EMG main selected as {str(self.autoscoring_BrainProducts_EMG_main_val.get())}')
+        print(f'Autoscoring EMG ref selected as {str(self.autoscoring_BrainProducts_EMG_ref_val.get())}')
+        
+        print(f'plotting ch1 main selected as {str(self.plotting_BrainProducts_EEG_main_val.get())}')
+        print(f'plotting ch1 ref selected as {str(self.plotting_BrainProducts_EEG_ref_val.get())}')
+        
+        print(f'plotting ch2 main selected as {str(self.plotting_BrainProducts_EOG_main_val.get())}')
+        print(f'plotting ch2 ref selected as {str(self.plotting_BrainProducts_EOG_ref_val.get())}')
+        
+        print(f'plotting ch3 main selected as {str(self.plotting_BrainProducts_EMG_main_val.get())}')
+        print(f'plotting ch3 ref selected as {str(self.plotting_BrainProducts_EMG_ref_val.get())}')
+        self.popupWin_BrainProducts_channel_selector.destroy()
+
+
+    #%% Receive values from automatic_spd_event_detection_popup
+    def receive_values_from_automatic_spd_event_detection_popup(self):
+        print(f'Dreamento received spd broad freq thresholds of {self.entry_freq_broad_threshold.get()} Hz of tpye{type(self.entry_freq_broad_threshold.get())}')
+        print(f'Dreamento received spd duration thresholds of {self.entry_spd_duration_threshold.get()} Hz of tpye{type(self.entry_spd_duration_threshold.get())}')
+        print(f'Dreamento received spd freq threshold of {self.entry_spd_freq_threshold.get()} Hz of tpye{type(self.entry_spd_freq_threshold.get())}')
+        print(f'Dreamento received spd min distance thresholds of { self.entry_min_distance_spd_detection_threshold.get()} Hz of tpye{type( self.entry_min_distance_spd_detection_threshold.get())}')
+
+        print(f'Dreamento received SO detection freq thresholds of {self.entry_freq_SO_threshold.get()} Hz of tpye{type(self.entry_freq_SO_threshold.get())}')
+        print(f'Dreamento received SO negative duration thresholds of {self.entry_SO_duration_neg_threshold.get()} Hz of tpye{type(self.entry_SO_duration_neg_threshold.get())}')
+        print(f'Dreamento received SO positive duration thresholds of {self.entry_SO_duration_pos_threshold.get()} Hz of tpye{type(self.entry_SO_duration_pos_threshold.get())}')
+        print(f'Dreamento received SO negative amp thresholds of {self.entry_SO_amp_neg_threshold.get()} Hz of tpye{type(self.entry_SO_amp_neg_threshold.get())}')
+        print(f'Dreamento received SO positive amp thresholds of {self.entry_SO_amp_pos_threshold.get()} Hz of tpye{type(self.entry_SO_amp_pos_threshold.get())}')
+        print(f'Dreamento received SO p2p amp thresholds of {self.entry_SO_amp_p2p_threshold.get()} Hz of tpye{type(self.entry_SO_amp_p2p_threshold.get())}')
+
+
+        self.min_freq_broad_threshold = int(self.entry_freq_broad_threshold.get().split(',')[0])
+        self.max_freq_broad_threshold = int(self.entry_freq_broad_threshold.get().split(',')[1])
+
+        self.min_dur_spd_detection = float(self.entry_spd_duration_threshold.get().split(',')[0])
+        self.max_dur_spd_detection = float(self.entry_spd_duration_threshold.get().split(',')[1])
+        
+        self.min_freq_spd_detection = float(self.entry_spd_freq_threshold.get().split(',')[0])
+        self.max_freq_spd_detection = float(self.entry_spd_freq_threshold.get().split(',')[1])
+        
+        self.min_distance_spd_detection = float(self.entry_min_distance_spd_detection_threshold.get())
+        
+        # SO
+        self.min_freq_SO_detection = float(self.entry_freq_SO_threshold.get().split(',')[0])
+        self.max_freq_SO_detection = float(self.entry_freq_SO_threshold.get().split(',')[1])
+        
+        self.min_dur_SO_negative_detection = float(self.entry_SO_duration_neg_threshold.get().split(',')[0])
+        self.max_dur_SO_negative_detection = float(self.entry_SO_duration_neg_threshold.get().split(',')[1])
+        
+        self.min_dur_SO_positive_detection = float(self.entry_SO_duration_pos_threshold.get().split(',')[0])
+        self.max_dur_SO_positive_detection = float(self.entry_SO_duration_pos_threshold.get().split(',')[1])
+        
+        self.min_amp_SO_negative_detection = float(self.entry_SO_amp_neg_threshold.get().split(',')[0])
+        self.max_amp_SO_negative_detection = float(self.entry_SO_amp_neg_threshold.get().split(',')[1])
+        
+        self.min_amp_SO_positive_detection = float(self.entry_SO_amp_pos_threshold.get().split(',')[0])
+        self.max_amp_SO_positive_detection = float(self.entry_SO_amp_pos_threshold.get().split(',')[1])
+
+        self.min_amp_SO_p2p_detection = float(self.entry_SO_amp_p2p_threshold.get().split(',')[0])
+        self.max_amp_SO_p2p_detection = float(self.entry_SO_amp_p2p_threshold.get().split(',')[1])
+        
+        self.popupWin_automatic_spd_event_detection.destroy()
+        
+        print(type(self.min_freq_broad_threshold))
+        print(type(self.max_freq_broad_threshold))
+        print(type(self.min_dur_spd_detection))
+        print(type(self.max_dur_spd_detection))
+        print(type(self.min_freq_spd_detection))
+        print(type(self.max_freq_spd_detection))
+        print(type(self.checkbox_spd_remove_outliers_val))
+        
+        print(type(self.min_freq_SO_detection))
+        print(type(self.max_freq_SO_detection))
+        print(type(self.min_dur_SO_negative_detection))
+        print(type(self.max_dur_SO_negative_detection))
+        print(type(self.min_dur_SO_positive_detection))
+        print(type(self.max_dur_SO_positive_detection))
+        print(type(self.min_amp_SO_negative_detection))
+        print(type(self.max_amp_SO_negative_detection))
+        print(type(self.min_amp_SO_positive_detection))
+        print(type(self.max_amp_SO_positive_detection))
+        print(type(self.min_amp_SO_p2p_detection))
+        print(type(self.max_amp_SO_p2p_detection))
+    
+    #%% Apply DreamentoConverter
+    def apply_DreamentoConverter(self):
+        import shutil
+        import subprocess
+
+        # define path to HDRecorder.exe
+        path_to_HDRecorder = str(self.entry_path_to_Hypnodyne_folder.get())
+        os.chdir(path_to_HDRecorder)
+        print(f'Changing directory to {path_to_HDRecorder}')
+        
+
+        # define files to be converted 
+        filenames_path = str(self.entry_path_to_txt_containing_hyps_to_convert.get())
+        
+        # Remove quotations if exist
+        filenames = np.loadtxt(filenames_path, dtype = 'str', delimiter = ',')
+        
+        print(f'raw hyp files received: {filenames}')
+
+        # define path to converted folders
+        destination_folders_path = str(self.entry_path_to_txt_containing_destination_paths.get())
+        destination_folders = np.loadtxt(destination_folders_path, dtype = 'str', delimiter = ',')
+
+        print(f'Locating the destination files: {destination_folders}')
+        
+        for conv in np.arange(len(filenames)):
+            
+            # Copy the .hyp file to HDRecoder folder for conversion
+            src_path = filenames[conv]
+            print(f'locating {src_path}')
+            current_file = filenames[conv].split('/')[-1]
+            dst_path = path_to_HDRecorder + current_file
+            print(dst_path)
+            shutil.copy(src_path, dst_path)
+                            
+            # Create a batch file to run conversion syntax
+            myBat = open(r'DreamentoConverter.bat','w+')
+            myBat.write('HDRecorder.exe -conv '+ current_file)
+            myBat.close()
+            
+            # run the created .bat --> conversion
+            print(f'Converting the file {conv+1}/{len(filenames)}...please be patient...\n')
+            subprocess.call(path_to_HDRecorder + 'DreamentoConverter.bat')
+            print(f'{conv+1}/{len(filenames)} files have been successfully converted\n')
+            print(f'file {src_path} converted to path {destination_folders[conv]}')
+            # Copy generated folder to the desired path
+            shutil.copytree(path_to_HDRecorder + 'SDConvert\\', destination_folders[conv])
+            
+            # Remove the .hyp and .bat files from HDRecorder folder
+            os.remove(path_to_HDRecorder + 'DreamentoConverter.bat')
+            os.remove(dst_path)
+            
+        print('All files have been successfully converted!')
     #%% select marker for sync command
     def select_marker(self):
         print(f'syncing based on the following event: {self.markers_sync_event.get()}')
         self.popupWin.destroy()
+    #%% plot hypno from YASA    
+    def plot_hypnogram(self, hypno, axis, sf_hypno=1/30, lw=1.5):
+        """
+        Plot a hypnogram.
+
+        .. versionadded:: 0.6.0
+
+        Parameters
+        ----------
+        hypno : array_like
+            Sleep stage (hypnogram).
+
+            .. note::
+                The default hypnogram format in YASA is a 1D integer vector where:
+
+                * -2 = Unscored
+                * -1 = Artefact / Movement
+                * 0 = Wake
+                * 1 = N1 sleep
+                * 2 = N2 sleep
+                * 3 = N3 sleep
+                * 4 = REM sleep
+        sf_hypno : float
+            The current sampling frequency of the hypnogram, in Hz, e.g.
+
+            * 1/30 = 1 value per each 30 seconds of EEG data,
+            * 1 = 1 value per second of EEG data
+        lw : float
+            Linewidth.
+        figsize : tuple
+           Width, height in inches.
+
+        Returns
+        -------
+        ax : :py:class:`matplotlib.axes.Axes`
+            Matplotlib Axes
+
+        Examples
+        --------
+        .. plot::
+
+            >>> import yasa
+            >>> import numpy as np
+            >>> hypno = np.loadtxt("https://github.com/raphaelvallat/yasa/raw/master/notebooks/data_full_6hrs_100Hz_hypno_30s.txt")
+            >>> ax = yasa.plot_hypnogram(hypno)
+        """
+        # Increase font size while preserving original
+        old_fontsize = plt.rcParams['font.size']
+        plt.rcParams.update({'font.size': 18})
+
+        # Safety checks
+        assert isinstance(hypno, (np.ndarray, pd.Series, list)), 'hypno must be an array.'
+        hypno = np.asarray(hypno).astype(int)
+        assert (hypno >= -2).all() and (hypno <= 4).all(), "hypno values must be between -2 to 4."
+        assert hypno.ndim == 1, 'hypno must be a 1D array.'
+        assert isinstance(sf_hypno, (int, float)), 'sf must be int or float.'
+
+        t_hyp = np.arange(hypno.size) / (sf_hypno * 3600)
+        # Make sure that REM is displayed after Wake
+        hypno = pd.Series(hypno).map({-2: -2, -1: -1, 0: 0, 1: 2, 2: 3, 3: 4, 4: 1}).values
+        hypno_rem = np.ma.masked_not_equal(hypno, 1)
+        hypno_art_uns = np.ma.masked_greater(hypno, -1)
+
+# =============================================================================
+#         fig, ax0 = plt.subplots(nrows=1, figsize=figsize)
+# =============================================================================
+        ax0 = axis
+        # Hypnogram (top axis)
+        ax0.step(t_hyp, -1 * hypno, color='k', lw=lw)
+        ax0.step(t_hyp, -1 * hypno_rem, color='red', lw=lw)
+        ax0.step(t_hyp, -1 * hypno_art_uns, color='grey', lw=lw)
+        if -2 in hypno and -1 in hypno:
+            # Both Unscored and Artefacts are present
+            ax0.set_yticks([2, 1, 0, -1, -2, -3, -4])
+            ax0.set_yticklabels(['Uns', 'Art', 'W', 'R', 'N1', 'N2', 'N3'])
+            ax0.set_ylim(-4.5, 2.5)
+        elif -2 in hypno and -1 not in hypno:
+            # Only Unscored are present
+            ax0.set_yticks([2, 0, -1, -2, -3, -4])
+            ax0.set_yticklabels(['Uns', 'W', 'R', 'N1', 'N2', 'N3'])
+            ax0.set_ylim(-4.5, 2.5)
+        elif -2 not in hypno and -1 in hypno:
+            # Only Artefacts are present
+            ax0.set_yticks([1, 0, -1, -2, -3, -4])
+            ax0.set_yticklabels(['Art', 'W', 'R', 'N1', 'N2', 'N3'])
+            ax0.set_ylim(-4.5, 1.5)
+        else:
+            # No artefacts or Unscored
+            ax0.set_yticks([0, -1, -2, -3, -4])
+            ax0.set_yticklabels(['W', 'R', 'N1', 'N2', 'N3'])
+            ax0.set_ylim(-4.5, 0.5)
+        ax0.set_xlim(0, t_hyp.max())
+        ax0.set_ylabel('Stage')
+        ax0.set_xlabel('Time [hrs]')
+        ax0.spines['right'].set_visible(False)
+        ax0.spines['top'].set_visible(False)
+        # Revert font-size
+# =============================================================================
+#         plt.rcParams.update({'font.size': old_fontsize})
+#         return ax0
+# =============================================================================
     #%% Click ZMax Hypnodyne only            
     def onclick_ZMaxHypnodyneOnly(self, event):
         """
@@ -4247,7 +6261,7 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.726;0.775x0.154)' or str(curr_ax) == 'AxesSubplot(0.125,0.6875;0.775x0.1925)'):
+            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
