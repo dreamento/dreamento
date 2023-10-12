@@ -18,6 +18,7 @@ recordings
 Testing
 voices/text2speech
 Teressa_rec.txt
+info_ch_extract.log
 
 # C extensions
 *.so

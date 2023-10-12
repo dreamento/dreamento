@@ -18,558 +18,552 @@
     <normaloff>graphics/app-logo.jpg</normaloff>graphics/app-logo.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>21</x>
-      <y>16</y>
-      <width>1234</width>
-      <height>840</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_3">
-     <item row="7" column="0" colspan="4">
-      <widget class="PlotWidget" name="graphWidget" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>500</width>
-         <height>200</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>400</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QSplitter" name="splitter">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QWidget" name="layoutWidget">
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
-          <widget class="QSlider" name="rSlider">
-           <property name="maximum">
-            <number>2</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QSlider" name="bSlider">
-           <property name="maximum">
-            <number>2</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="gValLabel">
-           <property name="text">
-            <string>Gval</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="rValLabel">
-           <property name="text">
-            <string>Rval</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="labelB">
-           <property name="text">
-            <string>B</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="labelR">
-           <property name="text">
-            <string>R</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="bValLabel">
-           <property name="text">
-            <string>Bval</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="labelG">
-           <property name="text">
-            <string>G</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSlider" name="gSlider">
-           <property name="maximum">
-            <number>2</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="7" column="0" colspan="4">
+       <widget class="PlotWidget" name="graphWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>400</height>
+         </size>
+        </property>
        </widget>
-       <widget class="QWidget" name="layoutWidget">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="10" column="0" colspan="4">
-          <widget class="QLineEdit" name="markerLineEdit">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="placeholderText">
-            <string>A remarkable happening....</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" colspan="4">
-          <widget class="QSlider" name="pwmSlider">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimum">
-            <number>2</number>
-           </property>
-           <property name="maximum">
-            <number>254</number>
-           </property>
-           <property name="singleStep">
-            <number>1</number>
-           </property>
-           <property name="value">
-            <number>210</number>
-           </property>
-           <property name="sliderPosition">
-            <number>210</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="labelText">
-           <property name="text">
-            <string>Say this:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1" colspan="5">
-          <widget class="QLineEdit" name="textToSpeechLineEdit"/>
-         </item>
-         <item row="1" column="2" rowspan="2">
-          <widget class="QCheckBox" name="vibrationBox">
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="text">
-            <string>Vibrate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="0" colspan="6">
-          <widget class="QComboBox" name="signalTypeComboBox"/>
-         </item>
-         <item row="1" column="4" rowspan="2" colspan="2">
-          <widget class="QSpinBox" name="repetitionsBox">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>15</number>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="4" colspan="2">
-          <widget class="QPushButton" name="setMarkerButton">
-           <property name="text">
-            <string>Set Marker</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>graphics/marker.png</normaloff>graphics/marker.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="labelOn">
-           <property name="text">
-            <string>On time</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0" colspan="6">
-          <widget class="QLabel" name="HintLine5">
-           <property name="text">
-            <string>5. Choose singal and press record and press record button:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="4" colspan="2">
-          <widget class="QPushButton" name="audioBrowserButton">
-           <property name="text">
-            <string>Select</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>10</width>
-             <height>10</height>
-            </size>
-           </property>
-           <property name="autoRepeatInterval">
-            <number>100</number>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="5">
-          <widget class="QLabel" name="intensitySliderLabel">
-           <property name="text">
-            <string>85%</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::RichText</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3" rowspan="2">
-          <widget class="QLabel" name="labelReps">
-           <property name="text">
-            <string>Reps</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="4" colspan="2">
-          <widget class="QPushButton" name="triggerText2SpeechButton">
-           <property name="text">
-            <string>Text2Speech</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>graphics/voice.png</normaloff>graphics/voice.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="labelIntensity">
-           <property name="text">
-            <string>Intensity</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QLabel" name="labelOff">
-           <property name="text">
-            <string>Off time</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="labelAudio">
-           <property name="text">
-            <string>Audio</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0" colspan="2">
-          <widget class="QPushButton" name="triggerLightButton">
-           <property name="text">
-            <string>Visual</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>graphics/light-bulb.png</normaloff>graphics/light-bulb.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QDoubleSpinBox" name="onTimeSpinBox">
-           <property name="decimals">
-            <number>1</number>
-           </property>
-           <property name="minimum">
-            <double>0.100000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>10.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.100000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" rowspan="2" colspan="2">
-          <widget class="QCheckBox" name="altEyesBox">
-           <property name="text">
-            <string>Althernate Eyes</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3">
-          <widget class="QDoubleSpinBox" name="offTimeSpinBox">
-           <property name="decimals">
-            <number>1</number>
-           </property>
-           <property name="minimum">
-            <double>0.100000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>10.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.100000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.300000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1" colspan="3">
-          <widget class="QLabel" name="audioNameLabel">
-           <property name="text">
-            <string>Nothing Selected</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0" colspan="6">
-          <widget class="QPushButton" name="recordButton">
-           <property name="text">
-            <string>Record</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>graphics/record_gray.png</normaloff>graphics/record_gray.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="2" colspan="2">
-          <widget class="QPushButton" name="triggerSoundButton">
-           <property name="text">
-            <string>Audio</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>graphics/sound-waves.png</normaloff>graphics/sound-waves.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="6">
-          <widget class="QLabel" name="HintLine4">
-           <property name="text">
-            <string>4. Trigger stimulation ( Zmax ON ):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="4" colspan="2">
-          <widget class="QLabel" name="labelSeconds">
-           <property name="text">
-            <string>seconds</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="3" colspan="3">
-          <widget class="QComboBox" name="sleepScoringMethodComboBox"/>
-         </item>
-         <item row="13" column="0" colspan="3">
-          <widget class="QCheckBox" name="scoreSleepCheckBox">
-           <property name="styleSheet">
-            <string notr="true">background-color:  #e7e7e7; color: black;</string>
-           </property>
-           <property name="text">
-            <string>Real-time Autoscoring</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      </item>
+      <item row="6" column="0">
+       <widget class="QSplitter" name="splitter">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <widget class="QWidget" name="layoutWidget">
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="1">
+           <widget class="QSlider" name="rSlider">
+            <property name="maximum">
+             <number>2</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSlider" name="bSlider">
+            <property name="maximum">
+             <number>2</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="gValLabel">
+            <property name="text">
+             <string>Gval</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="rValLabel">
+            <property name="text">
+             <string>Rval</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelB">
+            <property name="text">
+             <string>B</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelR">
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="bValLabel">
+            <property name="text">
+             <string>Bval</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelG">
+            <property name="text">
+             <string>G</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSlider" name="gSlider">
+            <property name="maximum">
+             <number>2</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="layoutWidget">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="10" column="0" colspan="4">
+           <widget class="QLineEdit" name="markerLineEdit">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>A remarkable happening....</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="4">
+           <widget class="QSlider" name="pwmSlider">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="minimum">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <number>254</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>210</number>
+            </property>
+            <property name="sliderPosition">
+             <number>210</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelText">
+            <property name="text">
+             <string>Say this:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1" colspan="5">
+           <widget class="QLineEdit" name="textToSpeechLineEdit"/>
+          </item>
+          <item row="1" column="2" rowspan="2">
+           <widget class="QCheckBox" name="vibrationBox">
+            <property name="focusPolicy">
+             <enum>Qt::StrongFocus</enum>
+            </property>
+            <property name="text">
+             <string>Vibrate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0" colspan="6">
+           <widget class="QComboBox" name="signalTypeComboBox"/>
+          </item>
+          <item row="1" column="4" rowspan="2" colspan="2">
+           <widget class="QSpinBox" name="repetitionsBox">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>15</number>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="4" colspan="2">
+           <widget class="QPushButton" name="setMarkerButton">
+            <property name="text">
+             <string>Set Marker</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>graphics/marker.png</normaloff>graphics/marker.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="labelOn">
+            <property name="text">
+             <string>On time</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0" colspan="6">
+           <widget class="QLabel" name="HintLine5">
+            <property name="text">
+             <string>5. Choose singal and press record and press record button:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4" colspan="2">
+           <widget class="QPushButton" name="audioBrowserButton">
+            <property name="text">
+             <string>Select</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>10</width>
+              <height>10</height>
+             </size>
+            </property>
+            <property name="autoRepeatInterval">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="5">
+           <widget class="QLabel" name="intensitySliderLabel">
+            <property name="text">
+             <string>85%</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3" rowspan="2">
+           <widget class="QLabel" name="labelReps">
+            <property name="text">
+             <string>Reps</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="4" colspan="2">
+           <widget class="QPushButton" name="triggerText2SpeechButton">
+            <property name="text">
+             <string>Text2Speech</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>graphics/voice.png</normaloff>graphics/voice.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="labelIntensity">
+            <property name="text">
+             <string>Intensity</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="labelOff">
+            <property name="text">
+             <string>Off time</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="labelAudio">
+            <property name="text">
+             <string>Audio</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0" colspan="2">
+           <widget class="QPushButton" name="triggerLightButton">
+            <property name="text">
+             <string>Visual</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>graphics/light-bulb.png</normaloff>graphics/light-bulb.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QDoubleSpinBox" name="onTimeSpinBox">
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" rowspan="2" colspan="2">
+           <widget class="QCheckBox" name="altEyesBox">
+            <property name="text">
+             <string>Althernate Eyes</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QDoubleSpinBox" name="offTimeSpinBox">
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.300000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="3">
+           <widget class="QLabel" name="audioNameLabel">
+            <property name="text">
+             <string>Nothing Selected</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0" colspan="6">
+           <widget class="QPushButton" name="recordButton">
+            <property name="text">
+             <string>Record</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>graphics/record_gray.png</normaloff>graphics/record_gray.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="2" colspan="2">
+           <widget class="QPushButton" name="triggerSoundButton">
+            <property name="text">
+             <string>Audio</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>graphics/sound-waves.png</normaloff>graphics/sound-waves.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="6">
+           <widget class="QLabel" name="HintLine4">
+            <property name="text">
+             <string>4. Trigger stimulation ( Zmax ON ):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="4" colspan="2">
+           <widget class="QLabel" name="labelSeconds">
+            <property name="text">
+             <string>seconds</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="3" colspan="3">
+           <widget class="QComboBox" name="sleepScoringMethodComboBox"/>
+          </item>
+          <item row="13" column="0" colspan="3">
+           <widget class="QCheckBox" name="scoreSleepCheckBox">
+            <property name="styleSheet">
+             <string notr="true">background-color:  #e7e7e7; color: black;</string>
+            </property>
+            <property name="text">
+             <string>Real-time Autoscoring</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
-      </widget>
-     </item>
-     <item row="2" column="0" rowspan="2" colspan="3">
-      <widget class="QPushButton" name="connectSoftwareButton">
-       <property name="text">
-        <string>2. Connect software</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" rowspan="2">
-      <widget class="QLabel" name="HintLine2">
-       <property name="text">
-        <string>3. Set desired stimulation (light/audio) parameters:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="QLabel" name="HintLine1">
-       <property name="text">
-        <string>1. Open HDServer.exe and HDRecorder.exe, then connect. </string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="3">
-      <widget class="QLabel" name="titleLabel">
-       <property name="font">
-        <font>
-         <family>Arial Narrow</family>
-         <pointsize>14</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Dreamento</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3" rowspan="6">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="MplWidget" name="SpectrogramWidget" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>700</width>
-           <height>200</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>400</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="MplWidget" name="PeriodogramWidget" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>100</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="1" rowspan="2" colspan="2">
-      <widget class="QLabel" name="PredictionLabel">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string>Predictions:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1" colspan="2">
-      <widget class="QPlainTextEdit" name="appDisplay"/>
-     </item>
-     <item row="8" column="0" colspan="2">
-      <widget class="QLabel" name="developer_names_label">
-       <property name="styleSheet">
-        <string notr="true">color: rgb(85, 85, 85);</string>
-       </property>
-       <property name="text">
-        <string>© 2021-22 — A.H. Daraie, M. Jafarzadeh Esfahani</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="2" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="range_x_label">
-         <property name="text">
-          <string>Range X</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="eegRangeX_SpinBox">
-         <property name="minimum">
-          <number>5</number>
-         </property>
-         <property name="maximum">
-          <number>30</number>
-         </property>
-         <property name="singleStep">
-          <number>5</number>
-         </property>
-         <property name="value">
-          <number>5</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="range_y_label">
-         <property name="text">
-          <string>Range Y</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="eegRangeY_SpinBox">
-         <property name="maximum">
-          <number>500</number>
-         </property>
-         <property name="singleStep">
-          <number>5</number>
-         </property>
-         <property name="value">
-          <number>60</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="resetEEGPlotButton">
-         <property name="minimumSize">
-          <size>
-           <width>400</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Set EEG Plot</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
+      </item>
+      <item row="2" column="0" rowspan="2" colspan="3">
+       <widget class="QPushButton" name="connectSoftwareButton">
+        <property name="text">
+         <string>2. Connect software</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" rowspan="2">
+       <widget class="QLabel" name="HintLine2">
+        <property name="text">
+         <string>3. Set desired stimulation (light/audio) parameters:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QLabel" name="HintLine1">
+        <property name="text">
+         <string>1. Open HDServer.exe and HDRecorder.exe, then connect. </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="3">
+       <widget class="QLabel" name="titleLabel">
+        <property name="font">
+         <font>
+          <family>Arial Narrow</family>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Dreamento</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" rowspan="6">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="MplWidget" name="SpectrogramWidget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>700</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>400</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="MplWidget" name="PeriodogramWidget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="1" rowspan="2" colspan="2">
+       <widget class="QLabel" name="PredictionLabel">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Predictions:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" colspan="2">
+       <widget class="QPlainTextEdit" name="appDisplay"/>
+      </item>
+      <item row="8" column="0" colspan="2">
+       <widget class="QLabel" name="developer_names_label">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(85, 85, 85);</string>
+        </property>
+        <property name="text">
+         <string>© 2021—23</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="range_x_label">
+          <property name="text">
+           <string>Range X</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="eegRangeX_SpinBox">
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>30</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="range_y_label">
+          <property name="text">
+           <string>Range Y</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="eegRangeY_SpinBox">
+          <property name="maximum">
+           <number>500</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>60</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="resetEEGPlotButton">
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Set EEG Plot</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>
