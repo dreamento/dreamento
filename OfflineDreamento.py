@@ -2517,6 +2517,9 @@ class OfflineDreamento():
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
                 ##########
+                
+            self.str_first_subplot = str(ax3)
+            
             fig.canvas.mpl_connect('key_press_event', self.pan_nav)
             fig.canvas.mpl_connect('button_press_event', self.onclick)
             #ax1.set_xlim([0, 7680])#len(data)])
@@ -2826,6 +2829,8 @@ class OfflineDreamento():
             
             #ax4.get_xaxis().set_visible(False)
             
+            self.str_first_subplot = str(ax3)
+
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_EMG_autoscoring)
             fig.canvas.mpl_connect('button_press_event', self.onclick_EMG_autoscoring)
             #ax1.set_xlim([0, 7680])#len(data)])
@@ -3895,6 +3900,8 @@ class OfflineDreamento():
             
         except OSError:
             print("Can't change the Current Working Directory")     
+            os.chdir('DreamentoScorer')
+
         print(f'current path is {path_to_DreamentoScorer}')
         from entropy.entropy import spectral_entropy
         from DreamentoScorer import DreamentoScorer
@@ -4638,7 +4645,8 @@ class OfflineDreamento():
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
                     
-                
+            self.str_first_subplot = str(ax3)
+
         #### If autoscoring is activated ....
         elif int(self.is_autoscoring.get()) == 1:
             print('Plot results with autoscoring')
@@ -4889,6 +4897,7 @@ class OfflineDreamento():
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
                 
+            self.str_first_subplot = str(ax3)
                 
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_ZMaxHypnodyneOnly)
             fig.canvas.mpl_connect('button_press_event', self.onclick_ZMaxHypnodyneOnly)
@@ -5233,7 +5242,8 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5258,7 +5268,8 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5297,7 +5308,8 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(curr_ax) == self.str_first_subplot:
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -5321,7 +5333,8 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5346,7 +5359,8 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5385,7 +5399,8 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            #if str(curr_ax) == 'AxesSubplot(0.125,0.728525;0.775x0.12623)':
+            if str(curr_ax) == self.str_first_subplot:
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
@@ -5472,7 +5487,8 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5496,7 +5512,8 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -6286,7 +6303,8 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.74;0.775x0.14)' or str(curr_ax) == 'AxesSubplot(0.125,0.708889;0.775x0.171111)'):
+            if str(curr_ax) == self.str_first_subplot:
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
