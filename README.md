@@ -44,7 +44,8 @@ Automatic rapid eye movement events detection:
 
 
 ## Installation and Prerequisities: 
-Option 1: installation through Anaconda (recommended)
+The following options are recommended when using **Microsoft Windows**:
+Option 1: installation through Anaconda *(recommended)*:
 - Download and install Anaconda (https://www.anaconda.com/).
 - Download and install Dreamento (see section *Step-by-step installation guide*)
 
@@ -70,6 +71,11 @@ conda env create --name dreamento --file dreamento.yml
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
+
+If you wish to use offlineDreamento on another operating system, e.g., ```Linux, Ubuntu```, you should install OfflineDreamento through the following:
+- ```conda create -n offlineDreamento -c conda-forge spyder yasa pywavelets```
+*N.B. Please note that the functionality may slightly differ on Linux-based systems, due to the minor differences in the dependencies. If you have the option to use offlineDreamento on Microsoft Windows, that's highly recommended.*
+
 ## Always stay up to date!
 Note: automatic Dreamento updater uses **git**. So, if you don't have git installed on your pc, first install it (https://git-scm.com/download/win)!
 
