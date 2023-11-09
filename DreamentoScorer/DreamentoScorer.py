@@ -19,7 +19,6 @@ import pandas as pd
 import pywt
 from scipy.signal import butter, lfilter, periodogram, spectrogram, welch, filtfilt, iirnotch
 from sklearn.ensemble import RandomForestClassifier
-import heapq
 from scipy.signal import argrelextrema
 from sklearn.model_selection import cross_val_score,KFold, cross_validate
 from sklearn.metrics import confusion_matrix, make_scorer, accuracy_score, precision_score, recall_score, f1_score
@@ -34,7 +33,6 @@ from scipy.fftpack import fft
 # =============================================================================
 import time
 #import pyeeg
-import nolds
 from scipy.integrate import simps
 import scipy
 import scipy.fftpack
