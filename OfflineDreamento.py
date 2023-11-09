@@ -30,15 +30,12 @@ from scipy.signal import butter, filtfilt
 import itertools
 import matplotlib
 import os
-import threading
 from sklearn.preprocessing import MinMaxScaler
 import yasa
+import platform 
 
 matplotlib.use('TkAgg')
 
-# =============================================================================
-# %matplotlib qt
-# =============================================================================
 style.use('default')
 
 
@@ -1446,9 +1443,14 @@ class OfflineDreamento():
     
         global hypnodyne_files_list
         
-        self.filenames        = filedialog.askopenfilenames(title = 'select EEG L.edf file', 
-                                                       filetype = (("EEG L edf", "*.edf"), ("All Files", "*.*")))
-        
+        if platform.system() == "Windows":
+            self.filenames        = filedialog.askopenfilenames(title = 'select EEG L.edf file', 
+                                                           filetype = (("EEG L edf", "*.edf"), ("All Files", "*.*")))
+        else:
+            
+            self.filenames        = filedialog.askopenfilenames(title = 'select EEG L.edf file', 
+                                                           filetypes = (("EEG L edf", "*.edf"), ("All Files", "*.*")))
+            
         # Make a list of imported file names (full path)
         hypnodyne_files_list       = self.frame_import.tk.splitlist(self.filenames)
         self.n_data_files     = len(hypnodyne_files_list)
@@ -1477,8 +1479,14 @@ class OfflineDreamento():
     
         global Dreamento_files_list
         
-        self.filenames    = filedialog.askopenfilenames(title = 'select label files', 
-                                                       filetype = (("txt", "*.txt"),("csv", "*.csv"), ("All Files", "*.*")))
+        if platform.system() == "Windows":
+
+            self.filenames    = filedialog.askopenfilenames(title = 'select label files', 
+                                                           filetype = (("txt", "*.txt"),("csv", "*.csv"), ("All Files", "*.*")))
+        else:
+            
+            self.filenames    = filedialog.askopenfilenames(title = 'select label files', 
+                                                           filetypes = (("txt", "*.txt"),("csv", "*.csv"), ("All Files", "*.*")))
         Dreamento_files_list  = self.frame_import.tk.splitlist(self.filenames)
         self.n_label_files     = len(Dreamento_files_list)
         
@@ -1509,8 +1517,13 @@ class OfflineDreamento():
     
         global marker_files_list
         
-        self.filenames    = filedialog.askopenfilenames(title = 'select marker files', 
-                                                       filetype = (("json", "*.json"),("csv", "*.csv"), ("All Files", "*.*")))
+        if platform.system() == "Windows":
+
+            self.filenames    = filedialog.askopenfilenames(title = 'select marker files', 
+                                                           filetype = (("json", "*.json"),("csv", "*.csv"), ("All Files", "*.*")))
+        else:
+            self.filenames    = filedialog.askopenfilenames(title = 'select marker files', 
+                                                           filetypes = (("json", "*.json"),("csv", "*.csv"), ("All Files", "*.*")))
         marker_files_list  = self.frame_import.tk.splitlist(self.filenames)
         self.n_label_files     = len(marker_files_list)
         
@@ -1539,8 +1552,14 @@ class OfflineDreamento():
     
         global EMG_files_list
         
-        self.filenames    = filedialog.askopenfilenames(title = 'select EMG file (.vhdr or .edf)', 
+        if platform.system() == "Windows":
+
+            self.filenames    = filedialog.askopenfilenames(title = 'select EMG file (.vhdr or .edf)', 
                                                        filetype = (("vhdr", "*.vhdr"),("edf", "*.edf"), ("All Files", "*.*")))
+        else: 
+            self.filenames    = filedialog.askopenfilenames(title = 'select EMG file (.vhdr or .edf)', 
+                                                       filetypes = (("vhdr", "*.vhdr"),("edf", "*.edf"), ("All Files", "*.*")))
+            
         EMG_files_list  = self.frame_import.tk.splitlist(self.filenames)
         self.n_label_files     = len(EMG_files_list)
         
@@ -1564,9 +1583,15 @@ class OfflineDreamento():
         
         
         """        
-        self.filename_paths_for_bulk_autoscoring    = filedialog.askopenfilenames(title = 'select a .txt file including paths to the folders to be autoscored', 
-                                                       filetype = (("txt", "*.txt"),("All Files", "*.*")))
+        if platform.system() == "Windows":
 
+            self.filename_paths_for_bulk_autoscoring    = filedialog.askopenfilenames(title = 'select a .txt file including paths to the folders to be autoscored', 
+                                                           filetype = (("txt", "*.txt"),("All Files", "*.*")))
+        else:
+                        
+            self.filename_paths_for_bulk_autoscoring    = filedialog.askopenfilenames(title = 'select a .txt file including paths to the folders to be autoscored', 
+                                                           filetypes = (("txt", "*.txt"),("All Files", "*.*")))
+            
         self.bulk_autoscoring_files_list  = self.popupWin_bulk_autoscoring.tk.splitlist(self.filename_paths_for_bulk_autoscoring)
         
         # check if the user chose somthing
