@@ -815,7 +815,7 @@ class OfflineDreamento():
             # Acc
             self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
             self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
-            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dZ.edf'
             
             self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
             self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
@@ -1705,7 +1705,7 @@ class OfflineDreamento():
             # Acc
             self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
             self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
-            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+            self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dZ.edf'
             
             self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
             self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
@@ -1769,7 +1769,7 @@ class OfflineDreamento():
                 # Acc
                 self.acc_x_path = hypnodyne_files_list[0].split('EEG')[0] + 'dX.edf'
                 self.acc_y_path = hypnodyne_files_list[0].split('EEG')[0] + 'dY.edf'
-                self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dz.edf'
+                self.acc_z_path = hypnodyne_files_list[0].split('EEG')[0] + 'dZ.edf'
                 
                 self.acc_x_obj = mne.io.read_raw_edf(self.acc_x_path)
                 self.acc_y_obj = mne.io.read_raw_edf(self.acc_y_path)
@@ -3406,6 +3406,7 @@ class OfflineDreamento():
             
             #ax4.get_xaxis().set_visible(False)
             
+            self.str_first_subplot = str(ax3)
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
             fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
             
@@ -3734,6 +3735,7 @@ class OfflineDreamento():
             ax_proba.set_yticks([])
             ax_proba.set_xticks([])
             
+            self.str_first_subplot = str(ax3)
             fig.canvas.mpl_connect('key_press_event', self.pan_nav_noEMG)
             fig.canvas.mpl_connect('button_press_event', self.onclick_noEMG)
 
@@ -5423,7 +5425,8 @@ class OfflineDreamento():
             adjust = (lims[1] - lims[0]) 
             ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5447,7 +5450,8 @@ class OfflineDreamento():
             print(f'favailable axes: {event.inaxes}')
             
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            if str(curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
@@ -5551,7 +5555,8 @@ class OfflineDreamento():
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
             print(f'{event.inaxes}')
             curr_ax = event.inaxes
-            if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            #if (str(curr_ax) == 'AxesSubplot(0.125,0.674667;0.775x0.171111)' or str(curr_ax) =='AxesSubplot(0.125,0.654634;0.775x0.187805)'):
+            if str(curr_ax) == self.str_first_subplot:
                 if len(curr_ax.lines) > 0 :
                     curr_ax.lines[-1].remove()
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
