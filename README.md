@@ -46,10 +46,9 @@ Automatic rapid eye movement events detection:
 ## Installation: 
 Please note that the installation **Offline** and **real-time** are different, and thus two different virtual environments are required as follows:
 
-The **Microsoft Windows** users are highly recommended to install **real-time Dreamento** using Option 1 or 2. Other OS users should use Option.
-
 1. Real-time Dreamento installation:
 
+The **Microsoft Windows** users are highly recommended to install **real-time Dreamento** using Option 1 or 2. Other OS users should use Option.
 **Option 1: installation through Anaconda** *(recommended)*:
 - Download and install Anaconda (https://www.anaconda.com/).
 - Download Dreamento repository from GitHub, e.g., ```git clone https://github.com/dreamento/dreamento.git```
