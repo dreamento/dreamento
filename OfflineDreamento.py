@@ -4064,7 +4064,9 @@ class OfflineDreamento():
             print("Loading DreamentoScorer class ... ")
             
         except OSError:
-            print("Can't change the Current Working Directory")     
+            print("Can't change the Current Working Directory")  
+            os.chdir('DreamentoScorer')
+
         print(f'current path is {path_to_DreamentoScorer}')
         from entropy.entropy import spectral_entropy
         from DreamentoScorer import DreamentoScorer

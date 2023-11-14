@@ -43,37 +43,44 @@ Automatic rapid eye movement events detection:
 ![rem](https://github.com/dreamento/dreamento/assets/48684369/5432a355-66ff-4ad9-be20-c94490003250)
 
 
-## Installation and Prerequisities: 
-The following options are recommended when using **Microsoft Windows**:
-Option 1: installation through Anaconda *(recommended)*:
+## Installation: 
+Please note that the installation **Offline** and **real-time** are different, and thus two different virtual environments are required as follows:
+
+The **Microsoft Windows** users are highly recommended to install **real-time Dreamento** using Option 1 or 2. Other OS users should use Option.
+
+1. Real-time Dreamento installation:
+
+**Option 1: installation through Anaconda** *(recommended)*:
 - Download and install Anaconda (https://www.anaconda.com/).
-- Download and install Dreamento (see section *Step-by-step installation guide*)
-
-Option 2: Using ```pip```:
-- ```pip install -r requirements_dreamento.txt```
-
-## Step-by-step installation guide
-Please note that the installation **Offline** and **real-time** are different, and thus two different virtual environments are required as follows: 
-
-1. Real-time Dreamento: (*A complete tutorial on how to install **real-time Dreamento** can be found [HERE](https://youtu.be/bDRXnMZEIyI).*)
-
-- Open anaconda prompt.
-
+- Download Dreamento repository from GitHub, e.g., ```git clone https://github.com/dreamento/dreamento.git```
+- Open anaconda prompt and change directory to where Dreamento repository is located (e.g., ```cd C:/path/to/Dreament_folder/```).
 - Create all the required packages on a virtual environment with the following syntax (only at the first use):
 ```
 conda env create --name dreamento --file dreamento.yml
 ```
-2. Offline Dreamento installation: (*A complete tutorial on how to install **Offline Dreamento**[(video tutorial)](https://youtu.be/dpnUeIM0XDQ))
 
-- Open anaconda prompt.
+**Option 2: Using ```pip```**:
+- Download Dreamento repository from GitHub, e.g., ```git clone https://github.com/dreamento/dreamento.git```
+- Open command prompt and change directory to where Dreamento repository is located (e.g., ```cd C:/path/to/Dreament_folder/```).
+- ```pip install -r requirements_dreamento.txt```
 
+**Option 3: Other operating systems, such as Linux, Ubuntu, Fedora**:
+- ```conda create -n dreamento python=3.6 && conda activate dreamento && pip install tensorflow==1.13.1 yasa gtts==2.2.3 pydub==0.25.1 PyQt5 && conda install -c anaconda qt==5.9.7 scikit-learn==0.24.2 pyqtgraph==0.11.0```
+
+2. Offline Dreamento installation:
+
+**Option 1: installation through Anaconda** *(recommended)*:
+- Download and install Anaconda (https://www.anaconda.com/).
+- Download Dreamento repository from GitHub, e.g., ```git clone https://github.com/dreamento/dreamento.git```
+- Open command prompt and change directory to where Dreamento repository is located (e.g., ```cd C:/path/to/Dreament_folder/```).
 - Create all the required packages on a virtual environment with the following syntax (only at the first use): 
 ```
 conda env create --name offlinedreamento --file offlinedreamento.yml
 ```
 
-If you wish to use offlineDreamento on another operating system, e.g., ```Linux, Ubuntu```, you should install OfflineDreamento through the following:
+**Option 2: Other operating system, e.g., ```Linux, Ubuntu```:
 - ```conda create -n offlineDreamento -c conda-forge spyder yasa pywavelets```
+
 *N.B. Please note that the functionality may slightly differ on Linux-based systems, due to the minor differences in the dependencies. If you have the option to use offlineDreamento on Microsoft Windows, that's highly recommended.*
 
 ## Always stay up to date!
