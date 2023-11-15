@@ -24,7 +24,7 @@ A complete tutorial on how to install and use Dreamento can be found in the user
 2. **Analysis**: Real-time spectrogram and peridogoram analysis
 3. **Autoscoring**: Real-time sleep staging, open to any algorithm (is not ideal yet, still under development)
 4. **Sensory stimulation**: Sensory stimulatio using visual, auditory, and tactile stimuli
-5. **annotations**: Capability of adding manual and automatic markers
+5. **annotations**: Capability of adding manual and automatic markers 
 
 ## Post-processing features:
 
@@ -48,7 +48,8 @@ Please note that the installation **Offline** and **real-time** are different, a
 
 1. Real-time Dreamento installation:
 
-The **Microsoft Windows** users are highly recommended to install **real-time Dreamento** using Option 1 or 2. Other OS users should use Option.
+The **Microsoft Windows** users are highly recommended to install **real-time Dreamento** using Option 1 or 2. Other OS users should use Option 3.
+
 **Option 1: installation through Anaconda** *(recommended)*:
 - Download and install Anaconda (https://www.anaconda.com/).
 - Download Dreamento repository from GitHub, e.g., ```git clone https://github.com/dreamento/dreamento.git```
