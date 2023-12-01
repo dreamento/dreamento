@@ -125,6 +125,11 @@ spyder
 When spyder pops up, open ```offlinedreamento.py``` and proceed with the desired analysis. **If you are interested in autoscoring, we highly recommend this method. Otherwise, if you run offlinedreamento directly through command prompt you may get errors while autoscoring.
 You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband) (4) BrainProducts post-processing.
 
+## Manual sleep scoring:
+Recently, we enabled the manual scoring feature in Dreamento. This feature is only active when all required files are provided to Dramento (1. EEG L.edf, 2. Dreametno recording, 3. Dreamento Annotations, 4. EMG file). This is because, we do not recommend manual scoring in the absence of EMG signal.
+
+By pressing the "Manual scoring instructions", you get the list of the relavant keys for scoring. In Dreamento manual scoring, we also enabled the possibility to mark the predefined eye signals, e.g., LRLR.
+
 
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package.
@@ -152,6 +157,9 @@ Do you have several raw recordings from ZMax (.hyp) and now you want to convert 
 If that option is not available in your OfflineDreamento GUI, you may need to update your software. See "Always stay up to date!" section!
 
 You need to create two .txt files, one with the path to all ```.hyp``` files that you need to convert, and the other .txt fileincluding all destination paths. 
+
+## Import sleep scoring:
+By checking the "Import sleep scoring" checkbox, the user can import up to 3 already scored files. Then, Dreamento presents all the scorings along with data and provide the agreement between scorers, if more than one scoring file is imported.
 
 ### Synchronization
 You can collect ExG data using other device in parallel with ZMax and then use Dreamento to synchronize the outputs!
@@ -191,10 +199,9 @@ Please note that this program is provided with no warranty of any kind.
 ## Citation
 For any use of Dreamento please cite: 
 
-*Jafarzadeh Esfahani, M., Daraie, A. H., Weber, F. D., & Dresler, M. (2022). Dreamento: an open-source dream engineering toolbox for sleep EEG wearables. arXiv e-prints, arXiv-2207.
-https://doi.org/10.48550/arXiv.2207.03977*
+*Jafarzadeh Esfahani, M., Daraie, A. H., Zerr, P., Weber, F. D., & Dresler, M. (2023). Dreamento: An open-source dream engineering toolbox for sleep EEG wearables. SoftwareX, 24, 101595. https://doi.org/10.1016/j.softx.2023.101595*
 
-If you intend to cite to the validity of DreamentoScorer in particular, please cite:
+If you intend to cite to the validity of **DreamentoScorer** in particular, please also cite:
 Jafarzadeh Esfahani, M., D. Weber, F., Boon, M., Anthes, S., Almazova, T., van Hal, M., ... & Dresler, M. (2023). Validation of the sleep EEG headband ZMax. bioRxiv, 2023-08. https://doi.org/10.1101/2023.08.18.553744
 
 **CopyRight (2021 - 23): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
