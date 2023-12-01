@@ -69,6 +69,12 @@ class OfflineDreamento():
                               font = 'Calibri 13 ', fg = 'white', bg = 'black')
         self.popup_button.grid(row = 1, column = 7)
         
+        #### ==================== Manual scoring pop-up button ======================####
+        
+        self.manual_scoring_popup_button = Button(self.master, text = "Manual scoring instructions", command = self.manual_scoring_popup_button_func,
+                              font = 'Calibri 13 ', fg = 'white', bg = 'navy')
+        self.manual_scoring_popup_button.grid(row = 1, column = 6)
+        
         ###### ================== CopyRight ============================ ######
         self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-23): Mahdad Jafarzadeh Esfahani",
                                   font = 'Calibri 10 italic')
@@ -146,27 +152,34 @@ class OfflineDreamento():
                                       font = 'Calibri 13 ')
         self.label_analysis.grid(row = 0 , column = 4, sticky="w")
         
-    #%% init a label to give warning
+    #%% label import human scoring / already scored hypnogram
+    #%% Enable manual scoring
+        self.import_scoring = IntVar(value = 0)
+        self.checkbox_import_scoring = Checkbutton(self.frame_import, text = "import sleep scoring",
+                                  font = 'Calibri 11 ', variable = self.import_scoring,
+                                  command=self.ImportManualScoring)
+        
+        self.checkbox_import_scoring.grid(row = 1, column = 4, sticky="w")
     #%% Bulk autoscoring
         self.bulk_autoscoring_val = IntVar(value = 0)
         self.checkbox_bulk_autoscoring = Checkbutton(self.frame_import, text = "Bulk autoscoring",
                                   font = 'Calibri 11 ', variable = self.bulk_autoscoring_val, 
                                   command = self.bulk_autoscoring_popup)
         
-        self.checkbox_bulk_autoscoring.grid(row = 1, column = 4, sticky="w")
+        self.checkbox_bulk_autoscoring.grid(row = 2, column = 4, sticky="w")
     #%% Checkbox for autoscoring
         self.is_autoscoring = IntVar(value = 0)
         self.checkbox_is_autoscoring = Checkbutton(self.frame_import, text = "Single-file autoscoring",
                                   font = 'Calibri 11 ', variable = self.is_autoscoring)#, command = self.scoring_caution)
         
-        self.checkbox_is_autoscoring.grid(row = 2, column = 4, sticky="w") 
+        self.checkbox_is_autoscoring.grid(row = 3, column = 4, sticky="w") 
         
     #%% Checkbox for filtering
         self.is_filtering = IntVar(value = 1)
         self.checkbox_is_filtering = Checkbutton(self.frame_import, text = "Band-pass filtering (.3-30 Hz)",
                                   font = 'Calibri 11 ', variable = self.is_filtering)
         
-        self.checkbox_is_filtering.grid(row = 3, column = 4, sticky="w")
+        self.checkbox_is_filtering.grid(row = 4, column = 4, sticky="w")
         
 
     #%% Checkbox for plotting syncing process
@@ -174,14 +187,14 @@ class OfflineDreamento():
         self.checkbox_plot_sync_output = Checkbutton(self.frame_import, text = "Plot EEG alignment process",
                                   font = 'Calibri 11 ', variable = self.plot_sync_output)
         
-        self.checkbox_plot_sync_output.grid(row = 4, column = 4, sticky="w")
+        self.checkbox_plot_sync_output.grid(row = 5, column = 4, sticky="w")
     
     #%% Checkbox for plotting EMG quality TFR
         self.plot_EMG_quality_evaluation = IntVar(value=1)
         self.checkbox_plot_EMG_quality_evaluation = Checkbutton(self.frame_import, text = "EMG quality evaluation",
                                   font = 'Calibri 11 ', variable = self.plot_EMG_quality_evaluation)
         
-        self.checkbox_plot_EMG_quality_evaluation.grid(row = 5, column = 4, sticky="w")
+        self.checkbox_plot_EMG_quality_evaluation.grid(row = 6, column = 4, sticky="w")
         
     #%% Checkbox for automatic eye movement detector
         self.automatic_REM_event_deetction = IntVar(value=0)
@@ -190,7 +203,7 @@ class OfflineDreamento():
                                   command = self.automatic_REM_event_detection_popup)
 
         
-        self.checkbox_automatic_REM_event_deetction.grid(row = 6, column = 4, sticky="w")
+        self.checkbox_automatic_REM_event_deetction.grid(row = 7, column = 4, sticky="w")
         
     #%% Checkbox for automatic spindle detection
         self.automatic_spd_event_deetction = IntVar(value=0)
@@ -199,13 +212,13 @@ class OfflineDreamento():
                                   command = self.automatic_spd_event_detection_popup)
 
         
-        self.checkbox_automatic_spd_event_deetction.grid(row = 7, column = 4, sticky="w")
+        self.checkbox_automatic_spd_event_deetction.grid(row = 8, column = 4, sticky="w")
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 8, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 9, column = 4, sticky="w", pady = 10)
         
         #%% checkbox DreamentoConverter
         self.DreamentoConverter_val = IntVar(value = 0)
@@ -213,13 +226,13 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.DreamentoConverter_val,\
                                   command=self.DreamentoConverter)
         
-        self.checkbox_DreamentoConverter.grid(row = 9, column = 4, sticky="w", pady = 10)
+        self.checkbox_DreamentoConverter.grid(row = 10, column = 4, sticky="w", pady = 10)
             
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 10 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 11 , column = 4, sticky="w")
         
     #%% Checkbox for plotting Dreamento + HDRecorder + EMG
         self.analysis_signal_options = IntVar(value = 1)
@@ -227,7 +240,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 11, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 12, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne + Dreamento
@@ -236,14 +249,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 12, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 13, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 13, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 14, column = 4, sticky="w", pady = 10)
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.BrainVision_analysis = IntVar(value = 0)
@@ -251,7 +264,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 4,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_BrainVision_analysis.grid(row = 14, column = 4, sticky="w", pady = 10)
+        self.checkbox_BrainVision_analysis.grid(row = 15, column = 4, sticky="w", pady = 10)
     #%% EMG Y SCALE
         #Label to read data and extract features
         self.label_EMG_scale = Label(self.frame_import, text = "EMG amplitude (uV):",
@@ -424,7 +437,49 @@ class OfflineDreamento():
             progress_var.set(progress)
     
         return 0
+    
+    #%%     Enable manual scoring impotr
+    def ImportManualScoring(self):
         
+        messagebox.showinfo("Information",f"You can import up to 3 scorings for each data (e.g., to get the agreement between scorers)\n\n" +\
+                                          "Dreamento excpects the scorings to be of 2 columns:\n\n"+\
+                                          "column1:\n sleep scorings, where 0,1,2,3,4 stand for W,N1,N2,N3,REM, respectively.\n\n" +\
+                                          "column2:\n events indicated by 0,1,2,5757 for no event, arousal, major body movement, and LRLR eye movement, respectively.")
+        self.popupWin_ImportManualScoring = Toplevel(root)         
+        
+        self.path_to_manual_scorings_label = Label(self.popupWin_ImportManualScoring, text='Path to scorings:')
+        self.path_to_manual_scorings_label.grid(row = 1 , column =1)
+
+        # Define browse button to import hypnos
+        self.button_import_manual_scorings_browse = Button(self.popupWin_ImportManualScoring, text = "Browse scorings", 
+                                           command = self.import_manual_scorings,fg = 'blue',
+                                           relief = RIDGE)
+        self.button_import_manual_scorings_browse.grid(row = 1 , column =2,  padx = 10, pady = 10)
+
+        # Define browse button to import hypnos
+        self.button_import_manual_scorings_ok = Button(self.popupWin_ImportManualScoring, text = "OK!", 
+                                           command = self.receive_scorings,fg = 'blue',
+                                           relief = RIDGE,  padx = 10, pady = 10)
+        self.button_import_manual_scorings_ok.grid(row = 3 , column =1)
+        
+    #%% receive scoring results
+    def receive_scorings(self):
+        
+# =============================================================================
+#         self.x_stages_imported = dict()
+#         self.y_stages_imported = dict()
+#         self.stages_imported = dict()
+#         self.scorings_imported = dict()
+#         print(f'number of imported scorings: {len(self.filename_scoring_paths)}')
+#         
+#         for scoring_file in np.arange(len(self.filename_scoring_paths)):
+#             print(f'reading {self.filename_scoring_paths[scoring_file]}')
+#             self.stages_imported[self.filename_scoring_paths[scoring_file]] = np.loadtxt(self.filename_scoring_paths[scoring_file], dtype = int)
+#             print(f'reading shape of  {np.shape(self.stages_imported[self.filename_scoring_paths[scoring_file]])}')
+# =============================================================================
+        self.stages_imported = dict()
+        self.events_imported = dict()
+        self.popupWin_ImportManualScoring.destroy()
     #%% Activation/inactivation of EMG button depending on the checkbox
     def EMG_sync_method_activator(self):
                 
@@ -1502,7 +1557,36 @@ class OfflineDreamento():
                                   fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column = 1)
             
             
+    #%% Load manual scoring1
+    def import_manual_scorings(self):
+                
+        if platform.system() == "Windows":
+            self.filename_scorings       = filedialog.askopenfilenames(title = 'txt file of the scorings', 
+                                                           filetype = (("txt", "*.txt"), ("All Files", "*.*")))
+        else:
             
+            self.filename_scorings        = filedialog.askopenfilenames(title = 'txt file of the scorings', 
+                                                           filetypes = (("txt", "*.txt"), ("All Files", "*.*")))
+        
+        self.path_to_manual_scorings_label.config(text=f'Path to scorings: {self.filename_scorings}')
+        self.popupWin_ImportManualScoring.lift()
+
+        # Make a list of imported file names (full path)
+        self.filename_scoring_paths  = self.popupWin_ImportManualScoring.tk.splitlist(self.filename_scorings)
+        print(f'the following files have been imported: {self.filename_scoring_paths}')
+        
+        # check if the user chose somthing
+        if not self.filename_scoring_paths:
+            
+            self.label_nofile       = Label(self.popupWin_ImportManualScoring, text = "No file has been selected!",
+                                          fg = 'red', font = 'Helvetica 9 bold').grid(row = 2, column = 0)
+    
+        else:
+            self.label_data       = Label(self.popupWin_ImportManualScoring, text = "The scoring files have been loaded!",
+                                          fg = 'green', font = 'Helvetica 9 bold').grid(row = 2, column =1)        
+            if len(self.filename_scoring_paths) >3:
+                self.label_more_than_3files      = Label(self.popupWin_ImportManualScoring, text = "Dreamento doesn't support more than 3 scorings consensus! reload up to 3 scorings!",
+                                              fg = 'orange', font = 'Helvetica 9 bold').grid(row = 3, column = 0)
     #%% Function: Import Hypnogram (Browse)
     def load_marker_file_dialog(self):
         
@@ -2208,23 +2292,97 @@ class OfflineDreamento():
             
             # If plotting EMG TFR is required
             if int(self.plot_EMG_quality_evaluation.get()) == 1:
-                fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4, 4, 10]})
-                ax1 = plt.subplot(16,1,1)
-                ax2 = plt.subplot(16,1,2, sharex = ax1)
-                ax3 = plt.subplot(16,1,3, sharex = ax1)
-                ax_TFR_EMG1 = plt.subplot(16,1,5)
-                ax_TFR_EMG2 = plt.subplot(16,1,6)
-                ax_TFR_EMG3 = plt.subplot(16,1,7)
-                ax_epoch_marker = plt.subplot(16,1,8, )
-                ax_epoch_light = plt.subplot(16,1,9, sharex = ax_epoch_marker)
-                ax_acc = plt.subplot(16,1,10, sharex = ax_epoch_marker)
-                ax_ppg = plt.subplot(16,1,11, sharex = ax_epoch_marker)
-                ax_noise = plt.subplot(16,1,12, sharex = ax_epoch_marker)  
-                ax_EMG = plt.subplot(16,1,13, sharex = ax_epoch_marker)
-                ax_EMG2 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
-                ax_EMG3 = plt.subplot(16,1,15, sharex = ax_epoch_marker)
-                ax_TFR_short = plt.subplot(16,1,4, sharex = ax1)
-                ax4 = plt.subplot(16,1,16, sharex = ax_epoch_marker)
+                if int(self.import_scoring.get()) == 0:
+                    fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4,4, 10]})
+                    ax1 = plt.subplot(16,1,1)
+                    ax2 = plt.subplot(16,1,2, sharex = ax1)
+                    ax3 = plt.subplot(16,1,3, sharex = ax1)
+                    ax_TFR_short = plt.subplot(16,1,4, sharex = ax1)
+                    ax_TFR_EMG1 = plt.subplot(16,1,5)
+                    ax_TFR_EMG2 = plt.subplot(16,1,6)
+                    ax_TFR_EMG3 = plt.subplot(16,1,7)
+                    ax_epoch_marker = plt.subplot(16,1,8, )
+                    ax_epoch_light = plt.subplot(16,1,9, sharex = ax_epoch_marker)
+                    ax_acc = plt.subplot(16,1,10, sharex = ax_epoch_marker)
+                    ax_ppg = plt.subplot(16,1,11, sharex = ax_epoch_marker)
+                    ax_noise = plt.subplot(16,1,12, sharex = ax_epoch_marker)  
+                    ax_EMG = plt.subplot(16,1,13, sharex = ax_epoch_marker)
+                    ax_EMG2 = plt.subplot(16,1,14, sharex = ax_epoch_marker)
+                    ax_EMG3 = plt.subplot(16,1,15, sharex = ax_epoch_marker)
+                    ax4 = plt.subplot(16,1,16, sharex = ax_epoch_marker)
+                else:
+                    if len(self.filename_scoring_paths)==1:
+                        fig,AX = plt.subplots(nrows=17, figsize=(17, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4,4 ,4, 10]})
+                        ax1 = plt.subplot(17,1,1)
+                        ax2 = plt.subplot(17,1,2, sharex = ax1)
+                        ax3 = plt.subplot(17,1,3, sharex = ax1)
+                        ax_TFR_short = plt.subplot(17,1,4, sharex = ax1)
+                        ax_TFR_EMG1 = plt.subplot(17,1,5)
+                        ax_TFR_EMG2 = plt.subplot(17,1,6)
+                        ax_TFR_EMG3 = plt.subplot(17,1,7)
+                        ax_epoch_marker = plt.subplot(17,1,8, )
+                        ax_epoch_light = plt.subplot(17,1,9, sharex = ax_epoch_marker)
+                        ax_acc = plt.subplot(17,1,10, sharex = ax_epoch_marker)
+                        ax_ppg = plt.subplot(17,1,11, sharex = ax_epoch_marker)
+                        ax_noise = plt.subplot(17,1,12, sharex = ax_epoch_marker)  
+                        ax_EMG = plt.subplot(17,1,13, sharex = ax_epoch_marker)
+                        ax_EMG2 = plt.subplot(17,1,14, sharex = ax_epoch_marker)
+                        ax_EMG3 = plt.subplot(17,1,15, sharex = ax_epoch_marker)
+                        
+                        ax_manual_scoring1 = plt.subplot(17,1,16,)
+
+                        ax4 = plt.subplot(17,1,17, sharex = ax_epoch_marker)
+                        
+                    elif len(self.filename_scoring_paths)==2:
+                        fig,AX = plt.subplots(nrows=18, figsize=(18, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4,4, 4, 4,4, 10]})
+                        ax1 = plt.subplot(18,1,1)
+                        ax2 = plt.subplot(18,1,2, sharex = ax1)
+                        ax3 = plt.subplot(18,1,3, sharex = ax1)
+                        ax_TFR_short = plt.subplot(18,1,4, sharex = ax1)
+                        ax_TFR_EMG1 = plt.subplot(18,1,5)
+                        ax_TFR_EMG2 = plt.subplot(18,1,6)
+                        ax_TFR_EMG3 = plt.subplot(18,1,7)
+                        ax_epoch_marker = plt.subplot(18,1,8, )
+                        ax_epoch_light = plt.subplot(18,1,9, sharex = ax_epoch_marker)
+                        ax_acc = plt.subplot(18,1,10, sharex = ax_epoch_marker)
+                        ax_ppg = plt.subplot(18,1,11, sharex = ax_epoch_marker)
+                        ax_noise = plt.subplot(18,1,12, sharex = ax_epoch_marker)  
+                        ax_EMG = plt.subplot(18,1,13, sharex = ax_epoch_marker)
+                        ax_EMG2 = plt.subplot(18,1,14, sharex = ax_epoch_marker)
+                        ax_EMG3 = plt.subplot(18,1,15, sharex = ax_epoch_marker)
+                        
+                        ax_manual_scoring1 = plt.subplot(18,1,16,)
+                        ax_manual_scoring2 = plt.subplot(18,1,17,)
+
+                        ax4 = plt.subplot(18,1,18, sharex = ax_epoch_marker)
+                        
+                    elif len(self.filename_scoring_paths)==3: 
+                        fig,AX = plt.subplots(nrows=19, figsize=(19, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4,4,4,4, 4,4, 10]})
+                        ax1 = plt.subplot(19,1,1)
+                        ax2 = plt.subplot(19,1,2, sharex = ax1)
+                        ax3 = plt.subplot(19,1,3, sharex = ax1)
+                        ax_TFR_short = plt.subplot(19,1,4, sharex = ax1)
+                        ax_TFR_EMG1 = plt.subplot(19,1,5)
+                        ax_TFR_EMG2 = plt.subplot(19,1,6)
+                        ax_TFR_EMG3 = plt.subplot(19,1,7)
+                        ax_epoch_marker = plt.subplot(19,1,8, )
+                        ax_epoch_light = plt.subplot(19,1,9, sharex = ax_epoch_marker)
+                        ax_acc = plt.subplot(19,1,10, sharex = ax_epoch_marker)
+                        ax_ppg = plt.subplot(19,1,11, sharex = ax_epoch_marker)
+                        ax_noise = plt.subplot(19,1,12, sharex = ax_epoch_marker)  
+                        ax_EMG = plt.subplot(19,1,13, sharex = ax_epoch_marker)
+                        ax_EMG2 = plt.subplot(19,1,14, sharex = ax_epoch_marker)
+                        ax_EMG3 = plt.subplot(19,1,15, sharex = ax_epoch_marker)
+                        
+                        ax_manual_scoring1 = plt.subplot(19,1,16,)
+                        ax_manual_scoring2 = plt.subplot(19,1,17,)
+                        ax_manual_scoring3 = plt.subplot(19,1,18,)
+
+                        ax4 = plt.subplot(19,1,19, sharex = ax_epoch_marker)
+                        
+                    elif len(self.filename_scoring_paths)>3: 
+                        print('Too many scorings! we can"t handle them at this version of Dreamento!')
+                        messagebox.showerror("Dreamento", "Sorry, the current version of Dreamento can import only up to 3 scorings! try again!")
 
             # If plotting EMG TFR is NOT required
             else:
@@ -2334,6 +2492,7 @@ class OfflineDreamento():
                         
             ax1.set_yticks([])
             ax2.set_yticks([])
+            ax_TFR_EMG3.set_xticks([])
             ax_epoch_marker.set_yticks([])
             ax_epoch_light.set_yticks([])
             #ax_epoch_marker.set_xticks([])
@@ -2517,11 +2676,18 @@ class OfflineDreamento():
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
                 ##########
-                
             self.str_first_subplot = str(ax3)
             
+            global manual_scoring
+            self.data = data
+            self.data_R = data_R
+
+            num_rows = int(np.floor(len(data)/256/30))
+            manual_scoring = np.column_stack((-np.ones(num_rows), np.zeros(num_rows)))
             fig.canvas.mpl_connect('key_press_event', self.pan_nav)
             fig.canvas.mpl_connect('button_press_event', self.onclick)
+            print(f'Data includes overall {int(np.floor(len(data)/256/30))} epochs all initialized as unscored ...')
+
             #ax1.set_xlim([0, 7680])#len(data)])
             #ax2.set_xlim([0, 7680])#len(data)])
             #ax3.set_xlim([0, len(data)])
@@ -2623,7 +2789,7 @@ class OfflineDreamento():
                 ax_TFR_EMG1.pcolormesh(self.t1_EMG, self.f1_EMG, self.Sxx1_EMG, norm=self.norm1_EMG, cmap=cmap, antialiased=True,
                                    shading="auto") # Normalized with respect to the same freq range as sig1
                 ax_TFR_EMG1.set_xlim(0, self.t1_EMG.max())
-                ax_TFR_EMG1.set_xticks([])
+                ax_TFR_EMG3.set_xticks([])
                 ax_TFR_EMG1.set_yticks([])
                 
                 # TFR EMG 2
@@ -2639,6 +2805,100 @@ class OfflineDreamento():
                 ax_TFR_EMG3.set_xlim(0, self.t3_EMG.max())
                 ax_TFR_EMG3.set_xticks([])
                 ax_TFR_EMG3.set_yticks([])
+            # Plotting manual scoring, if exists
+            if int(self.import_scoring.get()) == 1:
+                for scoring_file_idx, scoring_file in enumerate(np.arange(len(self.filename_scoring_paths))):
+                    
+                    print(f'reading {self.filename_scoring_paths[scoring_file]}')
+                    self.stages_imported[self.filename_scoring_paths[scoring_file]] = np.loadtxt(self.filename_scoring_paths[scoring_file], dtype = int)[:, 0]
+                    self.events_imported[self.filename_scoring_paths[scoring_file]] = np.loadtxt(self.filename_scoring_paths[scoring_file], dtype = int)[:, 1]
+
+                    print(f'reading shape of  {np.shape(self.stages_imported[self.filename_scoring_paths[scoring_file]])}')
+                    
+                    # Determine the axis based on the iteration index
+                    if scoring_file_idx == 0:
+                        current_axis = ax_manual_scoring1
+                        scoring1= self.stages_imported[self.filename_scoring_paths[scoring_file]]
+                        scorer1 = self.filename_scoring_paths[scoring_file]
+                        events1 = self.events_imported[self.filename_scoring_paths[scoring_file]]
+                        
+                    elif scoring_file_idx == 1:
+                        current_axis = ax_manual_scoring2
+                        scoring2= self.stages_imported[self.filename_scoring_paths[scoring_file]]
+                        scorer2 = self.filename_scoring_paths[scoring_file]
+                        events2 = self.events_imported[self.filename_scoring_paths[scoring_file]]
+
+                    elif scoring_file_idx == 2:
+                        current_axis = ax_manual_scoring3
+                        scoring3= self.stages_imported[self.filename_scoring_paths[scoring_file]]
+                        scorer3 = self.filename_scoring_paths[scoring_file]
+                        events3 = self.events_imported[self.filename_scoring_paths[scoring_file]]
+
+                     # Change the order of classes: REM and wake on top
+                    x = []
+                    y = []
+                    
+                    for i in np.arange(len(self.stages_imported[self.filename_scoring_paths[scoring_file]])):
+                        
+                        s =  self.stages_imported[self.filename_scoring_paths[scoring_file]][i]
+                        if s== 0 :  p = -0
+                        if s== 4 :  p = -1
+                        if s== 1 :  p = -2
+                        if s== 2 :  p = -3
+                        if s== 3 :  p = -4
+                        if i!=0:
+                            
+                            y.append(p)
+                            x.append(i-1)   
+                    y.append(p)
+                    x.append(i)
+        
+
+                    current_axis.step(x, y, where='post', color = 'black')
+                    rem = [i for i,j in enumerate(self.stages_imported[self.filename_scoring_paths[scoring_file]]) if (self.stages_imported[self.filename_scoring_paths[scoring_file]][i]==4)]
+                    LRLR = [i for i,j in enumerate(self.events_imported[self.filename_scoring_paths[scoring_file]]) if (self.events_imported[self.filename_scoring_paths[scoring_file]][i]==5757)]
+                    arousal = [i for i,j in enumerate(self.events_imported[self.filename_scoring_paths[scoring_file]]) if (self.events_imported[self.filename_scoring_paths[scoring_file]][i]==1)]
+                    MBM     = [i for i,j in enumerate(self.events_imported[self.filename_scoring_paths[scoring_file]]) if (self.events_imported[self.filename_scoring_paths[scoring_file]][i]==2)]
+
+                    for i in np.arange(len(rem)) -1:
+                        current_axis.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
+                        
+                    for i in np.arange(len(LRLR)):
+                        current_axis.scatter(LRLR[i], -.5,  marker='v', color='red')
+                    
+                    for i in np.arange(len(arousal)):
+                        current_axis.scatter(arousal[i], -.5,  marker='^', color='navy')
+                        
+                    for i in np.arange(len(MBM)):
+                        current_axis.scatter(MBM[i], -.5,  marker='^', color='blue')
+                        
+                    #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
+                    current_axis.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'],\
+                                              fontsize = 8)
+                    current_axis.set_xlim([0, len(self.stages_imported[self.filename_scoring_paths[scoring_file]])])
+                    
+                    current_axis.grid(axis='y')
+
+                    current_axis.set_xticks([])
+
+                    print(f'len of scoring {scoring_file}: {np.shape(self.stages_imported[self.filename_scoring_paths[scoring_file]])} epochs')
+                    
+                # Compute agrement between scorers
+                if len(self.filename_scoring_paths) == 2:
+                    
+                    from sklearn.metrics import cohen_kappa_score
+                    self.kappa1_2   = cohen_kappa_score(scoring1, scoring2)
+                    messagebox.showinfo("Scorers agreemnt",f"The agreement between {scorer1} and {scorer2} is:\n {round(self.kappa1_2, 2)*100} %.")
+                    
+                elif len(self.filename_scoring_paths) == 3:
+                    
+                    from sklearn.metrics import cohen_kappa_score
+                    self.kappa1_2   = cohen_kappa_score(scoring1, scoring2)
+                    self.kappa1_3   = cohen_kappa_score(scoring1, scoring3)
+                    self.kappa2_3   = cohen_kappa_score(scoring2, scoring3)
+
+                    messagebox.showinfo("Scorers agreement",f"The agreement between {scorer1} and {scorer2} is:\n {round(self.kappa1_2, 2)*100} %\n~~~~\n between {scorer1} and {scorer3} is: {100*round(self.kappa1_3,2)} % \n~~~~\n and between {scorer2} and {scorer3} is:\n {round(self.kappa2_3,2)*100}%.")
+                    
         else:
             
             # If plotting EMG TFR is required
@@ -3075,8 +3335,7 @@ class OfflineDreamento():
                 
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
-                
-            
+                    
 # =============================================================================
 #             global sig_emg_1, sig_emg_2, sig_emg_3
 #              
@@ -5227,9 +5486,53 @@ class OfflineDreamento():
             
         
         messagebox.showinfo(title = "Help", message = line_msg)
-    
+    #%% manual scoring pop-up    
+    def manual_scoring_popup_button_func(self):
+        """
+        Help button of the manual scoring using Dreamento.
+        
+        :param self: access the attributes and methods of the class
+        """
+        
+        line_msg = "this function is only active in case all 4 required files are loaded\n" +\
+                   "Manual scoring buttons:\n"+\
+                   "on each epoch of data, you can press a button to score sleep (same as all other scoring software) and then it jumps to the next epoch.\n\n" +\
+                   '- Press "w" or "0" to score wake.\n'+\
+                   '- Press "1" to score N1.\n'+\
+                   '- Press "2" to score N2.\n'+\
+                   '- Press "3" to score N3/SWS.\n'+\
+                   '- Press "4" or "5" or "r" to score REM.\n\n'+\
+                   '- Press "a" to mark an arousal.\n'+\
+                   '- Press "m" to mark a major body movement.\n'+\
+                   '- Press "9" to mark a predefined eye signaling,e.g., LRLR,\n\n'+\
+                   '- if an epoch is unscoarable, simply hit the ```right arrow``` key on the keyboard to leave that epoch as unscored/unscorable and go to the next. \n'+\
+                   '- If you changed your mind about scoring one of the past epochs, simply use  ```left arrow``` to go back and then change the scoring to the desired (i.e. press relevant key for the sleep stage).\n\n'+\
+                   '- **export scoring** by pressing ```e``` on the keyboard, then you will be presented with a message to select the folder and filename.\n'       
+                   
+        
+        messagebox.showinfo(title = "Manual scroing instructions", message = line_msg)
+    #%% Compute bandpower per epoch
+    def compute_bandpower_navigating_epochs(self):
+        # Bandpower computer
+        global bandpower_epoch
+        bandpower_epoch = yasa.bandpower(self.data[int(self.lims[0]*256): int(self.lims[1]*256)], \
+                                         sf=256, win_sec=4, relative=True)
+        print(f'computing bandower between {self.lims}: {bandpower_epoch}')
+        
+        bandpower_delta = str(round(bandpower_epoch['Delta'][0], 2))
+        bandpower_theta = str(round(bandpower_epoch['Theta'][0], 2))
+        bandpower_alpha = str(round(bandpower_epoch['Alpha'][0], 2))
+        bandpower_sgima = str(round(bandpower_epoch['Sigma'][0], 2))
+        bandpower_beta  = str(round(bandpower_epoch['Beta'][0] , 2))
+
+        self.ax_tmp.text(self.lims[0]+1, 90, 'Delta: ' + bandpower_delta +\
+                                            ', Theta: ' + bandpower_theta +\
+                                            ', Alpha: ' + bandpower_alpha +\
+                                            ', Sigma: ' + bandpower_sgima +\
+                                            ', Beta: ' + bandpower_beta, color = 'dimgray')
     #%% Navigating via keyboard in the figure
     def pan_nav(self, event):
+        
         """
         The keyboard controller of the software
         
@@ -5240,27 +5543,31 @@ class OfflineDreamento():
         :param right arrow keyboard button: navigate to the next epoch
 
         """
-        ax_tmp = plt.gca()
+        
+        self.ax_tmp = plt.gca()
+        self.lims = self.ax_tmp.get_xlim()
         if event.key == 'left':
-            lims = ax_tmp.get_xlim()
-            adjust = (lims[1] - lims[0]) 
-            ax_tmp.set_xlim((lims[0] - adjust, lims[1] - adjust))
-            curr_ax = event.inaxes
-            #if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
-            if str(curr_ax) == self.str_first_subplot:
+            self.lims = self.ax_tmp.get_xlim()
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] - adjust, self.lims[1] - adjust))
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
-                if len(curr_ax.lines) > 0 :
-                    curr_ax.lines[-1].remove()
-                curr_ax.plot([int(np.mean((lims[0] - adjust, lims[1] - adjust))), int(np.mean((lims[0] - adjust, lims[1] - adjust)))], [-150, 150], color = 'black')
-                #curr_ax.set_ylim((0.1,25))
-            
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] - adjust, self.lims[1] - adjust))), int(np.mean((self.lims[0] - adjust, self.lims[1] - adjust)))], [-150, 150], color = 'black')
+                #self.curr_ax.set_ylim((0.1,25))
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
             plt.draw()
+            
         elif event.key == 'right':
-            lims = ax_tmp.get_xlim()
-            adjust = (lims[1] - lims[0]) 
-            ax_tmp.set_xlim((lims[0] + adjust, lims[1] + adjust))
+            self.lims = self.ax_tmp.get_xlim()
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
             print(event.xdata)
-            print(lims)
+            print(self.lims)
             #ax3.axvline(x=event.xdata, color="k")
             plt.draw()
             print(f'The xdata is : {event.xdata}')
@@ -5271,28 +5578,233 @@ class OfflineDreamento():
             
             print(f'favailable axes: {event.inaxes}')
             
-            curr_ax = event.inaxes
-            #if str(curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
-            if str(curr_ax) == self.str_first_subplot:
+            self.curr_ax = event.inaxes
+            
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
                 print('spectrogram axis detected')
-                if len(curr_ax.lines) > 0 :
-                    curr_ax.lines[-1].remove()
-                curr_ax.plot([int(np.mean((lims[0] + adjust, lims[1] + adjust))), int(np.mean((lims[0] + adjust, lims[1] + adjust)))], [-150, 150], color = 'black')
-                #curr_ax.set_ylim((0.1,25))
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+            
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+
+                #self.curr_ax.set_ylim((0.1,25))
         elif event.key == 'up':
-            lims = ax_tmp.get_ylim()
-            adjust_up = lims[1] - lims[1]/5
-            adjust_down = lims[0] +lims[1]/5
-            ax_tmp.set_ylim((adjust_down, adjust_up))
+            self.lims = self.ax_tmp.get_ylim()
+            adjust_up = self.lims[1] - self.lims[1]/5
+            adjust_down = self.lims[0] +self.lims[1]/5
+            self.ax_tmp.set_ylim((adjust_down, adjust_up))
             plt.draw()
             
         elif event.key == 'down':
-            lims = ax_tmp.get_ylim()
-            adjust_up = lims[1] + lims[1]/5
-            adjust_down = lims[0] - lims[1]/5
-            ax_tmp.set_ylim((adjust_down, adjust_up))
+            self.lims = self.ax_tmp.get_ylim()
+            adjust_up = self.lims[1] + self.lims[1]/5
+            adjust_down = self.lims[0] - self.lims[1]/5
+            self.ax_tmp.set_ylim((adjust_down, adjust_up))
             plt.draw()
-    
+        
+        #Enable manual scoring system
+        elif event.key == 'w' or event.key == '0':
+            self.lims = self.ax_tmp.get_xlim()
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as Wake')
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'Wake', color = 'black')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = 0
+            # show next epoch
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
+            print(event.xdata)
+            print(self.lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+            
+            
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
+                print('spectrogram axis detected')
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+            
+        elif event.key == '1':
+            self.lims = self.ax_tmp.get_xlim()
+
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as N1')
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'N1', color = 'cyan')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = 1
+
+            # show next epoch
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
+            print(event.xdata)
+            print(self.lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
+                print('spectrogram axis detected')
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+        
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+            
+        elif event.key == '2':
+            self.lims = self.ax_tmp.get_xlim()
+
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as N2')
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'N2', color = 'purple')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = 2
+
+            # show next epoch
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
+            print(event.xdata)
+            print(self.lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+            
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
+                print('spectrogram axis detected')
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+            
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+            
+        elif event.key == '3':
+            self.lims = self.ax_tmp.get_xlim()
+
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as N3/SWS')
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'SWS', color = 'blue')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = 3
+
+            # show next epoch
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
+            print(event.xdata)
+            print(self.lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+            
+
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
+                print('spectrogram axis detected')
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+            
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+            
+        elif event.key == '4' or event.key == '5' or event.key == 'r':
+            self.lims = self.ax_tmp.get_xlim()
+
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as REM')
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'REM', color = 'red')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = 4
+
+            # show next epoch
+            adjust = (self.lims[1] - self.lims[0]) 
+            self.ax_tmp.set_xlim((self.lims[0] + adjust, self.lims[1] + adjust))
+            print(event.xdata)
+            print(self.lims)
+            #ax3.axvline(x=event.xdata, color="k")
+            plt.draw()
+            print(f'The xdata is : {event.xdata}')
+            print(f'The ydata is : {event.ydata}')
+            
+            print(f'The x is : {event.x}')
+            print(f'The y is : {event.y}')
+            
+            print(f'favailable axes: {event.inaxes}')
+            
+            self.curr_ax = event.inaxes
+            #if str(self.curr_ax) == 'AxesSubplot(0.125,0.730968;0.775x0.124194)':
+            if str(self.curr_ax) == self.str_first_subplot:
+                print('spectrogram axis detected')
+                if len(self.curr_ax.lines) > 0 :
+                    self.curr_ax.lines[-1].remove()
+                self.curr_ax.plot([int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust))), int(np.mean((self.lims[0] + adjust, self.lims[1] + adjust)))], [-150, 150], color = 'black')
+           
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
+        elif event.key == 'd':
+            self.lims = self.ax_tmp.get_xlim()
+
+            print(f'Epoch {int(np.round(self.lims[1])/30)} marked as unscored (scoring removed)')
+            for text in self.ax_tmp.texts:
+                if text.get_position() == (self.lims[1] - 15, 50):
+                    text.remove()
+            self.ax_tmp.text(self.lims[1] - 15, 50, 'Unscored', color = 'gray')
+            manual_scoring[int(np.round(self.lims[1])/30)-1,0] = -1
+            plt.draw()
+            
+        elif event.key == '9':
+            self.lims = self.ax_tmp.get_xlim()
+
+            self.ax_tmp.text(self.lims[1] - 15, 70, 'LRLR', color = 'darkred')
+            manual_scoring[int(np.round(self.lims[1])/30)-1, 1] = 5757
+            plt.draw()
+            
+        elif event.key == 'a':
+                self.lims = self.ax_tmp.get_xlim()
+
+                self.ax_tmp.text(self.lims[1] - 15, 90, 'Mov. arousal', color = 'navy')
+                manual_scoring[int(np.round(self.lims[1])/30)-1, 1] = 1
+                plt.draw()
+                
+        elif event.key == 'm':
+                self.lims = self.ax_tmp.get_xlim()
+
+                self.ax_tmp.text(self.lims[1] - 15, 90, 'MBM', color = 'darkslateblue')
+                manual_scoring[int(np.round(self.lims[1])/30)-1, 1] = 2
+                plt.draw()
+                        
+        elif event.key == 'e':
+            self.ExportManualScoring()
+    #%% def 
     #%% Define event while clicking
     
     def onclick(self, event):
@@ -5302,11 +5814,11 @@ class OfflineDreamento():
         :param self: access the attributes and methods of the class
         :param event: mouse click
         """
-        ax_tmp = plt.gca()
+        self.ax_tmp = plt.gca()
         if event.button == 1: 
 
             print('mouse cliked --> move plot')
-            ax_tmp.set_xlim((np.floor(event.xdata)- int(7680/256/2), np.floor(event.xdata)+ int(7680/256/2)))
+            self.ax_tmp.set_xlim((np.floor(event.xdata)- int(7680/256/2), np.floor(event.xdata)+ int(7680/256/2)))
             plt.draw()
             print(f'clicked sample{ {event.xdata}}')
             print(f'adjust xlm {(np.floor(event.xdata)- int(7680/2), np.floor(event.xdata)+ int(7680/2))}')
@@ -5319,6 +5831,8 @@ class OfflineDreamento():
                 curr_ax.plot([event.xdata, event.xdata], [0.3, 40], color = 'black')
                 curr_ax.set_ylim((0.1,25))
                 
+            self.lims = self.ax_tmp.get_xlim()
+            self.compute_bandpower_navigating_epochs()
     #%% Navigating via keyboard in the figure
     def pan_nav_EMG_autoscoring (self, event):
         """
@@ -5900,7 +6414,28 @@ class OfflineDreamento():
                                                                         command = self.apply_DreamentoConverter,
                                                                         font = 'Calibri 13 ')
         self.convert_button.grid(row = 7, column = 1)
+    #%% ExportManualScoring
+    def ExportManualScoring(self):
+        self.popupWin_ExportManualScoring = Toplevel(root)         
+        
+        self.path_to_manual_scoring_folder_label = Label(self.popupWin_ExportManualScoring, text='Path to Folder:')
+        self.path_to_manual_scoring_folder_label.grid(row = 1 , column =1)
+        
+        self.path_to_manual_scoring_folder = Entry(self.popupWin_ExportManualScoring)
+        self.path_to_manual_scoring_folder.insert(0, self.HDRecorderRecording.split('EEG L.edf')[0])
+        self.path_to_manual_scoring_folder.grid(row = 1 , column =2)
+        
+        self.path_to_manual_scoring_filename_label = Label(self.popupWin_ExportManualScoring, text='Filename:')
+        self.path_to_manual_scoring_filename_label.grid(row = 2 , column =1)
+        
+        self.entry_filename = Entry(self.popupWin_ExportManualScoring)#, borderwidth = 2, width = 10)
+        self.entry_filename.insert(0, 'Dreamento_ManualScoring_SCORER-NAME.txt')
+        self.entry_filename.grid(row = 2 , column = 2)
 
+        self.convert_button = Button(self.popupWin_ExportManualScoring, text = "Export!", 
+                                                                        command = self.ApplyExportManualScoring,
+                                                                        font = 'Calibri 13 ')
+        self.convert_button.grid(row = 3, column = 1)
     #%% Brain amp channel selector for plotting + autoscoring
     def BrainProducts_channel_selector(self):
         
@@ -6186,6 +6721,12 @@ class OfflineDreamento():
             os.remove(dst_path)
             
         print('All files have been successfully converted!')
+    #%% Apply export of manual scoring
+    def ApplyExportManualScoring(self):
+        path_manual_scoring = str(self.path_to_manual_scoring_folder.get()) + str(self.entry_filename.get())
+        messagebox.showinfo("Scoring saved!",f" The autoscoring results saved in {path_manual_scoring}")
+        np.savetxt(path_manual_scoring, \
+           manual_scoring, fmt='%d', delimiter='\t')
     #%% select marker for sync command
     def select_marker(self):
         print(f'syncing based on the following event: {self.markers_sync_event.get()}')
