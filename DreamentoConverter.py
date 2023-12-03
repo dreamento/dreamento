@@ -24,14 +24,10 @@ path_to_HDRecorder = 'C:\\Program Files (x86)\\Hypnodyne\\ZMax\\'
 os.chdir(path_to_HDRecorder)
 
 # define files to be converted 
-filenames = ['C:\\PhD\\test_DreamentoConverter\\hypno1.hyp', 
-             'C:\\PhD\\test_DreamentoConverter\\hypno2.hyp', 
-             'C:\\PhD\\test_DreamentoConverter\\hypno3.hyp']
+filenames = ['C:\\PhD\\test_DreamentoConverter\\hypno1.hyp']
 
 # define path to converted folders
-destination_folders = ['C:\\PhD\\test_DreamentoConverter\\converted\\hypno1\\',
-                       'C:\\PhD\\test_DreamentoConverter\\converted\\hypno2\\',
-                       'C:\\PhD\\test_DreamentoConverter\\converted\\hypno3\\']
+destination_folders = ['C:\\PhD\\test_DreamentoConverter\\converted\\hypno1\\']
 
 for conv in np.arange(len(filenames)):
     
