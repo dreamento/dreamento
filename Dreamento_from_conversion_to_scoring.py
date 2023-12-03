@@ -38,9 +38,9 @@ path_to_HDRecorder = 'C:\\Program Files (x86)\\Hypnodyne\\ZMax\\'
 os.chdir(path_to_HDRecorder)
 
 # define folder including raw .hyp files to be converted 
-source_folder = 'C:\\PhD\\test_DreamentoConverter\\'
+source_folder = 'path\\to\\folders\\including\\hyp\\files\\'
 
-Dreamento_main_folder_path = 'C:\\PhD\\LD induction\\Dreamento\\Dreamento\\'
+Dreamento_main_folder_path = 'path\\to\\Dreamento\\folder\\'
     
 DreamentoScorerModel ="PooledData_Full_20percent_valid.sav" 
 # ============================= ///// \\\\\ ==================================
