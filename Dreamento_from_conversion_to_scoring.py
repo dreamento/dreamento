@@ -35,7 +35,6 @@ import json
 # ============================= USER INPUT ==================================
 # define path to HDRecorder.exe
 path_to_HDRecorder = 'C:\\Program Files (x86)\\Hypnodyne\\ZMax\\'
-os.chdir(path_to_HDRecorder)
 
 # define folder including raw .hyp files to be converted 
 source_folder = 'path\\to\\folders\\including\\hyp\\files\\'
@@ -46,6 +45,8 @@ DreamentoScorerModel ="PooledData_Full_20percent_valid.sav"
 # ============================= ///// \\\\\ ==================================
 
 #%% Required functions 
+os.chdir(path_to_HDRecorder)
+
 # Finding .hyp files within the tree directory of the provided folder
 def find_files_with_extension(folder_path, extension):
     # Initialize an empty list to store matching files
