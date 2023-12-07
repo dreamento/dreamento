@@ -153,33 +153,39 @@ class OfflineDreamento():
         self.label_analysis.grid(row = 0 , column = 4, sticky="w")
         
     #%% label import human scoring / already scored hypnogram
+        self.deactivate_markers = IntVar(value = 0)
+        self.checkbox_deactivate_markers = Checkbutton(self.frame_import, text = "Deactivate Markers for scoring",
+                                  font = 'Calibri 11 ', variable = self.deactivate_markers)
+        
+        self.checkbox_deactivate_markers.grid(row = 1, column = 4, sticky="w")
+        
     #%% Enable manual scoring
         self.import_scoring = IntVar(value = 0)
         self.checkbox_import_scoring = Checkbutton(self.frame_import, text = "import sleep scoring",
                                   font = 'Calibri 11 ', variable = self.import_scoring,
                                   command=self.ImportManualScoring)
         
-        self.checkbox_import_scoring.grid(row = 1, column = 4, sticky="w")
+        self.checkbox_import_scoring.grid(row = 2, column = 4, sticky="w")
     #%% Bulk autoscoring
         self.bulk_autoscoring_val = IntVar(value = 0)
         self.checkbox_bulk_autoscoring = Checkbutton(self.frame_import, text = "Bulk autoscoring",
                                   font = 'Calibri 11 ', variable = self.bulk_autoscoring_val, 
                                   command = self.bulk_autoscoring_popup)
         
-        self.checkbox_bulk_autoscoring.grid(row = 2, column = 4, sticky="w")
+        self.checkbox_bulk_autoscoring.grid(row = 3, column = 4, sticky="w")
     #%% Checkbox for autoscoring
         self.is_autoscoring = IntVar(value = 0)
         self.checkbox_is_autoscoring = Checkbutton(self.frame_import, text = "Single-file autoscoring",
                                   font = 'Calibri 11 ', variable = self.is_autoscoring)#, command = self.scoring_caution)
         
-        self.checkbox_is_autoscoring.grid(row = 3, column = 4, sticky="w") 
+        self.checkbox_is_autoscoring.grid(row = 4, column = 4, sticky="w") 
         
     #%% Checkbox for filtering
         self.is_filtering = IntVar(value = 1)
         self.checkbox_is_filtering = Checkbutton(self.frame_import, text = "Band-pass filtering (.3-30 Hz)",
                                   font = 'Calibri 11 ', variable = self.is_filtering)
         
-        self.checkbox_is_filtering.grid(row = 4, column = 4, sticky="w")
+        self.checkbox_is_filtering.grid(row = 5, column = 4, sticky="w")
         
 
     #%% Checkbox for plotting syncing process
@@ -187,14 +193,14 @@ class OfflineDreamento():
         self.checkbox_plot_sync_output = Checkbutton(self.frame_import, text = "Plot EEG alignment process",
                                   font = 'Calibri 11 ', variable = self.plot_sync_output)
         
-        self.checkbox_plot_sync_output.grid(row = 5, column = 4, sticky="w")
+        self.checkbox_plot_sync_output.grid(row = 6, column = 4, sticky="w")
     
     #%% Checkbox for plotting EMG quality TFR
         self.plot_EMG_quality_evaluation = IntVar(value=1)
         self.checkbox_plot_EMG_quality_evaluation = Checkbutton(self.frame_import, text = "EMG quality evaluation",
                                   font = 'Calibri 11 ', variable = self.plot_EMG_quality_evaluation)
         
-        self.checkbox_plot_EMG_quality_evaluation.grid(row = 6, column = 4, sticky="w")
+        self.checkbox_plot_EMG_quality_evaluation.grid(row = 7, column = 4, sticky="w")
         
     #%% Checkbox for automatic eye movement detector
         self.automatic_REM_event_deetction = IntVar(value=0)
@@ -203,7 +209,7 @@ class OfflineDreamento():
                                   command = self.automatic_REM_event_detection_popup)
 
         
-        self.checkbox_automatic_REM_event_deetction.grid(row = 7, column = 4, sticky="w")
+        self.checkbox_automatic_REM_event_deetction.grid(row = 8, column = 4, sticky="w")
         
     #%% Checkbox for automatic spindle detection
         self.automatic_spd_event_deetction = IntVar(value=0)
@@ -212,13 +218,13 @@ class OfflineDreamento():
                                   command = self.automatic_spd_event_detection_popup)
 
         
-        self.checkbox_automatic_spd_event_deetction.grid(row = 8, column = 4, sticky="w")
+        self.checkbox_automatic_spd_event_deetction.grid(row = 9, column = 4, sticky="w")
     #%% Checkbox for plotting periodogram 
         self.plot_psd = IntVar(value = 0)
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 9, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 10, column = 4, sticky="w", pady = 10)
         
         #%% checkbox DreamentoConverter
         self.DreamentoConverter_val = IntVar(value = 0)
@@ -226,13 +232,13 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.DreamentoConverter_val,\
                                   command=self.DreamentoConverter)
         
-        self.checkbox_DreamentoConverter.grid(row = 10, column = 4, sticky="w", pady = 10)
+        self.checkbox_DreamentoConverter.grid(row = 11, column = 4, sticky="w", pady = 10)
             
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
                                       font = 'Calibri 13 ')
-        self.label_analysis_data.grid(row = 11 , column = 4, sticky="w")
+        self.label_analysis_data.grid(row = 12 , column = 4, sticky="w")
         
     #%% Checkbox for plotting Dreamento + HDRecorder + EMG
         self.analysis_signal_options = IntVar(value = 1)
@@ -240,7 +246,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 12, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 13, column = 4, sticky="w", pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne + Dreamento
@@ -249,14 +255,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 13, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 14, column = 4, sticky="w", pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 14, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 15, column = 4, sticky="w", pady = 10)
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.BrainVision_analysis = IntVar(value = 0)
@@ -264,7 +270,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 4,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_BrainVision_analysis.grid(row = 15, column = 4, sticky="w", pady = 10)
+        self.checkbox_BrainVision_analysis.grid(row = 16, column = 4, sticky="w", pady = 10)
     #%% EMG Y SCALE
         #Label to read data and extract features
         self.label_EMG_scale = Label(self.frame_import, text = "EMG amplitude (uV):",
@@ -3335,7 +3341,7 @@ class OfflineDreamento():
                 
                 ax4.plot(np.arange(len(data_R))/256, spindles_L_highlight, 'green')
                 ax4.plot(np.arange(len(data_R))/256, spindles_R_highlight, 'green')
-                    
+                
 # =============================================================================
 #             global sig_emg_1, sig_emg_2, sig_emg_3
 #              
@@ -3376,6 +3382,13 @@ class OfflineDreamento():
 #         ax_EMG2.set_xticks([])
 #         ax_EMG3.set_xticks([])
 # =============================================================================
+        if int(self.deactivate_markers.get())==1:
+            print('=======================================')
+            print(f'The user deactivated the markers and stimulation axes. (deactivate = {int(self.deactivate_markers.get())})')
+            ax1.set_visible(False)
+            ax2.set_visible(False)
+            ax_epoch_light.set_visible(False)
+            ax_epoch_marker.set_visible(False)
         return fig, markers_details
     
     #%% AssignMarkersToRecordedData EEG + TFR
