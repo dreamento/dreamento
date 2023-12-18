@@ -203,7 +203,8 @@ For any use of Dreamento please cite:
 *Jafarzadeh Esfahani, M., Daraie, A. H., Zerr, P., Weber, F. D., & Dresler, M. (2023). Dreamento: An open-source dream engineering toolbox for sleep EEG wearables. SoftwareX, 24, 101595. https://doi.org/10.1016/j.softx.2023.101595*
 
 If you intend to cite to the validity of **DreamentoScorer** in particular, please also cite:
-Jafarzadeh Esfahani, M., D. Weber, F., Boon, M., Anthes, S., Almazova, T., van Hal, M., ... & Dresler, M. (2023). Validation of the sleep EEG headband ZMax. bioRxiv, 2023-08. https://doi.org/10.1101/2023.08.18.553744
 
-**CopyRight (2021 - 23): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
+*Jafarzadeh Esfahani, M., D. Weber, F., Boon, M., Anthes, S., Almazova, T., van Hal, M., ... & Dresler, M. (2023). Validation of the sleep EEG headband ZMax. bioRxiv, 2023-08. https://doi.org/10.1101/2023.08.18.553744*
+
+**CopyRight (2021 - 24): Mahdad Jafarzadeh Esfahani, Amir Hossein Daraie** 
 
