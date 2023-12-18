@@ -142,9 +142,9 @@ With DreamentoScorer, you can export not only the sleep stage predictions, but a
 
 DreamentoScorer not only provides the sleep stages, but also hypnodensity as a measure of the autoscoring certainty level (the probability of each sleep stage for each epoch).
 
-*N.B 1: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying.* 
+*N.B 1: To have a reliable autoscoring with the current algorithm, the quality of both EEG channels should be satisfying. Always double-check by manual scoring through a human expert in case of doubt, especially when autoscoring data (1) from a very wide age-range (our algo is trained on young adults), (2) from participants with sleep disorders, (3) short nap data (the algo is trained based full overnight sleep).* 
 
-*N.B 2: There is sometimes a confusion for the model to misclassify N1 as REM. Thus, we implemented an 'optional' post-scoring algorithm that replaces the detected REM before the first N2 detection with N1. This algorithm is activated by default. If you wish to deactivate it, you should set the 'apply_post_scoring_N1_correction' flag to 'False'.*
+*N.B 2: There is sometimes a confusion for the model to misclassify N1 as REM. This is anticipated as N1 is also the stage characterized by the lowest agreement among human raters. Thus, we implemented an 'optional' post-scoring algorithm that replaces the detected REM before the first N2 detection with N1. This algorithm is activated by default. If you wish to deactivate it, you should set the 'apply_post_scoring_N1_correction' flag to 'False'.*
 
 ### Bulk data scoring:
 
