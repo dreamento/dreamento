@@ -2,14 +2,14 @@
 
 ## Overview
 
-Dreamento is a an **open-source** Python package for (1) recording, monitoring, analyzing, and modulating sleep data online in **real-time** in addition to (2) **offline** post-processing the acquired data, both in a **graphical user interface (GUI)**..  
+Dreamento is a an **open-source** Python package for (1) recording, monitoring, analyzing, and modulating sleep data in **real-time** in addition to (2) **offline** post-processing the acquired data, both in a **graphical user interface (GUI)**..  
 - The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
 - **For any use, please cite our preprint article: see also citation section in the bottom of page
 
 A complete tutorial on how to install and use Dreamento can be found in the user manual folder of this repository.
 
-## Online (real-time) vs Offline Dreamento
-- **Online/real-time Dreamento** is meant to be used for data collection
+## Real-time vs Offline Dreamento
+- **Real-time Dreamento** is meant to be used for data collection
 ![Dreamento screenshot](https://user-images.githubusercontent.com/48684369/181081825-84c69c04-5ab1-4e4e-a708-9f4d59b5fb1c.png)
 - **offline/post-processing Dreamento** is capable of analyzing the acquired data.
 ![OfflineDreamentoScreenshot](https://user-images.githubusercontent.com/48684369/212293402-de503bb8-121f-4deb-a121-595380119315.png)
@@ -123,7 +123,7 @@ conda activate offlinedreamento
 spyder
 ```
 When spyder pops up, open ```offlinedreamento.py``` and proceed with the desired analysis. **If you are interested in autoscoring, we highly recommend this method. Otherwise, if you run offlinedreamento directly through command prompt you may get errors while autoscoring.
-You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., online via HDRecorder or offline by pushing the record button on the headband) (4) BrainProducts post-processing.
+You can post-process your recordings with Dreamento in three cases: (1) While having (Dreamento + Hypnodyne HDRecorder + data with other measurement modality, e.g., EMG), (2) Dreamento + Hypnodyne HDRecorder **WITHOUT** havign parallel recording with other measurement modality, and (3) recordings by ZMax only (e.g., in real-time via HDRecorder or offline by pushing the record button on the headband) (4) BrainProducts post-processing.
 
 ## Manual sleep scoring:
 Recently, we enabled the manual scoring feature in Dreamento. This feature is only active when all required files are provided to Dramento (1. EEG L.edf, 2. Dreametno recording, 3. Dreamento Annotations, 4. EMG file). This is because, we do not recommend manual scoring in the absence of EMG signal.
