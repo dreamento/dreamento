@@ -5519,7 +5519,8 @@ class OfflineDreamento():
                    '- Press "m" to mark a major body movement.\n'+\
                    '- Press "9" to mark a predefined eye signaling,e.g., LRLR,\n\n'+\
                    '- if an epoch is unscoarable, simply hit the ```right arrow``` key on the keyboard to leave that epoch as unscored/unscorable and go to the next. \n'+\
-                   '- If you changed your mind about scoring one of the past epochs, simply use  ```left arrow``` to go back and then change the scoring to the desired (i.e. press relevant key for the sleep stage).\n\n'+\
+                   '- If you changed your mind about scoring one of the past epochs, simply use  ```left arrow``` to go back and then change the scoring to the desired (i.e. press relevant key for the sleep stage). If you want to remove the scoring, i.e., mark the epoch as "unscorable", you should push "d" button.\n\n'+\
+                   '- If pressing the letters on keyboard e.g, "a, m, d, e" does not perform the required task, make sure the caps lock is off. \n\n '+\
                    '- **export scoring** by pressing ```e``` on the keyboard, then you will be presented with a message to select the folder and filename.\n'       
                    
         

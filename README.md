@@ -130,6 +130,7 @@ Recently, we enabled the manual scoring feature in Dreamento. This feature is on
 
 By pressing the "Manual scoring instructions", you get the list of the relavant keys for scoring. In Dreamento manual scoring, we also enabled the possibility to mark the predefined eye signals, e.g., LRLR.
 
+![Scoring](https://github.com/dreamento/dreamento/assets/48684369/35a81a43-6307-472c-adc6-9bcbb7e72711)
 
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package.
