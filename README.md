@@ -4,7 +4,7 @@
 
 Dreamento is a an **open-source** Python package for (1) recording, monitoring, analyzing, and modulating sleep data in **real-time** in addition to (2) **offline** post-processing the acquired data, both in a **graphical user interface (GUI)**..  
 - The developers have done their best to build it in a modular and open-source fashion, such that other researchers can add their own features to it and extend it further. 
-- **For any use, please cite our preprint article: see also citation section in the bottom of page
+- **For any use, please cite our scientific papers: see the citation section in the bottom of page.
 
 A complete tutorial on how to install and use Dreamento can be found in the user manual folder of this repository.
 
@@ -151,6 +151,9 @@ DreamentoScorer not only provides the sleep stages, but also hypnodensity as a m
 
 We added the possibility for the user to provide a ```.txt``` file including the path to the folders in which ZMax data (both ```EEG L.edf``` and ```EEG R.edf```) are stored. This way, Dreamento autoscores the data and based on the user's preferences plots the results, store them and even generates sleep statistics such as the duration in each sleep stage, sleep efficiency, etc.
 
+## Import sleep scoring:
+By checking the "Import sleep scoring" checkbox, the user can import up to 3 already scored files. Then, Dreamento presents all the scorings along with data and provide the agreement between scorers, if more than one scoring file is imported.
+
 ## Dreamento Converter
 
 Do you have several raw recordings from ZMax (.hyp) and now you want to convert them all at once? Then you need DreamentoConverter!
@@ -159,19 +162,20 @@ If that option is not available in your OfflineDreamento GUI, you may need to up
 
 You need to create two .txt files, one with the path to all ```.hyp``` files that you need to convert, and the other .txt fileincluding all destination paths. 
 
-## Import sleep scoring:
-By checking the "Import sleep scoring" checkbox, the user can import up to 3 already scored files. Then, Dreamento presents all the scorings along with data and provide the agreement between scorers, if more than one scoring file is imported.
-
-### Synchronization
+## Synchronization
 You can collect ExG data using other device in parallel with ZMax and then use Dreamento to synchronize the outputs!
 An example, is EMG recording in parallel with Dreamento, based on which the user can sync the data.
 
 ![EEG_EMG_synchronization](https://user-images.githubusercontent.com/48684369/181077226-31550c51-615f-486c-8b4f-1e5c55d8a20c.png)
 
-### Documentation
+## One-fits-all solution (no GUI): Dreamento_from_conversion_to_scoring.py
+
+This code provides a comprehensive assessment, from automatically converting a recorded .hyp file into final scoring and sleep metrics assessment. All you need to do is to store all the .hhyp fils within a folder (there can be folder trees within the main folder), and then Dreamento will take care of the rest!
+
+## Documentation
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
 
-### FAQ:
+## FAQ:
 
 *1. Can I analyze the data I collected with ZMax headband (an not necessarily with Dreamento), such as a recording by pushing the record button on the headband using offline Dreamento?*
 
