@@ -161,7 +161,7 @@ class OfflineDreamento():
         
     #%% Enable manual scoring
         self.import_scoring = IntVar(value = 0)
-        self.checkbox_import_scoring = Checkbutton(self.frame_import, text = "import sleep scoring",
+        self.checkbox_import_scoring = Checkbutton(self.frame_import, text = "Import sleep scoring",
                                   font = 'Calibri 11 ', variable = self.import_scoring,
                                   command=self.ImportManualScoring)
         
@@ -467,6 +467,12 @@ class OfflineDreamento():
                                            command = self.receive_scorings,fg = 'blue',
                                            relief = RIDGE,  padx = 10, pady = 10)
         self.button_import_manual_scorings_ok.grid(row = 3 , column =1)
+        
+        self.combine_W_N1_for_assessment = IntVar(value = 0)
+        self.checkbox_combine_W_N1_for_assessment = Checkbutton(self.popupWin_ImportManualScoring, text = "Combine W and N1 epochs for inter-rater agreement",
+                                  font = 'Calibri 11 ', variable = self.combine_W_N1_for_assessment)
+        
+        self.checkbox_combine_W_N1_for_assessment.grid(row = 1, column = 3, sticky="w")
         
     #%% receive scoring results
     def receive_scorings(self):
@@ -2893,10 +2899,46 @@ class OfflineDreamento():
                 if len(self.filename_scoring_paths) == 2:
                     
                     from sklearn.metrics import cohen_kappa_score
+                    
+                    # Should the W and N1 scorings be combined? 
+                    if int(self.combine_W_N1_for_assessment.get())==1:
+                        # Scoring1
+                        W_N1_indices_scoring1 = np.where((scoring1 == 0) | (scoring1 == 1))
+                        print('Combining N1 and Wake stages before computing Kappa score ....')
+                        scoring1[W_N1_indices_scoring1] = 10
+                        
+                        # Scoring1
+                        W_N1_indices_scoring2 = np.where((scoring2 == 0) | (scoring2 == 1))
+                        print('Combining N1 and Wake stages before computing Kappa score ....')
+                        scoring2[W_N1_indices_scoring2] = 10
+
                     self.kappa1_2   = cohen_kappa_score(scoring1, scoring2)
                     messagebox.showinfo("Scorers agreemnt",f"The agreement between {scorer1} and {scorer2} is:\n {round(self.kappa1_2, 2)*100} %.")
                     
                 elif len(self.filename_scoring_paths) == 3:
+                    
+                    # Should the W and N1 scorings be combined? 
+                    if int(self.combine_W_N1_for_assessment.get()==1):
+                        
+                        # Scoring1
+                        W_N1_indices_scoring1 = np.where((scoring1 == 0) | (scoring1 == 1))
+                        print('Combining N1 and Wake stages before computing Kappa score ....')
+                        scoring1[W_N1_indices_scoring1] = 10
+                        
+                        # Scoring2
+                        W_N1_indices_scoring2 = np.where((scoring2 == 0) | (scoring2 == 1))
+                        print('Combining N1 and Wake stages before computing Kappa score ....')
+                        scoring2[W_N1_indices_scoring2] = 10
+                        
+                        # Scoring3
+                        W_N1_indices_scoring3 = np.where((scoring3 == 0) | (scoring3 == 1))
+                        print('Combining N1 and Wake stages before computing Kappa score ....')
+                        scoring3[W_N1_indices_scoring3] = 10
+                        
+                        print(scoring1)
+                        print(scoring2)
+                        print(scoring3)
+
                     
                     from sklearn.metrics import cohen_kappa_score
                     self.kappa1_2   = cohen_kappa_score(scoring1, scoring2)
