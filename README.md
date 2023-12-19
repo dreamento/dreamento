@@ -170,7 +170,7 @@ An example, is EMG recording in parallel with Dreamento, based on which the user
 
 ## One-fits-all solution (no GUI): Dreamento_from_conversion_to_scoring.py
 
-This code provides a comprehensive assessment, from automatically converting a recorded .hyp file into final scoring and sleep metrics assessment. All you need to do is to store all the .hhyp fils within a folder (there can be folder trees within the main folder), and then Dreamento will take care of the rest!
+This code provides a comprehensive assessment, from automatically converting recorded .hyp files into final scoring and sleep metrics assessment. All you need to do is to store all the .hyp files within a folder (there can be folder trees within the main folder), and then Dreamento will take care of the rest!
 
 ## Documentation
 The documentation of Dreamento can be found at: https://dreamento.github.io/docs/
