@@ -2711,7 +2711,7 @@ class OfflineDreamento():
             if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
                 
                 self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
-                self.EMG_raw = self.EMG_raw.resample(int(256))
+                #self.EMG_raw = self.EMG_raw.resample(int(256))
 
                  
             elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
@@ -2737,15 +2737,24 @@ class OfflineDreamento():
             self.EMG_filtered_data1_minus_2 = signal.filtfilt(b, a, self.EMG_filtered_data1_minus_2, axis=0)
 
             self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
-            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
-                
+# =============================================================================
+#             if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+# 
+#                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+#                 
+#             elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+# 
+#                 #self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
+#                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+# =============================================================================
 
+            # detect if the EMG data is in uV or V
+            if np.std(self.EMG_filtered_data1) < 1:
+                print('data scale is deteceted in Volts range')
                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
-                
-
+            else:
                 self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
-
+            
             # Check whether the user already synced EMG vs. EEG or not
             print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
     
@@ -3195,24 +3204,33 @@ class OfflineDreamento():
             if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
                 
                 self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
-                self.EMG_raw = self.EMG_raw.resample(int(256))
             
             elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+                
                 self.EMG_raw = mne.io.read_raw_edf(self.path_to_EMG, preload = True)
                            
             self.EMG_filtered = self.EMG_raw.filter(l_freq=10, h_freq=100)
+            self.EMG_filtered = self.EMG_filtered.resample(int(256))
             self.EMG_filtered_data1 = self.EMG_filtered.get_data()[0] 
             self.EMG_filtered_data2 = self.EMG_filtered.get_data()[1] 
             self.EMG_filtered_data1_minus_2 = self.EMG_filtered_data1 - self.EMG_filtered_data2
             
             self.desired_EMG_scale_val = int(self.EMG_scale_options_val.get())
-            if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
-            
+# =============================================================================
+#             if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
+#             
+#                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+#             elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
+#             
+#                 #self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
+#                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
+# =============================================================================
+            # detect if the EMG data is in uV or V
+            if np.std(self.EMG_filtered_data1) < 1:
                 self.desired_EMG_scale= [-1e-6* self.desired_EMG_scale_val, 1e-6* self.desired_EMG_scale_val]
-            elif (self.path_to_EMG[-3:] == 'edf' or self.path_to_EMG[-3:] == 'EDF'):
-            
+            else:
                 self.desired_EMG_scale= [-1 * self.desired_EMG_scale_val, 1* self.desired_EMG_scale_val]
-            
+                
             # Check whether the user already synced EMG vs. EEG or not
             print(f'shape EMG signals = {np.shape(self.EMG_filtered_data1)}')
             
