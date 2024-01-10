@@ -58,98 +58,98 @@ class OfflineDreamento():
         #%% Import section
         #### !!~~~~~~~~~~~~~~~~~ DEFINE INPUT DATAFRAME ~~~~~~~~~~~~~~~~~!!####
         
-        self.frame_import = LabelFrame(self.master, text = "Analysis section", padx = 40, pady = 20,
+        self.frame_import = LabelFrame(self.master, text = "Analysis section",
                                   font = 'Calibri 18 bold')
-        self.frame_import.grid(row = 0 , column = 0, padx = 5, pady = 5, columnspan = 8)        
+        self.frame_import.grid(row = 0 , column = 0, columnspan = 8)        
 
         
         #### ==================== Help pop-up button ======================####
         
         self.popup_button = Button(self.master, text = "Help", command = self.help_pop_up_func,
-                              font = 'Calibri 13 ', fg = 'white', bg = 'black')
+                              font = 'Calibri 11 ', fg = 'white', bg = 'black')
         self.popup_button.grid(row = 1, column = 7)
         
         #### ==================== Manual scoring pop-up button ======================####
         
         self.manual_scoring_popup_button = Button(self.master, text = "Manual scoring instructions", command = self.manual_scoring_popup_button_func,
-                              font = 'Calibri 13 ', fg = 'white', bg = 'navy')
+                              font = 'Calibri 11 ', fg = 'white', bg = 'navy')
         self.manual_scoring_popup_button.grid(row = 1, column = 6)
         
         ###### ================== CopyRight ============================ ######
         self.label_CopyRight = Label(self.master, text = "© CopyRight (2021-23): Mahdad Jafarzadeh Esfahani",
                                   font = 'Calibri 10 italic')
-        self.label_CopyRight.grid(row = 1 , column = 0, padx = 10, pady = 10)
+        self.label_CopyRight.grid(row = 1 , column = 0)#, padx = 10, pady = 10)
         
         #### ==================== Import Hypnodyne data  ========================####
         # Label: Import EDF
-        self.label_Hypnodyne = Label(self.frame_import, text = "Import Hypnodyne EEG L.edf file:",
-                                  font = 'Calibri 13 ')
-        self.label_Hypnodyne.grid(row = 0 , column = 0, padx = 10, pady = 10)
+        self.label_Hypnodyne = Label(self.frame_import, text = "Import Hypnodyne EEG L.edf:",
+                                  font = 'Calibri 11 ')
+        self.label_Hypnodyne.grid(row = 0 , column = 0)#, padx = 10, pady = 10)
         
         # Button: Import EDF (Browse)
         self.button_Hypnodyne_browse = Button(self.frame_import, text = "Browse Hypnodyne",
                                            padx = 40, pady = 10,font = 'Calibri 12 ',
                                            command = self.load_hypnodyne_file_dialog, fg = 'blue',
                                            relief = RIDGE)
-        self.button_Hypnodyne_browse.grid(row = 1, column = 0, padx = 10, pady = 10)
+        self.button_Hypnodyne_browse.grid(row = 1, column = 0)#, padx = 10, pady = 10)
         
         #### ================== Import Dreamento file ====================####
         # Show a message about hypnograms
-        self.label_Dreamento = Label(self.frame_import, text = "Import Dreamento output file (.txt):",
-                                  font = 'Calibri 13 ')
-        self.label_Dreamento.grid(row = 0 , column = 1, padx = 10, pady = 10)
+        self.label_Dreamento = Label(self.frame_import, text = "Import Dreamento output (.txt):",
+                                  font = 'Calibri 11 ')
+        self.label_Dreamento.grid(row = 0 , column = 1)#, padx = 10, pady = 10)
         
         # Define browse button to import hypnos
         self.button_Dreamento_browse = Button(self.frame_import, text = "Browse Dreamento", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.load_Dreamento_file_dialog,fg = 'blue',
                                            relief = RIDGE)
-        self.button_Dreamento_browse.grid(row = 1, column = 1, padx = 10, pady = 10)
+        self.button_Dreamento_browse.grid(row = 1, column = 1)#, padx = 10, pady = 10)
         
         #### ================== Import markers Json file ====================####
         # Show a message about hypnograms
         self.label_marker_json = Label(self.frame_import, text = "Import marker file (.json):",
-                                  font = 'Calibri 13 ')
-        self.label_marker_json.grid(row = 0 , column = 2, padx = 10, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_marker_json.grid(row = 0 , column = 2)#, padx = 10, pady = 10)
         
         # Define browse button to import hypnos
         self.button_marker_json_browse = Button(self.frame_import, text = "Browse markers", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.load_marker_file_dialog,fg = 'blue',
                                            relief = RIDGE)
-        self.button_marker_json_browse.grid(row = 1, column = 2, padx = 10, pady = 10)
+        self.button_marker_json_browse.grid(row = 1, column = 2)#, padx = 10, pady = 10)
         
        
         #### ================== Import Brainvision EMG Json file ====================####
         # Show a message about hypnograms
         self.label_EMG = Label(self.frame_import, text = "Import EMG file (.vhdr):",
-                                  font = 'Calibri 13 ')
-        self.label_EMG.grid(row = 0 , column = 3, padx = 10, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_EMG.grid(row = 0 , column = 3)#, padx = 10, pady = 10)
         
         # Define browse button to import hypnos
         self.button_EMG_browse = Button(self.frame_import, text = "Browse EMG (.vhdr)", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.load_EMG_file_dialog,fg = 'blue',
                                            relief = RIDGE)
-        self.button_EMG_browse.grid(row = 1, column = 3, padx = 10, pady = 10)
+        self.button_EMG_browse.grid(row = 1, column = 3)#, padx = 10, pady = 10)
 # =============================================================================
 #         #### ============ Push Analyze button to assign markers =========####
 #         #Label to read data and extract features
 #         self.label_apply = Label(self.frame_import, text = "Assign markers",
-#                                       font = 'Calibri 13 ')
+#                                       font = 'Calibri 11 ')
 #         self.label_apply.grid(row = 2 , column = 1)
 # =============================================================================
         # Apply button
-        self.button_apply = Button(self.frame_import, text = "Analyze!", padx = 40, pady=8,
-                              font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
+        self.button_apply = Button(self.frame_import, text = "Analyze!",#, padx = 40, pady=8,
+                              font = 'Calibri 11 bold', relief = RIDGE, fg = 'blue',
                               command = self.Apply_button, state = tk.DISABLED)
-        self.button_apply.grid(row = 3 , column =2, padx = 10, pady = 10)
+        self.button_apply.grid(row = 3 , column =2)#, padx = 10, pady = 10)
 
 
     #%% =========================== Options for analysis =================== #%%
         #Label to read data and extract features
         self.label_analysis = Label(self.frame_import, text = "Analysis options:",
-                                      font = 'Calibri 13 ')
+                                      font = 'Calibri 11 ')
         self.label_analysis.grid(row = 0 , column = 4, sticky="w")
         
     #%% label import human scoring / already scored hypnogram
@@ -224,7 +224,7 @@ class OfflineDreamento():
         self.checkbox_plot_psd = Checkbutton(self.frame_import, text = "Plot peridogram",
                                   font = 'Calibri 11 ', variable = self.plot_psd)
         
-        self.checkbox_plot_psd.grid(row = 10, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_psd.grid(row = 10, column = 4, sticky="w")#, pady = 10)
         
         #%% checkbox DreamentoConverter
         self.DreamentoConverter_val = IntVar(value = 0)
@@ -232,12 +232,12 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.DreamentoConverter_val,\
                                   command=self.DreamentoConverter)
         
-        self.checkbox_DreamentoConverter.grid(row = 11, column = 4, sticky="w", pady = 10)
+        self.checkbox_DreamentoConverter.grid(row = 11, column = 4, sticky="w")#, pady = 10)
             
     #%% Label to select the desired analysis
         #Label to read data and extract features
         self.label_analysis_data = Label(self.frame_import, text = "Select the data to analyze:",
-                                      font = 'Calibri 13 ')
+                                      font = 'Calibri 11 ')
         self.label_analysis_data.grid(row = 12 , column = 4, sticky="w")
         
     #%% Checkbox for plotting Dreamento + HDRecorder + EMG
@@ -246,7 +246,7 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options,\
                                   value = 1, command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_plot_additional_EMG.grid(row = 13, column = 4, sticky="w", pady = 10)
+        self.checkbox_plot_additional_EMG.grid(row = 13, column = 4, sticky="w")#, pady = 10)
         
         
     #%% Checkbox for analyzing ZMax Hypndoyne + Dreamento
@@ -255,14 +255,14 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 2,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 14, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_Dreamento.grid(row = 14, column = 4, sticky="w")#, pady = 10)
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.ZMax_Hypno_only = IntVar(value = 0)
         self.checkbox_ZMax_Hypno_only = Radiobutton(self.frame_import, text = "HDRecorder",
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 3,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_ZMax_Hypno_only.grid(row = 15, column = 4, sticky="w", pady = 10)
+        self.checkbox_ZMax_Hypno_only.grid(row = 15, column = 4, sticky="w")#, pady = 10)
         
     #%% Checkbox for analyzing ZMax Hypndoyne only
         self.BrainVision_analysis = IntVar(value = 0)
@@ -270,11 +270,11 @@ class OfflineDreamento():
                                   font = 'Calibri 11 ', variable = self.analysis_signal_options, value = 4,\
                                   command=self.analysis_signal_options_button_activator)
         
-        self.checkbox_BrainVision_analysis.grid(row = 16, column = 4, sticky="w", pady = 10)
+        self.checkbox_BrainVision_analysis.grid(row = 16, column = 4, sticky="w")#, pady = 10)
     #%% EMG Y SCALE
         #Label to read data and extract features
         self.label_EMG_scale = Label(self.frame_import, text = "EMG amplitude (uV):",
-                                      font = 'Calibri 13 ')
+                                      font = 'Calibri 11 ')
         self.label_EMG_scale.grid(row = 2 , column = 0)
         self.EMG_scale_options = ['Set desired EMG amplitude ...','100', '50', '20', '10']
         self.EMG_scale_options_val = StringVar()
@@ -292,14 +292,14 @@ class OfflineDreamento():
     #%% EMG sync option
         #Label to read data and extract features
         
-        self.button_sync_EMG = Button(self.frame_import, text = "Analyze! (+EMG)", padx = 40, pady=8,
-                              font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
+        self.button_sync_EMG = Button(self.frame_import, text = "Analyze! (+EMG)",#, padx = 40, pady=8,
+                              font = 'Calibri 11 bold', relief = RIDGE, fg = 'blue',
                               command = self.EMG_sync_method_activator)
-        self.button_sync_EMG.grid(row = 3 , column =1, padx = 15, pady = 10)
+        self.button_sync_EMG.grid(row = 3 , column =1)#, padx = 15, pady = 10)
         
 # =============================================================================
 #         self.label_sync_EMG_option = Label(self.frame_import, text = "EMG sync method?",
-#                                       font = 'Calibri 13 ')
+#                                       font = 'Calibri 11 ')
 #         self.label_sync_EMG_option.grid(row = 5 , column = 0)
 #         self.sync_EMG_option = ['no sync', 'manual']
 #         self.sync_EMG_option_val = StringVar()
@@ -1407,31 +1407,31 @@ class OfflineDreamento():
         
         # Label: Save outcome
         self.label_save_path = Label(self.frame_import, text = "Saving path:",
-                                  font = 'Calibri 13 ')
-        self.label_save_path.grid(row = 6 , column = 0, padx = 15, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_save_path.grid(row = 6 , column = 0)#, padx = 15, pady = 10)
         
         # Define browse button to import hypnos
         self.button_save_browse = Button(self.frame_import, text = "Browse ...", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.save_path_finder,fg = 'blue',
                                            relief = RIDGE)
-        self.button_save_browse.grid(row = 7, column = 0, padx = 15, pady = 10)
+        self.button_save_browse.grid(row = 7, column = 0)#, padx = 15, pady = 10)
         
         
         
         # Label: Save name
         self.label_save_filename = Label(self.frame_import, text = "Saving filename:",
-                                  font = 'Calibri 13 ')
-        self.label_save_filename.grid(row = 6 , column = 1)#, padx = 15, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_save_filename.grid(row = 6 , column = 1)#)#, padx = 15, pady = 10)
         
         # Create entry for user
         self.entry_save_name = Entry(self.frame_import,text = " enter filename.mat ")#, borderwidth = 2, width = 10)
-        self.entry_save_name.grid(row = 7, column = 1)#, padx = 15, pady = 10)
+        self.entry_save_name.grid(row = 7, column = 1)#)#, padx = 15, pady = 10)
         
-        self.button_save_mat = Button(self.frame_import, text = "Save", padx = 40, pady=8,
-                              font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
+        self.button_save_mat = Button(self.frame_import, text = "Save",#, padx = 40, pady=8,
+                              font = 'Calibri 11 bold', relief = RIDGE, fg = 'blue',
                               command = self.save_results_button)
-        self.button_save_mat.grid(row = 7 , column =2, padx = 15, pady = 10)
+        self.button_save_mat.grid(row = 7 , column =2)#, padx = 15, pady = 10)
         
     #%% create save options for autoscoring
     def create_save_options_autoscoring(self):
@@ -1448,31 +1448,31 @@ class OfflineDreamento():
         
         # Label: Save outcome
         self.label_save_path_autoscoring = Label(self.frame_import, text = "Path to save autoscoring results:",
-                                  font = 'Calibri 13 ')
-        self.label_save_path_autoscoring.grid(row = 4 , column = 0, padx = 15, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_save_path_autoscoring.grid(row = 4 , column = 0)#, padx = 15, pady = 10)
         
         # Define browse button to import hypnos
         self.button_save_browse_autoscoring = Button(self.frame_import, text = "Browse ...", 
                                            padx = 40, pady = 10, font = 'Calibri 12 ',
                                            command = self.save_path_finder,fg = 'blue',
                                            relief = RIDGE)
-        self.button_save_browse_autoscoring.grid(row = 5, column = 0, padx = 15, pady = 10)
+        self.button_save_browse_autoscoring.grid(row = 5, column = 0)#, padx = 15, pady = 10)
         
         
         
         # Label: Save name
         self.label_save_filename_autoscoring = Label(self.frame_import, text = "Saving filename:",
-                                  font = 'Calibri 13 ')
-        self.label_save_filename_autoscoring.grid(row = 4 , column = 1)#, padx = 15, pady = 10)
+                                  font = 'Calibri 11 ')
+        self.label_save_filename_autoscoring.grid(row = 4 , column = 1)#)#, padx = 15, pady = 10)
         
         # Create entry for user
         self.entry_save_name_autoscoring = Entry(self.frame_import,text = "Subject#_night#.txt ")#, borderwidth = 2, width = 10)
-        self.entry_save_name_autoscoring.grid(row = 5, column = 1)#, padx = 15, pady = 10)
+        self.entry_save_name_autoscoring.grid(row = 5, column = 1)#)#, padx = 15, pady = 10)
         
-        self.button_save_mat_autoscoring = Button(self.frame_import, text = "Save", padx = 40, pady=8,
-                              font = 'Calibri 13 bold', relief = RIDGE, fg = 'blue',
+        self.button_save_mat_autoscoring = Button(self.frame_import, text = "Save",#, padx = 40, pady=8,
+                              font = 'Calibri 11 bold', relief = RIDGE, fg = 'blue',
                               command = self.save_autoscoring_button)
-        self.button_save_mat_autoscoring.grid(row = 5 , column =2, padx = 15, pady = 10)
+        self.button_save_mat_autoscoring.grid(row = 5 , column =2)#, padx = 15, pady = 10)
     #%% ################### DEFINE FUNCTIONS OF BUTTON(S) #######################
     #%% Save autoscorrig button
     def save_autoscoring_button(self):
@@ -6256,7 +6256,7 @@ class OfflineDreamento():
         self.load_txt_bulk_autoscoring_paths_label = Label(self.popupWin_bulk_autoscoring, text='select a txt file including paths to folders')
         self.load_txt_bulk_autoscoring_paths_label.grid(row = 1 , column =1)
         self.button_load_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Browse ...",
-                              font = 'Calibri 13 bold', relief = RIDGE,
+                              font = 'Calibri 11 bold', relief = RIDGE,
                               command = self.browse_txt_for_bulk_autoscoring)
         self.button_load_bulk_autoscoring.grid(row = 2 , column =1)
         
@@ -6265,7 +6265,7 @@ class OfflineDreamento():
 #         self.select_folder_export_bulk_autoscoring_bulk_autoscoring_label = Label(self.popupWin_bulk_autoscoring, text='select destination folder')
 #         self.select_folder_export_bulk_autoscoring_bulk_autoscoring_label.grid(row = 1 , column =2)
 #         self.button_select_folder_export_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Browse ...",
-#                               font = 'Calibri 13 bold', relief = RIDGE,
+#                               font = 'Calibri 11 bold', relief = RIDGE,
 #                               command = self.browse_destination_folder_for_bulk_autoscoring)
 #         self.button_select_folder_export_bulk_autoscoring.grid(row = 2 , column =2)
 # =============================================================================
@@ -6274,7 +6274,7 @@ class OfflineDreamento():
         self.button_start_bulk_autoscoring_label = Label(self.popupWin_bulk_autoscoring, text='start autoscoring!')
         self.button_start_bulk_autoscoring_label.grid(row = 1 , column =3)
         self.button_start_bulk_autoscoring = Button(self.popupWin_bulk_autoscoring, text = "Start!",
-                              font = 'Calibri 13 bold', relief = RIDGE,
+                              font = 'Calibri 11 bold', relief = RIDGE,
                               command = self.bulk_autoscoring)
         self.button_start_bulk_autoscoring.grid(row = 2 , column =3)
         
@@ -6342,19 +6342,19 @@ class OfflineDreamento():
         # user entries
         self.entry_REM_amplitude_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
         self.entry_REM_amplitude_threshold.insert(0, "30, 325")
-        self.entry_REM_amplitude_threshold.grid(row = 2, column = 1)#, padx = 15, pady = 10)
+        self.entry_REM_amplitude_threshold.grid(row = 2, column = 1)#)#, padx = 15, pady = 10)
         
         self.entry_REM_duration_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
         self.entry_REM_duration_threshold.insert(0, ".3, 1.2")
-        self.entry_REM_duration_threshold.grid(row = 2, column = 2)#, padx = 15, pady = 10)
+        self.entry_REM_duration_threshold.grid(row = 2, column = 2)#)#, padx = 15, pady = 10)
         
         self.entry_REM_freq_threshold = Entry(self.popupWin_automatic_REM_event_detection)#, borderwidth = 2, width = 10)
         self.entry_REM_freq_threshold.insert(0, ".5, 5")
-        self.entry_REM_freq_threshold.grid(row = 2, column = 3)#, padx = 15, pady = 10)
+        self.entry_REM_freq_threshold.grid(row = 2, column = 3)#)#, padx = 15, pady = 10)
         
         self.OK_button_popupWin_automatic_REM_event_detection = Button(self.popupWin_automatic_REM_event_detection, text = "OK!", 
                                                                        command = self.receive_values_from_automatic_REM_event_detection_popup,
-                                                                       font = 'Calibri 13 ')
+                                                                       font = 'Calibri 11 ')
         self.OK_button_popupWin_automatic_REM_event_detection.grid(row = 3, column = 3)
         
     #%% Automatic spindle event detection popup
@@ -6388,23 +6388,23 @@ class OfflineDreamento():
         # user entries
         self.entry_freq_broad_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
         self.entry_freq_broad_threshold.insert(0, "1, 30")
-        self.entry_freq_broad_threshold.grid(row = 2, column = 1)#, padx = 15, pady = 10)
+        self.entry_freq_broad_threshold.grid(row = 2, column = 1)#)#, padx = 15, pady = 10)
          
         self.entry_spd_duration_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
         self.entry_spd_duration_threshold.insert(0, ".5, 2")
-        self.entry_spd_duration_threshold.grid(row = 2, column = 2)#, padx = 15, pady = 10)
+        self.entry_spd_duration_threshold.grid(row = 2, column = 2)#)#, padx = 15, pady = 10)
          
         self.entry_spd_freq_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
         self.entry_spd_freq_threshold.insert(0, "11, 15")
-        self.entry_spd_freq_threshold.grid(row = 2, column = 3)#, padx = 15, pady = 10)
+        self.entry_spd_freq_threshold.grid(row = 2, column = 3)#)#, padx = 15, pady = 10)
         
         self.entry_min_distance_spd_detection_threshold = Entry(self.popupWin_automatic_spd_event_detection)#, borderwidth = 2, width = 10)
         self.entry_min_distance_spd_detection_threshold.insert(0, "500")
-        self.entry_min_distance_spd_detection_threshold.grid(row = 2, column = 4)#, padx = 15, pady = 10)
+        self.entry_min_distance_spd_detection_threshold.grid(row = 2, column = 4)#)#, padx = 15, pady = 10)
         
         self.OK_button_popupWin_automatic_spd_event_detection = Button(self.popupWin_automatic_spd_event_detection, text = "OK!", 
                                                                         command = self.receive_values_from_automatic_spd_event_detection_popup,
-                                                                        font = 'Calibri 13 ')
+                                                                        font = 'Calibri 11 ')
 # =============================================================================
 #         self.checkbox_spd_remove_outliers_val = IntVar(value = 0)
 #         self.checkbox_spd_remove_outliers = Checkbutton(self.popupWin_automatic_spd_event_detection, text = "remove outliers? (recommended)",
@@ -6486,7 +6486,7 @@ class OfflineDreamento():
         
         self.convert_button = Button(self.popupWin_DreamentoConverter, text = "Convert!", 
                                                                         command = self.apply_DreamentoConverter,
-                                                                        font = 'Calibri 13 ')
+                                                                        font = 'Calibri 11 ')
         self.convert_button.grid(row = 7, column = 1)
     #%% ExportManualScoring
     def ExportManualScoring(self):
@@ -6508,7 +6508,7 @@ class OfflineDreamento():
 
         self.convert_button = Button(self.popupWin_ExportManualScoring, text = "Export!", 
                                                                         command = self.ApplyExportManualScoring,
-                                                                        font = 'Calibri 13 ')
+                                                                        font = 'Calibri 11 ')
         self.convert_button.grid(row = 3, column = 1)
     #%% Brain amp channel selector for plotting + autoscoring
     def BrainProducts_channel_selector(self):
@@ -6615,7 +6615,7 @@ class OfflineDreamento():
         
         self.OK_button_popupWin_BrainProdcuts = Button(self.popupWin_BrainProducts_channel_selector, text = "OK!", 
                                                                         command = self.receive_values_from_BrainProducts_channel_selector,
-                                                                        font = 'Calibri 13 ')
+                                                                        font = 'Calibri 11 ')
         self.OK_button_popupWin_BrainProdcuts.grid(row = 7, column = 4)
         
         self.checkbox_save_YASA_autoscoring_val = IntVar(value = 1)
