@@ -132,6 +132,11 @@ By pressing the "Manual scoring instructions", you get the list of the relavant 
 
 ![Scoring](https://github.com/dreamento/dreamento/assets/48684369/35a81a43-6307-472c-adc6-9bcbb7e72711)
 
+
+### Consensus scoring:
+
+If the "import manual scoring" checkbox is selected, users have the option to import up to three different scorings (for instance, scoring from three separate scorers) and generate a consensus. By default, any epochs with scoring discrepancies will be highlighted in red and devoid of a sleep stage. This indicates areas where manual scorers can review, re-score the data, and subsequently export the consensus scoring.
+
 ## Automatic sleep scoring (autoscoring):
 We have recently introduced *DreamentoScorer* which is an open-source autoscoring algorithm that comes with Dreamento package.
 DreamentoScorer is a machine-learning based alogorithm which exctracts several linear and non-linear features in time and time-frequency domain from each 30-second epoch of data. The classifier is based on the LightGBM and

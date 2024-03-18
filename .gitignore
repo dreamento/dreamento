@@ -167,3 +167,10 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+
+kappa_scores.xlsx
+OfflineDreamento_alpha.py
+LRLR_Agreements_DNDRS_Dataset.xlsx
+LRLR_Agreement.py
+Compute_Kappa_Scores.py

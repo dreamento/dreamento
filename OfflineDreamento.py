@@ -611,7 +611,7 @@ class OfflineDreamento():
             EMG_data_get1   = self.butter_bandpass_filter(data = EMG_data_get1, lowcut=10, highcut=100, fs = 256, order = 2)
             EMG_data_get2   = self.butter_bandpass_filter(data = EMG_data_get2, lowcut=10, highcut=100, fs = 256, order = 2)
             EMG_data_get3   = self.butter_bandpass_filter(data = EMG_data_get3, lowcut=10, highcut=100, fs = 256, order = 2)
-            t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*30)
+            t_sync          = np.arange(time_sync_event[0] - 256*5, time_sync_event[0] + 256*70)
     
             # notch filtering
             notch_freq = 50  # set the notch frequency to 50 Hz
@@ -2082,11 +2082,16 @@ class OfflineDreamento():
     
         corr2 = np.correlate(sigHDRecorder, sigScript, "full")
         lag2 = np.argmax(corr2)
-    
-        xCorrZeros = np.zeros(lag2 + 1 - len(sigScript))
-        xShiftedForward = np.append(xCorrZeros, sigScript)
-    
+        
+        print(f'len ({len(sigScript)})')
+        print(f'lag2 ({lag2})')
+        
         samples_before_begin = lag2 + 1 - len(sigScript)
+        
+        if samples_before_begin < 0:
+            xCorrZeros = np.zeros(-samples_before_begin)
+            xShiftedForward = np.append(xCorrZeros, sigScript)
+    
         samples_after_end = len(sigHDRecorder) - samples_before_begin - len(sigScript)
         index_start_script = samples_before_begin
         index_end_script = len(sigHDRecorder) - samples_after_end
@@ -2137,7 +2142,7 @@ class OfflineDreamento():
             plt.plot(sigHDRecorder_org[samples_before_begin:]*1e6, label='EEG L - HDRecorder')
             plt.legend()
             plt.show()
-            
+                
         # Synced data
         sigHDRecorder_org_synced = sigHDRecorder_org[samples_before_begin:]
         self.sigHDRecorder_org_synced = sigHDRecorder_org_synced
@@ -2305,7 +2310,7 @@ class OfflineDreamento():
             # If plotting EMG TFR is required
             if int(self.plot_EMG_quality_evaluation.get()) == 1:
                 if int(self.import_scoring.get()) == 0:
-                    fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,1,1, 2, 2, 2, 4, 4, 4,4, 10]})
+                    fig,AX = plt.subplots(nrows=16, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10, 10, 3, 3,3,2, 2, 2, 2, 2, 4, 4,4, 10]})
                     ax1 = plt.subplot(16,1,1)
                     ax2 = plt.subplot(16,1,2, sharex = ax1)
                     ax3 = plt.subplot(16,1,3, sharex = ax1)
@@ -2437,7 +2442,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('EEG L-Freq(Hz)')
+            ax3.set_ylabel('EEG L-Freq(Hz)', rotation = 80, fontsize=9)
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -2556,7 +2561,7 @@ class OfflineDreamento():
             ax_noise.plot(np.arange(len(self.noise_data[self.samples_before_begin:]))/256, self.noise_data[self.samples_before_begin:], linewidth = 2, color = 'navy')
             
             #ax4.get_xaxis().set_visible(False)
-            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=9)
 
             ###########
             # Apply automatic REM EVENTS detection
@@ -2710,7 +2715,7 @@ class OfflineDreamento():
             # read EMG
             if (self.path_to_EMG[-4:] == 'vhdr' or self.path_to_EMG[-4:] == 'VHDR'):
                 
-                self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG)
+                self.EMG_raw = mne.io.read_raw_brainvision(self.path_to_EMG,  preload = True)
                 #self.EMG_raw = self.EMG_raw.resample(int(256))
 
                  
@@ -2819,7 +2824,7 @@ class OfflineDreamento():
                 ax_TFR_EMG2.set_xlim(0, self.t2_EMG.max())
                 ax_TFR_EMG2.set_xticks([])
                 ax_TFR_EMG2.set_yticks([])
-                ax_TFR_short.set_ylabel('EMG TFR', rotation = 90)
+                ax_TFR_short.set_ylabel('EEG R-freq(Hz)', rotation = 80, fontsize=9)
                 # TFR EMG 3
                 ax_TFR_EMG3.pcolormesh(self.t3_EMG, self.f3_EMG, self.Sxx3_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
                                    shading="auto") # Normalized with respect to the same freq range as sig1
@@ -3026,7 +3031,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('EEG L-Freq(Hz)')
+            ax3.set_ylabel('EEG L-Freq(Hz)', rotation = 80, fontsize=9)
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3040,7 +3045,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=9)
             
                        
             # Opening JSON file
@@ -3103,7 +3108,7 @@ class OfflineDreamento():
             ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
             ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
             ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 0, labelpad=30, fontsize=8)
             ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
             ax_EMG.set_ylabel('EMG1 (uV)',rotation = 0, labelpad=30, fontsize=8)
             ax_EMG2.set_ylabel('EMG2 (uV)',rotation = 0, labelpad=30, fontsize=8)
@@ -3137,7 +3142,7 @@ class OfflineDreamento():
             # Plot ppg
             ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
             ax_ppg.set_ylim([-100, 100])
-            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_ylabel('PPG', rotation = 0, labelpad=30, fontsize=8)
             ax_ppg.set_yticks([])
             
             
@@ -3430,7 +3435,7 @@ class OfflineDreamento():
                 ax_TFR_EMG2.set_xlim(0, self.t2_EMG.max())
                 ax_TFR_EMG2.set_xticks([])
                 ax_TFR_EMG2.set_yticks([])
-                ax_TFR_short.set_ylabel('EMG TFR', rotation = 90)
+                ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=9)
                 # TFR EMG 3
                 ax_TFR_EMG3.pcolormesh(self.t3_EMG, self.f3_EMG, self.Sxx3_EMG, norm=self.norm2_EMG, cmap=cmap, antialiased=True,
                                    shading="auto") # Normalized with respect to the same freq range as sig1
@@ -3610,7 +3615,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('EEG L-Freq(Hz)')
+            ax3.set_ylabel('EEG L-Freq(Hz)', rotation = 80, fontsize=9)
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3637,7 +3642,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=9)
     
                        
             # Opening JSON file
@@ -3700,8 +3705,8 @@ class OfflineDreamento():
             ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
             ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
             ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 0, labelpad = 30)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30)#, fontsize=8)
             
             ax2.spines["right"].set_visible(False)
             ax2.spines["left"].set_visible(False)
@@ -3729,7 +3734,7 @@ class OfflineDreamento():
             # Plot ppg
             ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
             ax_ppg.set_ylim([-100, 100])
-            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_ylabel('PPG',  rotation = 0, labelpad = 30)
             ax_ppg.set_yticks([])
             
             
@@ -3873,7 +3878,7 @@ class OfflineDreamento():
                     
         else:
             
-            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,4,1,1,2, 2, 2, 1, 10]})
+            fig,AX = plt.subplots(nrows=12, figsize=(16, 9), gridspec_kw={'height_ratios': [1, 1, 10,10,4,4,2,2, 2, 2, 2, 10]})
             
             ax1 = plt.subplot(12,1,1)
             ax2 = plt.subplot(12,1,2, sharex = ax1)
@@ -3911,7 +3916,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('EEG L-Freq(Hz)')
+            ax3.set_ylabel('EEG L-Freq(Hz)', rotation = 80, fontsize=9)
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -3925,7 +3930,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=10)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file
@@ -3988,7 +3993,7 @@ class OfflineDreamento():
             ax1.set_ylabel('Markers(overall)', rotation = 0, labelpad=30, fontsize=8)#.set_rotation(0)
             ax_epoch_marker.set_ylabel('Markers(epoch)', rotation = 0, labelpad=30, fontsize=8)
             ax_epoch_light.set_ylabel('Stimulation(epoch)', rotation = 0, labelpad=30,fontsize=8)
-            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc', rotation = 0, labelpad=30, fontsize=8)
             ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
             
             ax2.spines["right"].set_visible(False)
@@ -4017,7 +4022,7 @@ class OfflineDreamento():
             # Plot ppg
             ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
             ax_ppg.set_ylim([-100, 100])
-            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_ylabel('PPG', rotation = 0, labelpad=30, fontsize=8)
             ax_ppg.set_yticks([])
             
             
@@ -4058,12 +4063,13 @@ class OfflineDreamento():
                 ax_autoscoring.plot([rem[i]-1, rem[i]], [-1,-1] , linewidth = 2, color = 'red')
 
                     
-            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
+            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'], fontsize=8)
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
             
             ax_proba.set_xlim([np.min(x), np.max(x)])
             self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'navy', 'deepskyblue', 'purple', 'red'])
             ax_proba.legend(loc = 'right', prop={'size': 6})
+            ax_proba.set_ylabel('Hypnodensity', rotation = 0, labelpad=40, fontsize=8)
             ax_proba.set_yticks([])
             ax_proba.set_xticks([])
             
@@ -4815,7 +4821,7 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('EEG R-Freq (Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=9)
     
                        
             # Opening JSON file]
@@ -5012,7 +5018,7 @@ class OfflineDreamento():
                                shading="auto")
             ax3.set_xlim([0, len(data)/256])
             ax3.set_ylim((fmin, 25))
-            ax3.set_ylabel('EEG L-Freq(Hz)')
+            ax3.set_ylabel('EEG L-Freq(Hz)', rotation = 80, fontsize=9)
             
             im2 = ax_TFR_short.pcolormesh(t2, f2, Sxx2, norm=norm2, cmap=cmap, antialiased=True,
                                shading="auto")
@@ -5027,12 +5033,12 @@ class OfflineDreamento():
             #ax4.set_xlim([0, len(data)])
             ax4.set_ylabel('EEG (uV)')
             ax4.set_ylim([-150, 150])
-            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 90)#, labelpad=30, fontsize=8)
+            ax_TFR_short.set_ylabel('EEG R-Freq(Hz)', rotation = 80, fontsize=10)#, labelpad=30, fontsize=8)
     
                        
             # Opening JSON file]
-            ax_acc.set_ylabel('Acc', rotation = 90)#, labelpad=30, fontsize=8)
-            ax_noise.set_ylabel('Sound', rotation = 0, labelpad=30, fontsize=8)
+            ax_acc.set_ylabel('Acc',  rotation = 90, fontsize=10)#, labelpad=30, fontsize=8)
+            ax_noise.set_ylabel('Sound',  rotation = 90, fontsize=10)#, fontsize=8)
     
             ax_acc.spines[["top", "bottom"]].set_visible(False)
             ax_noise.spines[["top", "bottom"]].set_visible(False)
@@ -5076,10 +5082,11 @@ class OfflineDreamento():
             
             ax_autoscoring.step(x, y, where='post', color = 'black')
             #ax_autoscoring.scatter(rem, -np.ones(len(rem)), color = 'red')
-            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'])
+            ax_autoscoring.set_yticks([0,-1,-2,-3,-4], ['Wake','REM', 'N1', 'N2', 'SWS'], fontsize=8)
             ax_autoscoring.set_xlim([np.min(x), np.max(x)])
             ax_proba.set_xlim([np.min(x), np.max(x)])
             self.y_pred_proba.plot(ax = ax_proba, kind="area", alpha=0.8, stacked=True, lw=0, color = ['black', 'olive', 'deepskyblue', 'purple', 'red'])
+            ax_proba.set_ylabel('Hypnodensity',  rotation = 0, fontsize=9, labelpad=40)
             ax_proba.legend(loc = 'right', prop={'size': 6})
             ax_proba.set_yticks([])
             ax_proba.set_xticks([])
@@ -5097,7 +5104,7 @@ class OfflineDreamento():
             # Plot ppg
             ax_ppg.plot(np.arange(len(self.ppg_data))/256, self.ppg_data, linewidth = 2 , color = 'olive')
             ax_ppg.set_ylim([-100, 100])
-            ax_ppg.set_ylabel('PPG')
+            ax_ppg.set_ylabel('PPG',  rotation = 90, fontsize=10)
             ax_ppg.set_yticks([])
             
             
@@ -5555,7 +5562,7 @@ class OfflineDreamento():
         "the spectrogrma plot while pressing left/right buttons to navigate.\n\n" +\
         "Matlab compatability: After the analysis you can export an .mat file\n\n\n" +\
         "Contact: Mahdad.Jafarzadehesfahani@donders.ru.nl \n" +\
-        "CopyRight (2021-2023): Mahdad Jafarzadeh Esfahani**" 
+        "CopyRight (2021-2024): Mahdad Jafarzadeh Esfahani**" 
             
         
         messagebox.showinfo(title = "Help", message = line_msg)
