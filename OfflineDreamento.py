@@ -30,6 +30,7 @@ from scipy.signal import butter, filtfilt
 import itertools
 import matplotlib
 import os
+import sys
 from sklearn.preprocessing import MinMaxScaler
 import yasa
 import platform 
@@ -4243,6 +4244,9 @@ class OfflineDreamento():
             os.chdir('DreamentoScorer')
 
         print(f'current path is {path_to_DreamentoScorer}')
+        # Make the scorer modules importable outside Spyder too
+        if os.getcwd() not in sys.path:
+            sys.path.insert(0, os.getcwd())
         from entropy.entropy import spectral_entropy
         from DreamentoScorer import DreamentoScorer
         self.SSN = DreamentoScorer(filename='', channel='', fs = fs, T = 30)
@@ -4406,6 +4410,9 @@ class OfflineDreamento():
             os.chdir('DreamentoScorer')
 
         print(f'current path is {path_to_DreamentoScorer}')
+        # Make the scorer modules importable outside Spyder too
+        if os.getcwd() not in sys.path:
+            sys.path.insert(0, os.getcwd())
         from entropy.entropy import spectral_entropy
         from DreamentoScorer import DreamentoScorer
         self.SSN = DreamentoScorer(filename='', channel='', fs = fs, T = 30)
