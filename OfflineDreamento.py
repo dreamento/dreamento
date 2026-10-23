@@ -1905,6 +1905,9 @@ class OfflineDreamento():
                 self.AnalyzeZMaxHypnodyne(data= self.sigHDRecorder, data_R = self.sigHDRecorder_r, sf = 256,\
                                         win_sec=30, fmin=0.3, fmax=25,\
                                         trimperc=5, cmap='RdBu_r', add_colorbar = False)      
+                # Activate save section
+                if int(self.is_autoscoring.get()) == 1:
+                    self.create_save_options_autoscoring()
            
     #%% band-pass filtering
     
